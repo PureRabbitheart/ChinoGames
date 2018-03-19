@@ -11,7 +11,10 @@ public class Alignment : MonoBehaviour
     private GameObject LHand;//左手
     [SerializeField]
     private GameObject RHand;//右手
-
+    [SerializeField]
+    private GameObject Head;//頭
+    [SerializeField]
+    private GameObject Hip;//腰
     // Use this for initialization
     void Start()
     {
@@ -21,10 +24,26 @@ public class Alignment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LHand.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/LeftHandAnchor").gameObject.transform.position;
-        LHand.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/LeftHandAnchor").gameObject.transform.rotation;
-        RHand.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/RightHandAnchor").gameObject.transform.position;
-        RHand.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/RightHandAnchor").gameObject.transform.rotation;
+        if (LHand != null)
+        {
+            LHand.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/LeftHandAnchor").gameObject.transform.position;
+            LHand.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/LeftHandAnchor").gameObject.transform.rotation;
+        }
+        if (RHand != null)
+        {
+            RHand.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/RightHandAnchor").gameObject.transform.position;
+            RHand.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/RightHandAnchor").gameObject.transform.rotation;
+        }
+        if (Head != null)
+        {
+            Head.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/CenterEyeAnchor").gameObject.transform.position;
+            Head.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/CenterEyeAnchor").gameObject.transform.rotation;
+        }
+        if (Hip != null)
+        {
+            Hip.transform.position = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/Hip").gameObject.transform.position;
+            Hip.transform.rotation = transform.parent.Find("Camera/OVRCameraRig/TrackingSpace/Hip").gameObject.transform.rotation;
+        }
 
     }
 
@@ -37,6 +56,9 @@ public class Alignment : MonoBehaviour
             Alignment p_Alignment = target as Alignment;
             p_Alignment.LHand = EditorGUILayout.ObjectField("左手", p_Alignment.LHand, typeof(GameObject), true) as GameObject;
             p_Alignment.RHand = EditorGUILayout.ObjectField("右手", p_Alignment.RHand, typeof(GameObject), true) as GameObject;
+            p_Alignment.Head = EditorGUILayout.ObjectField("頭", p_Alignment.Head, typeof(GameObject), true) as GameObject;
+            p_Alignment.Hip = EditorGUILayout.ObjectField("腰", p_Alignment.Hip, typeof(GameObject), true) as GameObject;
+
 
         }
     }

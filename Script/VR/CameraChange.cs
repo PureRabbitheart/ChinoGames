@@ -20,7 +20,6 @@ public class CameraChange : MonoBehaviour
 
     void Awake()
     {
-
         Camera.SetActive(false);//初期化
         VRCamera.SetActive(false);//初期化
 

@@ -150,12 +150,12 @@ class OVREngineConfigurationUpdater
 			}
 		}
 
-		if (QualitySettings.vSyncCount != 0)
-		{
-			Debug.Log("OVREngineConfigurationUpdater: Setting vsyncCount to 0");
-			// We sync in the TimeWarp, so we don't want unity syncing elsewhere.
-			QualitySettings.vSyncCount = 0;
-		}
+		//if (QualitySettings.vSyncCount != 0)
+		//{
+		//	Debug.Log("OVREngineConfigurationUpdater: Setting vsyncCount to 0");
+		//	// We sync in the TimeWarp, so we don't want unity syncing elsewhere.
+		//	QualitySettings.vSyncCount = 0;
+		//}
 	}
 
 	static void EnforceVRSupport()

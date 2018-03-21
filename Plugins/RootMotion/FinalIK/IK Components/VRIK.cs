@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 namespace RootMotion.FinalIK {
 	
-	/// <summary>
-	/// A full-body IK solver designed specifically for a VR HMD and hand controllers.
-	/// </summary>
-	//[HelpURL("http://www.root-motion.com/finalikdox/html/page7.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/VR IK")]
 	public class VRIK : IK {
 

@@ -21,18 +21,18 @@ public class Transit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out hit) && hit.transform.tag == "MainCamera")
+        if (Physics.Raycast(transform.position, -transform.right, out hit) && hit.transform.tag == "MainCamera")
         {
             laser.SetPosition(0, transform.position);
             laser.SetPosition(1, hit.point);
-            hit.collider.GetComponent<MeshRenderer>().material.color = Color.red;
+            //hit.collider.GetComponent<MeshRenderer>().material.color = Color.red;
             HitModel = hit.transform.gameObject;
         }
         else
         {
             HitModel = null;
             laser.SetPosition(0, transform.position);
-            laser.SetPosition(1, transform.forward * 100);
+            laser.SetPosition(1, -transform.right * 100);
         }
 
         if (OVRInput.GetDown(OVRInput.RawButton.A) && HitModel != null)

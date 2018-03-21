@@ -38,7 +38,7 @@ public class Gun : MonoBehaviour
     [SerializeField]
     public Transform tMuzzle;// 発射位置を指定
     public Transform tStartRay;// Rayの開始位置
-    private int layer =100;// layerの距離
+    private int layer = 100;// layerの距離
     public GameObject Shell;// 薬莢
     public Transform tShellOuter;// 薬莢の排出口
     public bool isShell; // 薬きょうを出すか
@@ -184,7 +184,7 @@ public class Gun : MonoBehaviour
                     {
                         if (hit.transform.tag == "Enemy")
                         {
-                          //  hit.collider.SendMessage("Damage", fDamage);
+                            //  hit.collider.SendMessage("Damage", fDamage);
                         }
                     }
                     else
@@ -198,12 +198,12 @@ public class Gun : MonoBehaviour
                     if (Physics.Raycast(ray, out hit, fRange, layer))
                     {
                         b.GetComponent<Rigidbody>().velocity = (hit.point - b.transform.position).normalized * fBulletSpeed;
-                        //b.SendMessage("BulletPower", fDamage);
+                        b.SendMessage("BulletPower", fDamage);
                     }
                     else
                     {
                         b.GetComponent<Rigidbody>().velocity = (ray.GetPoint(fRange) - b.transform.position).normalized * fBulletSpeed;
-                       // b.SendMessage("BulletPower", fDamage);
+                        b.SendMessage("BulletPower", fDamage);
 
                     }
                 }
@@ -230,7 +230,7 @@ public class Gun : MonoBehaviour
         {
             isBulletEnd = true;
         }
-        if(isShotSE == true)
+        if (isShotSE == true)
         {
             Sound();
         }

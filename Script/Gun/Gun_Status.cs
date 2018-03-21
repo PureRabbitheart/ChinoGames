@@ -12,7 +12,7 @@ public class Gun_Status : Gun
     private string[] strInput = new string[2];//コントローラーのボタンの名前
     [SerializeField]
     private string[] strTagName = new string[2];// タグの名前管理
-    private int LeftOrRight;// 0と1で右手か左手を決める
+    private int LeftOrRight;// 0と1で左手か右手を決める
     [SerializeField]
     private bool isEnemy;// 敵に使うか自分に使うか
 
@@ -74,10 +74,11 @@ public class Gun_Status : Gun
 
             if(p_Gun.isEnemy == false)
             {
-                p_Gun.strInput[1] = EditorGUILayout.TextField("右のコントローラーの名前", p_Gun.strInput[1]);
-                p_Gun.strTagName[1] = EditorGUILayout.TextField("右手で持ったときのTag名", p_Gun.strTagName[1]);
                 p_Gun.strInput[0] = EditorGUILayout.TextField("左のコントローラーの名前", p_Gun.strInput[0]);
                 p_Gun.strTagName[0] = EditorGUILayout.TextField("左手で持ったときのTag名", p_Gun.strTagName[0]);
+
+                p_Gun.strInput[1] = EditorGUILayout.TextField("右のコントローラーの名前", p_Gun.strInput[1]);
+                p_Gun.strTagName[1] = EditorGUILayout.TextField("右手で持ったときのTag名", p_Gun.strTagName[1]);
 
             }
 

@@ -20,6 +20,10 @@ namespace RootMotion.Demos {
 
 			// Set myself as IK target
 			aimIK.solver.IKPosition = transform.position;
+
+
+            
+
 		}
 	}
 }

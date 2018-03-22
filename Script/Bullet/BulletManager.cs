@@ -26,6 +26,7 @@ public class BulletManager : MonoBehaviour
                 if (other.tag == "EnemyHead")
                 {
                     other.transform.root.gameObject.SendMessage("Damage", Power * 100);//敵にセンドメッセージを送る
+                    other.tag = "CutObject";
                    // Instantiate(headFX, transform.position, transform.rotation);
                    // Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
 

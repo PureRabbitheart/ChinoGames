@@ -117,9 +117,9 @@ namespace BLINDED_AM_ME{
 			victim.name = "left side";
 			victim.GetComponent<MeshFilter>().mesh = left_HalfMesh;
 
-			GameObject leftSideObj = victim;
-
-			GameObject rightSideObj = new GameObject("right side", typeof(MeshFilter), typeof(MeshRenderer));
+            GameObject leftSideObj = victim;
+      
+            GameObject rightSideObj = new GameObject("right side", typeof(MeshFilter), typeof(MeshRenderer));
 			rightSideObj.transform.position = victim.transform.position;
 			rightSideObj.transform.rotation = victim.transform.rotation;
 			rightSideObj.GetComponent<MeshFilter>().mesh = right_HalfMesh;
@@ -135,7 +135,23 @@ namespace BLINDED_AM_ME{
 			leftSideObj.GetComponent<MeshRenderer>().materials = mats;
 			rightSideObj.GetComponent<MeshRenderer>().materials = mats;
 
-			return new GameObject[]{ leftSideObj, rightSideObj };
+
+            //if (!leftSideObj.GetComponent<MeshCollider>())
+            //{
+            //    MeshCollider mcol = leftSideObj.AddComponent<MeshCollider>();
+            //    mcol.convex = true;
+            //}
+
+
+            //if (!rightSideObj.GetComponent<MeshCollider>())
+            //{
+            //    rightSideObj.tag = "EnemyHead";
+            //    rightSideObj.AddComponent<Rigidbody>();
+            //    rightSideObj.AddComponent<MeshCollider>();
+            //    rightSideObj.GetComponent<MeshCollider>().convex = true;
+            //}
+
+            return new GameObject[]{ leftSideObj, rightSideObj };
 
 		}
 

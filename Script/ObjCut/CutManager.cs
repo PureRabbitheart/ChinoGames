@@ -8,53 +8,70 @@ public class CutManager : MonoBehaviour
     public float fTimeEnd;
     private float fNowTime;
     private bool isCut = true;
-
+    GameObject[] CutObj = new GameObject[2];
     void OnTriggerEnter(Collider other)
     {
         if (isCut == true)
         {
-            if (other.tag == "EnemyHead")
+            if (other.tag == "CutObject" || other.tag == "EnemyHead")
             {
                 GameObject victim = other.gameObject;//触れたオブジェクトの情報を入れる
                 GameObject[] pieces = BLINDED_AM_ME.MeshCut.Cut(victim, transform.position, transform.right, capMaterial);//触れた角度場所から計算してカッティングする
-                if (!pieces[0].GetComponent<BoxCollider>())//BoxColliderならコンポーネントを切る
+                CutObj = pieces;
+                if (pieces[0].GetComponent<BoxCollider>())//BoxColliderならコンポーネントを切る
                 {
                     Destroy(pieces[0].GetComponent<BoxCollider>());
                 }
-                else if(!pieces[0].GetComponent<MeshCollider>())//MeshColliderならコンポーネントを切る
+                else if (pieces[0].GetComponent<MeshCollider>())//MeshColliderならコンポーネントを切る
                 {
                     Destroy(pieces[0].GetComponent<MeshCollider>());
                 }
-                else if (!pieces[0].GetComponent<CapsuleCollider>())//MeshColliderならコンポーネントを切る
+                else if (pieces[0].GetComponent<CapsuleCollider>())//MeshColliderならコンポーネントを切る
                 {
                     Destroy(pieces[0].GetComponent<CapsuleCollider>());
                 }
-                else if (!pieces[0].GetComponent<SphereCollider>())//MeshColliderならコンポーネントを切る
+                else if (pieces[0].GetComponent<SphereCollider>())//MeshColliderならコンポーネントを切る
                 {
                     Destroy(pieces[0].GetComponent<SphereCollider>());
                 }
 
-                if (!pieces[0].GetComponent<MeshCollider>())
+                if (!pieces[0].GetComponent<Rigidbody>())
                 {
-                    pieces[0].AddComponent<MeshCollider>();//元々あったやつにMeshColliderをコンポーネントする
-                    pieces[0].GetComponent<MeshCollider>().convex = true;//使えるようにする
-
+                    pieces[0].AddComponent<Rigidbody>();
                 }
 
-                if (!pieces[1].GetComponent<Rigidbody>())//Rigidbodyがなければ
+                Invoke("CutMesh", 0.01f);
+                if (other.tag == "EnemyHead")
                 {
-                    pieces[1].AddComponent<Rigidbody>();//コンポーネントする
-                       pieces[1].tag = "EnemyHead";
+                    other.transform.root.gameObject.SendMessage("Damage", 100);
                 }
-                if(!pieces[1].GetComponent<MeshCollider>())
-                {
-                    pieces[1].AddComponent<MeshCollider>();//コンポーネントする
-                    pieces[1].GetComponent<MeshCollider>().convex = true;//使えるようにする
-
-                }
-                Debug.Log(pieces.Length);
                 isCut = false;
             }
+        }
+
+    }
+
+    void CutMesh()
+    {
+        CutObj[0].AddComponent<MeshCollider>();
+        MeshCollider LeftObj = CutObj[0].GetComponent<MeshCollider>();//コンポーネントする
+        LeftObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
+        LeftObj.convex = true;//使えるようにする
+        CutObj[0].tag = "CutObject";
+        CutObj[0].GetComponent<Rigidbody>().useGravity = true;
+
+        if (!CutObj[1].GetComponent<Rigidbody>())//Rigidbodyがなければ
+        {
+            CutObj[1].AddComponent<Rigidbody>();//コンポーネントする
+            CutObj[1].tag = "CutObject";
+        }
+
+        if (!CutObj[1].GetComponent<MeshCollider>())
+        {
+            MeshCollider RightObj = CutObj[1].AddComponent<MeshCollider>();//コンポーネントする
+            RightObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
+            RightObj.convex = true;//使えるようにする
+
         }
 
     }
@@ -81,11 +98,6 @@ public class CutManager : MonoBehaviour
             fNowTime = 0.0f;
         }
 
-
-
-    }
-    void Cut()
-    {
 
     }
 

@@ -20,15 +20,19 @@ public class EnemyManager : MonoBehaviour
     private Transform target;
     private bool isArea;
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Finish")//finishのtagに当たったら
         {
             isArea = true;//動けない範囲になったら
         }
-        else
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Finish")//finishのtagに当たったら
         {
-            isArea = false;
+            isArea = false;//動けない範囲になったら
         }
     }
 
@@ -60,7 +64,6 @@ public class EnemyManager : MonoBehaviour
     void Damage(float Damage)
     {
         HP -= Damage;
-        Debug.Log("HP");
     }
 
     public void Move()

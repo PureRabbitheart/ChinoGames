@@ -27,8 +27,13 @@ public class BulletManager : MonoBehaviour
                 {
                     other.transform.root.gameObject.SendMessage("Damage", Power * 100);//敵にセンドメッセージを送る
                     other.tag = "CutObject";
-                   // Instantiate(headFX, transform.position, transform.rotation);
-                   // Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
+                    Destroy(other.gameObject, 5f);
+                    if(!other.gameObject.GetComponent<Rigidbody>())
+                    {
+                        other.gameObject.AddComponent<Rigidbody>();
+                    }
+                    // Instantiate(headFX, transform.position, transform.rotation);
+                    // Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
 
                 }
                 

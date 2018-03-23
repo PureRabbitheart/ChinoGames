@@ -15,6 +15,9 @@ public class CutManager : MonoBehaviour
         {
             if (other.tag == "CutObject" || other.tag == "EnemyHead")
             {
+                GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().R_VIBRATION(255);
+                GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().L_VIBRATION(255);
+
                 GameObject victim = other.gameObject;//触れたオブジェクトの情報を入れる
                 GameObject[] pieces = BLINDED_AM_ME.MeshCut.Cut(victim, transform.position, transform.right, capMaterial);//触れた角度場所から計算してカッティングする
                 CutObj = pieces;
@@ -40,7 +43,7 @@ public class CutManager : MonoBehaviour
                     pieces[0].AddComponent<Rigidbody>();
                 }
 
-                Invoke("CutMesh", 0.01f);
+                Invoke("CutMesh", 0.05f);
                 if (other.tag == "EnemyHead")
                 {
                     other.transform.root.gameObject.SendMessage("Damage", 100);
@@ -71,9 +74,10 @@ public class CutManager : MonoBehaviour
             MeshCollider RightObj = CutObj[1].AddComponent<MeshCollider>();//コンポーネントする
             RightObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
             RightObj.convex = true;//使えるようにする
-
         }
 
+        Destroy(CutObj[0], 5f);
+        Destroy(CutObj[1], 5f);
     }
 
     // Use this for initialization

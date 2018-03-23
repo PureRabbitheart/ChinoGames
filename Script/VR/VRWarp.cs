@@ -17,7 +17,7 @@ public class VRWarp : MonoBehaviour
     [SerializeField]
     float initialVelocity = 1;
     List<Vector3> vertexes = new List<Vector3>();
-    static readonly float Gravity = 0;
+    static readonly float Gravity = 9.81F;
 
 
     void Start()

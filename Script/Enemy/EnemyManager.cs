@@ -55,7 +55,6 @@ public class EnemyManager : MonoBehaviour
 
         if (HP <= 0)
         {
-
             gameObject.transform.DetachChildren();
             Destroy(gameObject);
         }

@@ -7,19 +7,17 @@ public class VRWarp : MonoBehaviour
 
     private LineRenderer laser;
     private RaycastHit hit;
-
-
+    private List<Vector3> vArrow = new List<Vector3>();
 
     [SerializeField]
-    GameObject targetMarker;
+    private GameObject targetMarker;
     [SerializeField]
-    float vertexCount = 25;
+    private float vertexCount = 30;
     [SerializeField]
-    float initialVelocity = 1;
-    List<Vector3> vertexes = new List<Vector3>();
-    static readonly float Gravity = 9.81F;
-
-
+    private float initialVelocity = 10;
+    [SerializeField]
+    private float Gravity = 9.81F;
+   
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
@@ -28,28 +26,28 @@ public class VRWarp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 stickR = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);//アナログスティックの入力
+        if (stickR.x != 0 || stickR.y != 0)//入力があったら
+        {
+            SetTarget();//放物線の計算と描画
+            laser.enabled = true;
+            float stickAngle = Mathf.Atan2(stickR.y, stickR.x);
+            Quaternion setQuat = new Quaternion();
+            setQuat.eulerAngles = new Vector3(0, -Mathf.Rad2Deg * stickAngle + transform.rotation.eulerAngles.y, 0);
+            targetMarker.transform.rotation = setQuat;
+            //Vector3 direction = new Vector3(stickR.x , transform.rotation.eulerAngles.y, stickR.y  );
+            //targetMarker.transform.rotation = Quaternion.LookRotation(direction);
+        }
+        else
+        {
+            laser.enabled = false;
+        }
 
-        SetTarget();
-        if (OVRInput.GetDown(OVRInput.RawButton.A))
+        if (OVRInput.GetDown(OVRInput.RawButton.A))//Aボタンを押したら
         {
             transform.root.position = targetMarker.transform.position;
+            transform.root.rotation = targetMarker.transform.rotation;
         }
-        //if (Physics.Raycast(transform.position, -transform.right, out hit))//コライダーにあたっていたら
-        //{
-        //    //laser.SetPosition(0, transform.position);//始点
-        //    //laser.SetPosition(1, hit.point);//終点
-        //    if (OVRInput.GetDown(OVRInput.RawButton.A))
-        //    {
-        //        transform.root.position = vertexes[vertexes.Count - 1];
-        //    }
-        //}
-        //else//触れていなかったら
-        //{
-        //    laser.enabled = false;
-        //    //laser.SetPosition(0, transform.position);//始点
-        //    //laser.SetPosition(1, -transform.right * 100);//終点
-        //}
-
     }
 
 
@@ -59,7 +57,7 @@ public class VRWarp : MonoBehaviour
         laser.enabled = true;
         //コントローラの向いている角度(x軸回転)をラジアン角へ
         var angleFacing = -Mathf.Deg2Rad * transform.eulerAngles.z;
-        var h = transform.position.y+5.0f;//触れた場所のY座標
+        var h = transform.position.y + 5.0f;//触れた場所のY座標
         var v0 = initialVelocity;
         var sin = Mathf.Sin(angleFacing);
         var cos = Mathf.Cos(angleFacing);
@@ -75,17 +73,35 @@ public class VRWarp : MonoBehaviour
             var delta = i * arrivalTime / vertexCount;
             var x = v0 * cos * delta;
             var y = v0 * sin * delta - 0.5F * g * square(delta);
-            var forward = new Vector3(-transform.right.x, 0, -transform.right.z);
-            var vertex = transform.position + forward * x + Vector3.up * y;
-            vertexes.Add(vertex);
+            Vector3 forward = new Vector3(-transform.right.x, 0, -transform.right.z);
+            Vector3 vertex = transform.position + forward * x + Vector3.up * y;
+            vArrow.Add(vertex);
         }
-        //ターゲットマーカーを頂点の最終地点へ
-        targetMarker.transform.position = vertexes[vertexes.Count - 1];
+
+
+        for (int i = 1; i < vertexCount; i++)
+        {
+            Vector3 vec3 = vArrow[i] - vArrow[i - 1];
+            Ray ray = new Ray(vArrow[i - 1], vec3);
+            float dis = Vector3.Distance(vArrow[i], vArrow[i - 1]);
+            Debug.DrawRay(ray.origin, ray.direction, Color.black, 1.0f);
+            if (Physics.Raycast(ray, out hit, dis + 1.0f))//コライダーにあたっていたら
+            {
+                targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
+                break;
+            }
+            else
+            {
+                targetMarker.transform.position = vArrow[vArrow.Count - 1];//ターゲットマーカーを頂点の最終地点へ
+            }
+        }
+
+
         //LineRendererの頂点の設置
-        laser.positionCount = vertexes.Count;
-        laser.SetPositions(vertexes.ToArray());
-        //リストの初期化
-        vertexes.Clear();
+        laser.positionCount = vArrow.Count;
+        laser.SetPositions(vArrow.ToArray());
+        vArrow.Clear();        //リストの初期化
+
     }
     static float square(float num)
     {

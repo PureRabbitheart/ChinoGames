@@ -5,53 +5,34 @@ public class CutManager : MonoBehaviour
 {
 
     public Material capMaterial;
+    public GameObject Effect;
     public float fTimeEnd;
     private float fNowTime;
     private bool isCut = true;
     GameObject[] CutObj = new GameObject[2];
+    
     void OnTriggerEnter(Collider other)
     {
         if (isCut == true)
         {
-            if (other.tag == "CutObject" || other.tag == "EnemyHead")
+            if (other.tag == "CutObject")
             {
-                GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().R_VIBRATION(255);
-                GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().L_VIBRATION(255);
-
-                GameObject victim = other.gameObject;//触れたオブジェクトの情報を入れる
-                GameObject[] pieces = BLINDED_AM_ME.MeshCut.Cut(victim, transform.position, transform.right, capMaterial);//触れた角度場所から計算してカッティングする
-                CutObj = pieces;
-                if (pieces[0].GetComponent<BoxCollider>())//BoxColliderならコンポーネントを切る
-                {
-                    Destroy(pieces[0].GetComponent<BoxCollider>());
-                }
-                else if (pieces[0].GetComponent<MeshCollider>())//MeshColliderならコンポーネントを切る
-                {
-                    Destroy(pieces[0].GetComponent<MeshCollider>());
-                }
-                else if (pieces[0].GetComponent<CapsuleCollider>())//MeshColliderならコンポーネントを切る
-                {
-                    Destroy(pieces[0].GetComponent<CapsuleCollider>());
-                }
-                else if (pieces[0].GetComponent<SphereCollider>())//MeshColliderならコンポーネントを切る
-                {
-                    Destroy(pieces[0].GetComponent<SphereCollider>());
-                }
-
-                if (!pieces[0].GetComponent<Rigidbody>())
-                {
-                    pieces[0].AddComponent<Rigidbody>();
-                }
-
-                Invoke("CutMesh", 0.05f);
+                CutObjcet(other);//モデルのカット処理
+                isCut = false;
+            }
+            else if (other.tag == "EnemyHead")
+            {
+                CutObjcet(other);//モデルのカット処理
                 if (other.tag == "EnemyHead")
                 {
                     other.transform.root.gameObject.SendMessage("Damage", 100);
                 }
                 isCut = false;
+                GameObject Fx = Instantiate(Effect, other.transform.position, Quaternion.identity);
+                Destroy(Fx, 1f);
+
             }
         }
-
     }
 
     void CutMesh()
@@ -105,17 +86,39 @@ public class CutManager : MonoBehaviour
 
     }
 
-    /*void OnDrawGizmosSelected() {
 
-		Gizmos.color = Color.green;
+    void CutObjcet(Collider other)
+    {
+        GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().R_VIBRATION(255);
+        GameObject.Find("OVRCameraRig").transform.GetComponent<Vibration>().L_VIBRATION(255);
 
-		Gizmos.DrawLine(transform.position, transform.position + transform.forward * 5.0f);
-		Gizmos.DrawLine(transform.position + transform.up * 0.5f, transform.position + transform.up * 0.5f + transform.forward * 5.0f);
-		Gizmos.DrawLine(transform.position + -transform.up * 0.5f, transform.position + -transform.up * 0.5f + transform.forward * 5.0f);
+        GameObject victim = other.gameObject;//触れたオブジェクトの情報を入れる
+        GameObject[] pieces = BLINDED_AM_ME.MeshCut.Cut(victim, transform.position, transform.right, capMaterial);//触れた角度場所から計算してカッティングする
+        CutObj = pieces;
 
-		Gizmos.DrawLine(transform.position, transform.position + transform.up * 0.5f);
-		Gizmos.DrawLine(transform.position,  transform.position + -transform.up * 0.5f);
 
-	}*/
+        if (pieces[0].GetComponent<BoxCollider>())//BoxColliderならコンポーネントを切る
+        {
+            Destroy(pieces[0].GetComponent<BoxCollider>());
+        }
+        else if (pieces[0].GetComponent<MeshCollider>())//MeshColliderならコンポーネントを切る
+        {
+            Destroy(pieces[0].GetComponent<MeshCollider>());
+        }
+        else if (pieces[0].GetComponent<CapsuleCollider>())//MeshColliderならコンポーネントを切る
+        {
+            Destroy(pieces[0].GetComponent<CapsuleCollider>());
+        }
+        else if (pieces[0].GetComponent<SphereCollider>())//MeshColliderならコンポーネントを切る
+        {
+            Destroy(pieces[0].GetComponent<SphereCollider>());
+        }
 
+        if (!pieces[0].GetComponent<Rigidbody>())
+        {
+            pieces[0].AddComponent<Rigidbody>();
+        }
+
+        Invoke("CutMesh", 0.05f);
+    }
 }

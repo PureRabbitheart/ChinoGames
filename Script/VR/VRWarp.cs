@@ -8,6 +8,7 @@ public class VRWarp : MonoBehaviour
     private LineRenderer laser;
     private RaycastHit hit;
     private List<Vector3> vArrow = new List<Vector3>();
+    private bool isMove;
 
     [SerializeField]
     private GameObject targetMarker;
@@ -17,7 +18,8 @@ public class VRWarp : MonoBehaviour
     private float initialVelocity = 10;
     [SerializeField]
     private float Gravity = 9.81F;
-   
+
+
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
@@ -30,31 +32,33 @@ public class VRWarp : MonoBehaviour
         if (stickR.x != 0 || stickR.y != 0)//入力があったら
         {
             SetTarget();//放物線の計算と描画
-            laser.enabled = true;
-            float stickAngle = Mathf.Atan2(stickR.y, stickR.x);
+            laser.enabled = true;//放物線を出す
+            targetMarker.SetActive(true);//マーカーを出す
+            float stickAngle = Mathf.Atan2(stickR.y, stickR.x);//アナログスティックの座標を角度にする
             Quaternion setQuat = new Quaternion();
-            setQuat.eulerAngles = new Vector3(0, -Mathf.Rad2Deg * stickAngle + transform.rotation.eulerAngles.y, 0);
-            targetMarker.transform.rotation = setQuat;
-            //Vector3 direction = new Vector3(stickR.x , transform.rotation.eulerAngles.y, stickR.y  );
-            //targetMarker.transform.rotation = Quaternion.LookRotation(direction);
+            setQuat.eulerAngles = new Vector3(0, -Mathf.Rad2Deg * stickAngle + transform.rotation.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
+            targetMarker.transform.rotation = setQuat;//代入
+            isMove = true;//移動中
         }
         else
         {
-            laser.enabled = false;
+            if (isMove == true && stickR.x <= 0.03f && stickR.x >= -0.03f && stickR.y <= 0.03f && stickR.y >= -0.03f)//アナログスティックをいじっていなくて移動になったら
+            {
+                isMove = false;//移動をストップ
+                transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + 0.6f, targetMarker.transform.position.z);//座標を代入
+                transform.root.rotation = targetMarker.transform.rotation;//回転を代入
+            }
+            laser.enabled = false;//放物線を消す
+            targetMarker.SetActive(false);//マーカーを消す
         }
 
-        if (OVRInput.GetDown(OVRInput.RawButton.A))//Aボタンを押したら
-        {
-            transform.root.position = targetMarker.transform.position;
-            transform.root.rotation = targetMarker.transform.rotation;
-        }
+  
     }
 
 
     public void SetTarget()
     {
 
-        laser.enabled = true;
         //コントローラの向いている角度(x軸回転)をラジアン角へ
         var angleFacing = -Mathf.Deg2Rad * transform.eulerAngles.z;
         var h = transform.position.y + 5.0f;//触れた場所のY座標

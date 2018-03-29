@@ -6,6 +6,7 @@ using UnityEngine;
 public class Sonar : MonoBehaviour
 {
     public bool isButton;
+    public bool isPlay;
     private Renderer[] ObjectRenderers;
     private static readonly Vector4 GarbagePosition = new Vector4(-5000, -5000, -5000, -5000);
     private static int QueueSize = 20;
@@ -57,8 +58,6 @@ public class Sonar : MonoBehaviour
         if(!isButton)
         {
             StartSonarRing(collision.contacts[0].point, collision.impulse.magnitude / 10.0f);
-            Debug.Log("aaaa");
-
         }
     }
 
@@ -69,6 +68,13 @@ public class Sonar : MonoBehaviour
             if (OVRInput.GetDown(OVRInput.RawButton.A))
             {
                 StartSonarRing(transform.position, 3.0f);
+            }
+
+            if(isPlay == true)
+            {
+                isPlay = false;
+                StartSonarRing(transform.position, 8.0f);
+
             }
         }
     }

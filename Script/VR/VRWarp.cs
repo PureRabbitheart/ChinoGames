@@ -11,6 +11,10 @@ public class VRWarp : MonoBehaviour
     private bool isMove;
 
     [SerializeField]
+    private TrailRenderer p_TrailRenderer;
+    [SerializeField]
+    private Animator p_Animator;
+    [SerializeField]
     private GameObject targetMarker;
     [SerializeField]
     private float vertexCount = 30;
@@ -18,7 +22,8 @@ public class VRWarp : MonoBehaviour
     private float initialVelocity = 10;
     [SerializeField]
     private float Gravity = 9.81F;
-
+    [SerializeField]
+    private LayerMask mask;
 
     void Start()
     {
@@ -28,9 +33,12 @@ public class VRWarp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         Vector2 stickR = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);//アナログスティックの入力
-        if (stickR.x != 0 || stickR.y != 0)//入力があったら
+        if (stickR.x > 0.5f || stickR.x < -0.5f || stickR.y > 0.5f || stickR.y < -0.5f)//入力があったら
         {
+
             SetTarget();//放物線の計算と描画
             laser.enabled = true;//放物線を出す
             targetMarker.SetActive(true);//マーカーを出す
@@ -44,9 +52,21 @@ public class VRWarp : MonoBehaviour
         {
             if (isMove == true && stickR.x <= 0.03f && stickR.x >= -0.03f && stickR.y <= 0.03f && stickR.y >= -0.03f)//アナログスティックをいじっていなくて移動になったら
             {
+
+                if (p_TrailRenderer != null)
+                {
+                    p_TrailRenderer.enabled = true;
+                }
                 isMove = false;//移動をストップ
                 transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + 0.6f, targetMarker.transform.position.z);//座標を代入
                 transform.root.rotation = targetMarker.transform.rotation;//回転を代入
+                if (p_Animator != null)
+                {
+                    p_Animator.SetBool("isMove", true);
+                }
+                Invoke("FadeReset", 0.2f);//もし触れているなら魂を変える
+
+                Invoke("OFF", 5.0f);
             }
             laser.enabled = false;//放物線を消す
             targetMarker.SetActive(false);//マーカーを消す
@@ -55,6 +75,21 @@ public class VRWarp : MonoBehaviour
   
     }
 
+    void FadeReset()
+    {
+        if (p_Animator != null)
+        {
+            p_Animator.SetBool("isMove", false);
+        }
+    }
+
+    void OFF()
+    {
+        if (p_TrailRenderer != null)
+        {
+            p_TrailRenderer.enabled = false;
+        }
+    }
 
     public void SetTarget()
     {
@@ -88,15 +123,16 @@ public class VRWarp : MonoBehaviour
             Vector3 vec3 = vArrow[i] - vArrow[i - 1];
             Ray ray = new Ray(vArrow[i - 1], vec3);
             float dis = Vector3.Distance(vArrow[i], vArrow[i - 1]);
-            Debug.DrawRay(ray.origin, ray.direction, Color.black, 1.0f);
-            if (Physics.Raycast(ray, out hit, dis + 1.0f))//コライダーにあたっていたら
+            //Debug.DrawRay(ray.origin, ray.direction, Color.black, 1.0f);
+            if (Physics.Raycast(ray, out hit, dis + 1.0f,mask))//コライダーにあたっていたら
             {
                 targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
                 break;
             }
             else
             {
-                targetMarker.transform.position = vArrow[vArrow.Count - 1];//ターゲットマーカーを頂点の最終地点へ
+                targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
+                //targetMarker.transform.position = vArrow[vArrow.Count - 1];//ターゲットマーカーを頂点の最終地点へ
             }
         }
 

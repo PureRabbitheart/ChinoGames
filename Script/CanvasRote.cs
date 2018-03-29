@@ -27,6 +27,6 @@ public class CanvasRote : MonoBehaviour
 
     void Rotation()
     {
-        p_Rigidbody.rotation = Quaternion.Slerp(p_Rigidbody.rotation, Quaternion.LookRotation(target.position - p_Rigidbody.position), fRotateSpeed);//ターゲットの方向を向く
+       // p_Rigidbody.rotation = Quaternion.Slerp(p_Rigidbody.rotation, Quaternion.LookRotation(target.position - p_Rigidbody.position), fRotateSpeed);//ターゲットの方向を向く
     }
 }

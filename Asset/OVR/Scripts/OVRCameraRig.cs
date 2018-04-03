@@ -250,6 +250,14 @@ public class OVRCameraRig : MonoBehaviour
         _rightEyeCamera.enabled = usePerEyeCameras;
     }
 
+   public void CameraReset()
+    {
+        leftHandAnchor.localRotation = new Quaternion(0, 0, 0, 0);
+        rightHandAnchor.localRotation = new Quaternion(0, 0, 0, 0);
+        tHeadLook.localRotation = new Quaternion(0, 0, 0, 0);
+        tHeadLook.localPosition = new Vector3(0,0,0);
+    }
+
     protected virtual Transform ConfigureAnchor(Transform root, string name)
     {
         Transform anchor = (root != null) ? transform.Find(root.name + "/" + name) : null;

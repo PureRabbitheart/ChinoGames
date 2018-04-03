@@ -25,7 +25,7 @@ public class CutManager : MonoBehaviour
                 CutObjcet(other);//モデルのカット処理
                 if (other.tag == "EnemyHead")
                 {
-                    other.transform.root.gameObject.SendMessage("Damage", 100);
+                    other.transform.parent.gameObject.SendMessage("Damage", 100);
                 }
                 isCut = false;
                 GameObject Fx = Instantiate(Effect, other.transform.position, Quaternion.identity);

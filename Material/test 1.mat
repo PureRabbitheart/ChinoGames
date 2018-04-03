@@ -73,7 +73,7 @@ Material:
     - _RingColorIntensity: 1
     - _RingIntensityScale: 5
     - _RingSpeed: 20
-    - _RingWidth: 1
+    - _RingWidth: 2
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -82,7 +82,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RingColor: {r: 0, g: 0.66896534, b: 1, a: 1}
+    - _RingColor: {r: 0, g: 0.822, b: 1, a: 1}
     - _SonarAddColor: {r: 0, g: 0, b: 0, a: 0}
     - _SonarBaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _SonarWaveColor: {r: 1, g: 0.1, b: 0.1, a: 0}

@@ -21,19 +21,25 @@ public class VRWarp : MonoBehaviour
     [SerializeField]
     private float initialVelocity = 10;
     [SerializeField]
-    private float Gravity = 9.81F;
+    private float Gravity = 9.81f;
     [SerializeField]
     private LayerMask mask;
+    [SerializeField]
+    private LayerMask KeepOut;
+    [SerializeField]
+    private Material MoveMaterial;
+    [SerializeField]
+    private Material OutMaterial;
 
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        
+
 
         Vector2 stickR = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);//アナログスティックの入力
         if (stickR.x > 0.5f || stickR.x < -0.5f || stickR.y > 0.5f || stickR.y < -0.5f)//入力があったら
@@ -46,7 +52,6 @@ public class VRWarp : MonoBehaviour
             Quaternion setQuat = new Quaternion();
             setQuat.eulerAngles = new Vector3(0, -Mathf.Rad2Deg * stickAngle + transform.rotation.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
             targetMarker.transform.rotation = setQuat;//代入
-            isMove = true;//移動中
         }
         else
         {
@@ -59,7 +64,11 @@ public class VRWarp : MonoBehaviour
                 }
                 isMove = false;//移動をストップ
                 transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + 0.6f, targetMarker.transform.position.z);//座標を代入
-                transform.root.rotation = targetMarker.transform.rotation;//回転を代入
+                
+                Quaternion setQuat = new Quaternion();
+                setQuat.eulerAngles = new Vector3(0, targetMarker.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
+                transform.root.rotation = setQuat;//回転を代入
+
                 if (p_Animator != null)
                 {
                     p_Animator.SetBool("isMove", true);
@@ -72,7 +81,7 @@ public class VRWarp : MonoBehaviour
             targetMarker.SetActive(false);//マーカーを消す
         }
 
-  
+
     }
 
     void FadeReset()
@@ -124,15 +133,26 @@ public class VRWarp : MonoBehaviour
             Ray ray = new Ray(vArrow[i - 1], vec3);
             float dis = Vector3.Distance(vArrow[i], vArrow[i - 1]);
             //Debug.DrawRay(ray.origin, ray.direction, Color.black, 1.0f);
-            if (Physics.Raycast(ray, out hit, dis + 1.0f,mask))//コライダーにあたっていたら
+            if (Physics.Raycast(ray, out hit, dis + 1.0f, KeepOut))
+            {
+                laser.material = OutMaterial;
+                isMove = false;//移動中
+
+                break;
+            }
+            else if (Physics.Raycast(ray, out hit, dis + 1.0f, mask))//コライダーにあたっていたら
             {
                 targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
+                laser.material = MoveMaterial;
+                isMove = true;//移動中
                 break;
             }
             else
             {
-                targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
-                //targetMarker.transform.position = vArrow[vArrow.Count - 1];//ターゲットマーカーを頂点の最終地点へ
+                isMove = false;//移動中
+                laser.material = OutMaterial;
+                //targetMarker.transform.position = hit.point;//ターゲットマーカーを頂点の最終地点へ
+                targetMarker.transform.position = vArrow[vArrow.Count - 1];//ターゲットマーカーを頂点の最終地点へ
             }
         }
 

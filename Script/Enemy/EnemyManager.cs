@@ -23,7 +23,7 @@ public class EnemyManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Sonar")
+        if (other.tag == "Sonar" && SkinMeshModel != null)
         {
             foreach (Transform child in SkinMeshModel.transform)
             {
@@ -43,7 +43,7 @@ public class EnemyManager : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
 
-        if (other.tag == "Sonar")
+        if (other.tag == "Sonar" && SkinMeshModel != null)
         {
             foreach (Transform child in SkinMeshModel.transform)
             {
@@ -85,7 +85,7 @@ public class EnemyManager : MonoBehaviour
         if (HP <= 0)//体力がなくなったら
         {
             gameObject.transform.DetachChildren();//親子関係を消して
-            Destroy(gameObject);//消す
+            Destroy(transform.root.gameObject);//消す
         }
     }
 

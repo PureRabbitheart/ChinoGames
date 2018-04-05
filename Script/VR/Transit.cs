@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Transit : MonoBehaviour
 {
-
-    private float startTime;//開始時間
-    private Vector3 startPosition;//開始地点
-    private bool isMoveAction;//乗り移っている状況
-    private float fTime = 0.5f;//乗り移るときの移動時間
-    private Vector3 tEndPos;//ゴール
-    private GameObject Soul;//乗り移る先
     private int NowCount = 0;//索敵範囲の半径のカウントを数える
+    private float fTime = 0.5f;//乗り移るときの移動時間
+    private float startTime;//開始時間
+    private bool isMoveAction;//乗り移っている状況
+    private bool isAction;
+    private Vector3 tEndPos;//ゴール
+    private Vector3 startPosition;//開始地点
+    private GameObject Soul;//乗り移る先
     private LineRenderer laser;
     private RaycastHit hit;
 
@@ -41,30 +41,37 @@ public class Transit : MonoBehaviour
     void Update()
     {
         Sphere.transform.position = transform.position;
-
-        if (OVRInput.Get(OVRInput.RawButton.A))
+        if (isAction == false)
         {
-            laser.enabled = true;
-            Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
-            RayHit(HitEnemy);//範囲内にいて更にレイで触れているオブジェクトを処理
-        }
-        else
-        {
-            laser.enabled = false;
-            NowCount = 0;
-            Sphere.transform.localScale = new Vector3(0, 0, 0);
-
-        }
-
-        if (OVRInput.GetUp(OVRInput.RawButton.A) && Soul != null && isMoveAction == false)
-        {
-            if (p_Image != null)
+            if (OVRInput.Get(OVRInput.RawButton.A))
             {
-                p_Image.color = new Vector4(255, 255, 255, 100);
+                laser.enabled = true;
+                Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
+                RayHit(HitEnemy);//範囲内にいて更にレイで触れているオブジェクトを処理
             }
-            Invoke("ChangeSouls", 0.2f);//もし触れているなら魂を変える
+            else
+            {
+                laser.enabled = false;
+                NowCount = 0;
+                Sphere.transform.localScale = new Vector3(0, 0, 0);
+
+            }
+
+            if (OVRInput.GetUp(OVRInput.RawButton.A) && Soul != null && isMoveAction == false)
+            {
+                if (p_Image != null)
+                {
+                    p_Image.color = new Vector4(255, 255, 255, 100);
+                }
+                isAction = true;
+                Invoke("ChangeSouls", 0.2f);//もし触れているなら魂を変える
+            }
+
         }
-        else if (isMoveAction == true)
+
+
+
+        if (isMoveAction == true)
         {
             MoveAction();
         }
@@ -161,6 +168,7 @@ public class Transit : MonoBehaviour
     void Arrival()//到着後の処理
     {
         isMoveAction = false;
+        isAction = false;
 
         Quaternion setQuat = new Quaternion();
         setQuat.eulerAngles = new Vector3(0, hit.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる

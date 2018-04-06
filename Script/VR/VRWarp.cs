@@ -9,6 +9,7 @@ public class VRWarp : MonoBehaviour
     private RaycastHit hit;
     private List<Vector3> vArrow = new List<Vector3>();
     private bool isMove;
+    private float Gravity = 9.81f;
 
     [SerializeField]
     private TrailRenderer p_TrailRenderer;
@@ -19,9 +20,9 @@ public class VRWarp : MonoBehaviour
     [SerializeField]
     private float vertexCount = 30;
     [SerializeField]
-    private float initialVelocity = 10;
+    private float fHeight;
     [SerializeField]
-    private float Gravity = 9.81f;
+    private float initialVelocity = 10;
     [SerializeField]
     private LayerMask mask;
     [SerializeField]
@@ -63,7 +64,7 @@ public class VRWarp : MonoBehaviour
                     p_TrailRenderer.enabled = true;
                 }
                 isMove = false;//移動をストップ
-                transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + 0.6f, targetMarker.transform.position.z);//座標を代入
+                transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + fHeight, targetMarker.transform.position.z);//座標を代入
                 
                 Quaternion setQuat = new Quaternion();
                 setQuat.eulerAngles = new Vector3(0, targetMarker.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる

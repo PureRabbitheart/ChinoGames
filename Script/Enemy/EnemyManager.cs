@@ -1,91 +1,122 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
 
-    [Tooltip("敵の動くスピードを入力してね")]
-    [SerializeField, Range(0, 1)]
-    private float fSpeed;
-    [Tooltip("回転スピードを入力してね")]
-    [SerializeField, Range(0, 1)]
-    private float fRotateSpeed;
-    [Tooltip("体力")]
+    public bool isAIEnemy;//AIか乗っ取っているか
     [SerializeField, Range(0, 100)]
-    private float HP;
+    private float HP;//体力
     [SerializeField]
-    private GameObject SkinMeshModel;
+    private GameObject SkinMeshModel;//色を変えるスキン
+    [SerializeField]
+    private Transform[] tTarget;//目的場所
 
-    private Rigidbody p_Rigidbody;//Rigidbody用の変数
-    private Transform target;
-    private bool isArea;
+    private NavMeshAgent agent;
+    private bool[] isTarget;//ターゲット
 
-    void OnTriggerEnter(Collider other)
+    private List<GameObject> lTarget = new List<GameObject>();//触れたやつ
+
+
+    void OnTriggerEnter(Collider other)//触れたら
     {
-        if (other.tag == "Sonar" && SkinMeshModel != null)
+        if (isAIEnemy == true)
         {
-            foreach (Transform child in SkinMeshModel.transform)
+            if (other.tag == "Sonar" && SkinMeshModel != null)
             {
-                if (child.GetComponent<Renderer>())
+                foreach (Transform child in SkinMeshModel.transform)
                 {
-                    child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 1, 0));
+                    if (child.GetComponent<Renderer>())
+                    {
+                        child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 1, 0));
+                    }
                 }
             }
         }
-        else if (other.gameObject.tag == "Finish")//finishのtagに当たったら
+        else
         {
-            isArea = true;//動けない範囲になったら
+
         }
+
     }
 
 
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)//離れたら
     {
-
-        if (other.tag == "Sonar" && SkinMeshModel != null)
+        if (isAIEnemy == true)
         {
-            foreach (Transform child in SkinMeshModel.transform)
+            if (other.tag == "Sonar" && SkinMeshModel != null)
             {
-                if (child.GetComponent<Renderer>())
+                foreach (Transform child in SkinMeshModel.transform)
                 {
-                    child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
+                    if (child.GetComponent<Renderer>())
+                    {
+                        child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
+                    }
                 }
             }
         }
-        else if (other.gameObject.tag == "Finish")//finishのtagに当たったら
+        else
         {
-            isArea = false;//動けない範囲になったら
+
         }
     }
 
 
     void Start()
     {
-        p_Rigidbody = GetComponent<Rigidbody>();// Rigidbodyの情報を入手
-        target = GameObject.Find("Camera").transform;
+        if (GetComponent<NavMeshAgent>() != null && tTarget.Length > 0)//NavMeshがあれば
+        {
+            isTarget = new bool[tTarget.Length];//ターゲット分フラグの配列を大きくする
+            int nextTarget = Random.Range(0, tTarget.Length);//次に行く場所をランダムで決める
+            isTarget[nextTarget] = true;//フラグをON
+            agent = GetComponent<NavMeshAgent>();
+        }
+
+        SearchingBehavior searching = GetComponentInChildren<SearchingBehavior>();
+        searching.onFound += OnFound;
+        searching.onLost += OnLost;
+
     }
 
 
     void Update()
     {
-
-        if (isArea == false)//動ける範囲なら
+        TakeOverControl();//乗り移っているかAI制御か判断する
+        if (GetComponent<NavMeshAgent>() != null && tTarget.Length > 0 && isAIEnemy == true)
         {
-            if (fSpeed > 0)
-            {
-                Move();
-            }
-            if (fRotateSpeed > 0)
-            {
-                Rotation();
-            }
+            navMesh();
         }
+        HPController();//死亡判定
+    }
 
-        if (HP <= 0)//体力がなくなったら
+    void TakeOverControl()
+    {
+        if (GetComponentInChildren<OVRCameraRig>())
         {
-            gameObject.transform.DetachChildren();//親子関係を消して
-            Destroy(transform.root.gameObject);//消す
+            isAIEnemy = false;
+        }
+        else
+        {
+            isAIEnemy = true;
+        }
+    }
+
+
+    private void OnFound(GameObject foundObj)//探索中怪しいものを見つけたら
+    {
+        lTarget.Add(foundObj);
+        Debug.Log(foundObj.name);
+    }
+
+    private void OnLost(GameObject lostObj)//見つけたものを見失ったら
+    {
+        lTarget.Remove(lostObj);
+
+        if (lTarget.Count == 0)
+        {
         }
     }
 
@@ -94,15 +125,39 @@ public class EnemyManager : MonoBehaviour
         HP -= Damage;
     }
 
-    public void Move()//移動の処理
+    void HPController()
     {
-        p_Rigidbody.position += transform.forward * fSpeed;//worldの青軸を使って敵を動かす
+        if (HP <= 0)//体力がなくなったら
+        {
+            //gameObject.transform.DetachChildren();//親子関係を消して
+            Destroy(transform.root.gameObject);//消す
+        }
+
     }
 
-    void Rotation()//回転の処理
+    void navMesh()//NavMeshの制御
     {
-        p_Rigidbody.rotation = Quaternion.Slerp(p_Rigidbody.rotation, Quaternion.LookRotation(target.position - p_Rigidbody.position), fRotateSpeed);//ターゲットの方向を向く
+        float fDis = 0.0f;//距離
+        for (int i = 0; i < tTarget.Length; i++)
+        {
+            if (isTarget[i] == true)
+            {
+                fDis = Vector3.Distance(transform.position, tTarget[i].position);//目的地までの距離を設定
+                agent.SetDestination(tTarget[i].position);//目的地まで突っ走る
+                break;
+            }
+        }
 
+        for (int i = 0; i < tTarget.Length; i++)
+        {
+            if (isTarget[i] == true && fDis < 5f)//半径が5F以下になったら
+            {
+                isTarget[i] = false;//今までの目的地を消す
+                int nextTarget = Random.Range(0, tTarget.Length);//ランダム
+                isTarget[nextTarget] = true;//次の目的地を設定
+                break;
+            }
+        }
     }
 
 }

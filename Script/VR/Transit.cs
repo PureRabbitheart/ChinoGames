@@ -111,7 +111,7 @@ public class Transit : MonoBehaviour
 
         startTime = Time.timeSinceLevelLoad;
         startPosition = transform.position;
-        tEndPos = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 0.6f, Soul.transform.root.position.z);
+        tEndPos = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 2f, Soul.transform.root.position.z);
         isMoveAction = true;
 
 

@@ -8,8 +8,8 @@ public class VRWarp : MonoBehaviour
     private LineRenderer laser;
     private RaycastHit hit;
     private List<Vector3> vArrow = new List<Vector3>();
-    private bool isMove;
-    private float Gravity = 9.81f;
+    private bool isMove;//移動中か
+    private float Gravity = 9.81f;//重力
 
     [SerializeField]
     private TrailRenderer p_TrailRenderer;
@@ -20,9 +20,9 @@ public class VRWarp : MonoBehaviour
     [SerializeField]
     private float vertexCount = 30;
     [SerializeField]
-    private float fHeight;
+    private float fHeight;//ヘッドマウントの高さ
     [SerializeField]
-    private float initialVelocity = 10;
+    private float initialVelocity = 10;//長さ距離
     [SerializeField]
     private LayerMask mask;
     [SerializeField]

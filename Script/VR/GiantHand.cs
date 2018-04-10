@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class GiantHand : MonoBehaviour
 {
-
+    [SerializeField]
+    private Transform HeadMountPoint;//HeadMountの位置
     [SerializeField]
     private Transform Hand;//TouchControllerの位置
     [SerializeField]
-    private float Double;//倍率
+    float scale = 3.0f;
 
-    // Use this for initialization
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Transform hand = Hand;
+        //  HMDから手までの距離を算出する
+        Vector3 abst = Hand.position + HeadMountPoint.position;
+
+        //  差分の距離に割り合いを掛ける
+        abst *= scale;
 
         transform.rotation = Hand.rotation;
-        transform.position = Hand.position * Double;
-
+        transform.position = HeadMountPoint.position + abst;
     }
 }

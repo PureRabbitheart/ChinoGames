@@ -5,9 +5,19 @@ using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
+    public enum mode
+    {
+        Wander,//徘徊モード
+        Attack,//戦闘モード
+        Vigilance,//警戒モード(※移動停止ｗ)
+        Pursuit,//追跡モード
+        Aid,//援護モード
+    }
 
     public bool isAIEnemy;//AIか乗っ取っているか
+    public mode Mode;
 
+    private Vector3 AidTarget;
     private float fAttackTime;//攻撃後のクールタイム
     private float fNowTime;//経過時間
     private bool[] isTarget;//ターゲット
@@ -20,20 +30,14 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private float fTimeOut;//色を変えるスキン
     [SerializeField]
+    private float fRadius;//色を変えるスキン
+    [SerializeField]
     private GameObject SkinMeshModel;//色を変えるスキン
     [SerializeField]
     private Transform[] tTarget;//目的場所
 
-    enum mode
-    {
-        Wander,//徘徊モード
-        Attack,//戦闘モード
-        Vigilance,//警戒モード(※移動停止ｗ)
-        Pursuit,//追跡モード
-    }
 
-    [SerializeField]
-    private mode Mode;
+
 
     void OnTriggerEnter(Collider other)//触れたら
     {
@@ -134,6 +138,10 @@ public class EnemyManager : MonoBehaviour
                 case mode.Pursuit://追跡
                     Chase();
                     break;
+                case mode.Aid://援護
+                    Assistance();
+                    break;
+
             }
         }
     }
@@ -145,7 +153,6 @@ public class EnemyManager : MonoBehaviour
         if (lTarget.Count > 0)
         {
             Mode = mode.Vigilance;//警戒モードに移行
-            Debug.Log(transform.name + "警戒モードに移行");
         }
     }
 
@@ -220,7 +227,7 @@ public class EnemyManager : MonoBehaviour
         {
             fNowTime = 0.0f;//経過時間をリセット
             Mode = mode.Vigilance;//警戒モードに移行
-            Debug.Log(transform.name + "警戒モード移行");
+
             return;
         }
 
@@ -233,12 +240,12 @@ public class EnemyManager : MonoBehaviour
         }
         else if (fDis < 3.0f)
         {
-            Mode = mode.Attack;//戦闘態勢に移行
             fAttackTime = 0.0f;
             isAttack = true;
-            agent.updatePosition = false;
-            agent.updateRotation = false;
-            Debug.Log(transform.name + "戦闘態勢に移行");
+            //agent.updatePosition = false;
+            //agent.updateRotation = false;
+            agent.SetDestination(transform.position);
+            Mode = mode.Attack;//戦闘態勢に移行
         }
 
 
@@ -250,7 +257,6 @@ public class EnemyManager : MonoBehaviour
         if (fNowTime > fTimeOut)//警戒時間がある一定になったら
         {
             Mode = mode.Wander;//徘徊モードに移行
-            Debug.Log(transform.name + "徘徊モードに移行");
         }
 
         for (int i = 0; i < lTarget.Count; i++)//索敵内にプレイヤーがいるかチェック
@@ -269,11 +275,12 @@ public class EnemyManager : MonoBehaviour
         if (isAttack == true)
         {
             Debug.Log("攻撃した");
+            CollHelp();//援護を呼ぶ
             isAttack = false;
         }
 
         fAttackTime += Time.deltaTime;
-        if (fAttackTime > 5.0f)
+        if (fAttackTime > 2.0f)
         {
             TargetInit();
             agent.updatePosition = true;
@@ -283,7 +290,7 @@ public class EnemyManager : MonoBehaviour
 
     }
 
-    void TargetInit()
+    void TargetInit()//次の目的地を選ぶ　
     {
         for (int i = 0; i < tTarget.Length; i++)
         {
@@ -297,4 +304,46 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    void CollHelp()//援護を呼ぶ
+    {
+        Collider[] HitHelp = Physics.OverlapSphere(transform.position, fRadius);//範囲内にいる仲間
+        
+        for (int i = 0;i< HitHelp.Length;i++)
+        {
+            if(HitHelp[i].GetComponent<EnemyManager>())
+            {
+                EnemyManager enemy = HitHelp[i].GetComponent<EnemyManager>();
+                if(enemy.Mode == mode.Wander)
+                {
+                    enemy.GetAidPos(transform.position);
+                    enemy.Mode = mode.Aid;//援護モードに移行
+                    Debug.Log("援護を呼んだ");
+                }
+            }
+        }
+    }
+
+    void Assistance()
+    {
+        if(AidTarget != new Vector3(0,0,0))
+        {
+            float fDis = Vector3.Distance(transform.position, AidTarget);//目的地までの距離を設定
+            if (fDis > 4.0f)
+            {
+                agent.SetDestination(AidTarget);//プレイヤーのところまでイクゥゥゥゥゥウウウウ
+            }
+            else
+            {
+                AidTarget = new Vector3(0, 0, 0);
+                Mode = mode.Vigilance;//警戒モード移行
+            }
+        }
+
+    }
+
+    public void GetAidPos(Vector3 pos)
+    {
+        Debug.Log("援護来たよ");
+        AidTarget = pos;
+    }
 }

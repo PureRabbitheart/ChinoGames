@@ -15,7 +15,7 @@ public class TimeDes : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         fNowTime += Time.deltaTime;
-        if(fEndTime > fNowTime)
+        if(fEndTime < fNowTime)
         {
             Destroy(gameObject);
         }

@@ -214,12 +214,14 @@ public class Gun : MonoBehaviour
                     fx.transform.parent = tMuzzle;
 
                 }
-
-                if (isShellPut)
+                isShellPut = true;
+                if (isShellPut == true && isShell == true)
                 {
-                    GameObject s = Instantiate(Shell, tShellOuter.position, tShellOuter.rotation);
+                    Instantiate(Shell, tShellOuter.position, tShellOuter.rotation);
+                    isShellPut = false;
+
                 }
-                isShell = true;
+
                 isSE = true;
                 //Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.5f, true);
                 //transform.rotation = initRotation;

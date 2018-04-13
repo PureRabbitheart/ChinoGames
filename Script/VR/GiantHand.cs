@@ -19,12 +19,12 @@ public class GiantHand : MonoBehaviour
     void Update()
     {
         //  HMDから手までの距離を算出する
-        Vector3 abst = Hand.position + HeadMountPoint.position;
+        Vector3 abst = HeadMountPoint.position - Hand.position;
 
         //  差分の距離に割り合いを掛ける
         abst *= scale;
 
         transform.rotation = Hand.rotation;
-        transform.position = HeadMountPoint.position + abst;
+        transform.position = HeadMountPoint.position - abst;
     }
 }

@@ -17,20 +17,25 @@ public class EnemyManager : MonoBehaviour
     public bool isAIEnemy;//AIか乗っ取っているか
     public mode Mode;
 
-    private Vector3 AidTarget;
+    private Vector3 AidTarget;//援護を呼ばれた場所
     private float fAttackTime;//攻撃後のクールタイム
     private float fNowTime;//経過時間
     private bool[] isTarget;//ターゲット
     private bool isAttack;//攻撃したか
+    private bool isAfter = false;//乗り移ってからもとに戻ったとき
+    private bool isLeftRight;//警戒時の左右を見る
     private NavMeshAgent agent;
     private List<GameObject> lTarget = new List<GameObject>();//触れたやつ
+    int count = 0;
 
     [SerializeField, Range(0, 100)]
-    private float HP;//体力
+    private float EnemyHP;//体力
+    [SerializeField, Range(0, 100)]
+    private float PlayerHP;//体力
     [SerializeField]
     private float fTimeOut;//色を変えるスキン
     [SerializeField]
-    private float fRadius;//色を変えるスキン
+    private float fRadius;//半径
     [SerializeField]
     private GameObject SkinMeshModel;//色を変えるスキン
     [SerializeField]
@@ -93,11 +98,14 @@ public class EnemyManager : MonoBehaviour
             isTarget[nextTarget] = true;//フラグをON
             agent = GetComponent<NavMeshAgent>();
         }
+        TakeOverControl();
 
-        SearchingBehavior searching = GetComponentInChildren<SearchingBehavior>();
-        searching.onFound += OnFound;
-        searching.onLost += OnLost;
-
+        if (isAIEnemy == true)
+        {
+            SearchingBehavior searching = GetComponentInChildren<SearchingBehavior>();
+            searching.onFound += OnFound;
+            searching.onLost += OnLost;
+        }
     }
 
 
@@ -112,11 +120,18 @@ public class EnemyManager : MonoBehaviour
     {
         if (GetComponentInChildren<OVRCameraRig>())
         {
-            isAIEnemy = false;
+            isAfter = true;//乗っ取りました
+            isAIEnemy = false;//乗り移っている
+            agent.SetDestination(transform.position);
         }
         else
         {
-            isAIEnemy = true;
+            if (isAfter == true)
+            {
+                EnemyHP = 0.0f;
+                isAfter = false;
+            }
+            isAIEnemy = true;//AI   
         }
     }
 
@@ -150,9 +165,11 @@ public class EnemyManager : MonoBehaviour
     {
         lTarget.Add(foundObj);
 
-        if (lTarget.Count > 0)
+        if (/*lTarget.Count > 0*/foundObj.tag == "Player")
         {
+            fNowTime = 0.0f;
             Mode = mode.Vigilance;//警戒モードに移行
+            Debug.Log("HIt");
         }
     }
 
@@ -168,15 +185,20 @@ public class EnemyManager : MonoBehaviour
 
     void Damage(float Damage)//ダメージ処理
     {
-        HP -= Damage;
+        EnemyHP -= Damage;
     }
 
     void HPController()//HPの制御
     {
-        if (HP <= 0)//体力がなくなったら
+        if (isAIEnemy == true && EnemyHP <= 0)//体力がなくなったら
         {
             //gameObject.transform.DetachChildren();//親子関係を消して
             Destroy(transform.root.gameObject);//消す
+        }
+
+        if (isAIEnemy == false && PlayerHP <= 0)
+        {
+            Debug.Log("死にました");
         }
 
     }
@@ -242,8 +264,6 @@ public class EnemyManager : MonoBehaviour
         {
             fAttackTime = 0.0f;
             isAttack = true;
-            //agent.updatePosition = false;
-            //agent.updateRotation = false;
             agent.SetDestination(transform.position);
             Mode = mode.Attack;//戦闘態勢に移行
         }
@@ -254,6 +274,10 @@ public class EnemyManager : MonoBehaviour
     void WatchOut()//警戒モード
     {
         fNowTime += Time.deltaTime;//警戒モードになってからの経過時間
+        agent.SetDestination(transform.position);//そこの場所で一旦止まる
+
+
+
         if (fNowTime > fTimeOut)//警戒時間がある一定になったら
         {
             Mode = mode.Wander;//徘徊モードに移行
@@ -261,16 +285,41 @@ public class EnemyManager : MonoBehaviour
 
         for (int i = 0; i < lTarget.Count; i++)//索敵内にプレイヤーがいるかチェック
         {
-            if (lTarget[i].tag == "Player")//いたら
+            if (lTarget[i] != null && lTarget[i].tag == "Player")//いたら
             {
                 Mode = mode.Pursuit;//追跡モードに移行
                 break;
             }
         }
 
+
+        if (count > 150)
+        {
+            switch (isLeftRight)
+            {
+                case true:
+                    isLeftRight = false;
+                    break;
+                case false:
+                    isLeftRight = true;
+                    break;
+            }
+            count = 0;
+        }
+        switch (isLeftRight)
+        {
+            case true:
+                transform.Rotate(new Vector3(0, 1, 0));
+                count++;
+                break;
+            case false:
+                transform.Rotate(new Vector3(0, -1, 0));
+                count++;
+                break;
+        }
     }
 
-    void Attacking()
+    void Attacking()//攻撃モード
     {
         if (isAttack == true)
         {
@@ -283,8 +332,6 @@ public class EnemyManager : MonoBehaviour
         if (fAttackTime > 2.0f)
         {
             TargetInit();
-            agent.updatePosition = true;
-            agent.updateRotation = true;
             Mode = mode.Pursuit;//追跡モードに移行する
         }
 
@@ -307,13 +354,13 @@ public class EnemyManager : MonoBehaviour
     void CollHelp()//援護を呼ぶ
     {
         Collider[] HitHelp = Physics.OverlapSphere(transform.position, fRadius);//範囲内にいる仲間
-        
-        for (int i = 0;i< HitHelp.Length;i++)
+        for (int i = 0; i < HitHelp.Length; i++)
         {
-            if(HitHelp[i].GetComponent<EnemyManager>())
+            EnemyManager enemy = HitHelp[i].GetComponentInParent<EnemyManager>();
+
+            if (enemy != null)
             {
-                EnemyManager enemy = HitHelp[i].GetComponent<EnemyManager>();
-                if(enemy.Mode == mode.Wander)
+                if (enemy.Mode == mode.Wander)
                 {
                     enemy.GetAidPos(transform.position);
                     enemy.Mode = mode.Aid;//援護モードに移行
@@ -323,9 +370,9 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    void Assistance()
+    void Assistance()//援護に向かう
     {
-        if(AidTarget != new Vector3(0,0,0))
+        if (AidTarget != new Vector3(0, 0, 0))
         {
             float fDis = Vector3.Distance(transform.position, AidTarget);//目的地までの距離を設定
             if (fDis > 4.0f)
@@ -335,15 +382,15 @@ public class EnemyManager : MonoBehaviour
             else
             {
                 AidTarget = new Vector3(0, 0, 0);
+                fNowTime = 0.0f;
                 Mode = mode.Vigilance;//警戒モード移行
             }
         }
 
     }
 
-    public void GetAidPos(Vector3 pos)
+    public void GetAidPos(Vector3 pos)//援護する場所を伝える
     {
-        Debug.Log("援護来たよ");
         AidTarget = pos;
     }
 }

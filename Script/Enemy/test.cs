@@ -7,9 +7,6 @@ public class test : MonoBehaviour
     public bool isFrame;
 
 
-
-
-
     void Start()
     {
 
@@ -27,7 +24,6 @@ public class test : MonoBehaviour
         {
             Frame();
         }
-
     }
 
 

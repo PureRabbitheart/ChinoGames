@@ -26,6 +26,8 @@ public class Transit : MonoBehaviour
     [SerializeField]
     private LayerMask mask;
     [SerializeField]
+    private LayerMask FloorMask;
+    [SerializeField]
     private Image p_Image;
     [SerializeField]
     private Sonar p_Sonar;
@@ -111,9 +113,16 @@ public class Transit : MonoBehaviour
 
         startTime = Time.timeSinceLevelLoad;
         startPosition = transform.position;
-        tEndPos = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 2f, Soul.transform.root.position.z);
+        Vector3 vTmpPos = Soul.transform.position;
+        Ray ray = new Ray(Soul.transform.position, -transform.up);//下に向かってレイを飛ばす
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.black);
+        RaycastHit HitFloor;
+        if (Physics.Raycast(ray, out HitFloor, 40.0f, FloorMask))//手からレイを飛ばす
+        {
+            tEndPos = new Vector3(Soul.transform.position.x, HitFloor.point.y + ((Soul.transform.localScale.y - 1) * 2), Soul.transform.position.z);
+        }
         isMoveAction = true;
-
+        Debug.Log(tEndPos.y);
 
     }
 
@@ -154,6 +163,7 @@ public class Transit : MonoBehaviour
         }
         else if (Camera.transform.position == tEndPos)
         {
+            Camera.transform.position = tEndPos;
             Arrival();//最終地点についたら
         }
 
@@ -174,7 +184,7 @@ public class Transit : MonoBehaviour
         setQuat.eulerAngles = new Vector3(0, hit.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
         Camera.transform.rotation = setQuat;//回転を代入
 
-        hit.transform.gameObject.SetActive(false);//敵を消す
+        hit.transform.root.Find("Model").gameObject.SetActive(false);//敵を消す
         hit.transform.root.Find("VRModel").gameObject.SetActive(true);//自分用の敵を出す
 
         if (p_Sonar != null)

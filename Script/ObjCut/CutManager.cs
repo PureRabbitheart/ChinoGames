@@ -10,7 +10,7 @@ public class CutManager : MonoBehaviour
     private float fNowTime;
     private bool isCut = true;
     GameObject[] CutObj = new GameObject[2];
-    
+
     void OnTriggerEnter(Collider other)
     {
         if (isCut == true)
@@ -25,7 +25,7 @@ public class CutManager : MonoBehaviour
                 CutObjcet(other);//モデルのカット処理
                 if (other.tag == "EnemyHead")
                 {
-                    other.transform.parent.gameObject.SendMessage("Damage", 100);
+                    other.transform.root.gameObject.SendMessage("Damage", 100);
                 }
                 isCut = false;
                 GameObject Fx = Instantiate(Effect, other.transform.position, Quaternion.identity);
@@ -37,28 +37,32 @@ public class CutManager : MonoBehaviour
 
     void CutMesh()
     {
-        CutObj[0].AddComponent<MeshCollider>();
-        MeshCollider LeftObj = CutObj[0].GetComponent<MeshCollider>();//コンポーネントする
-        LeftObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
-        LeftObj.convex = true;//使えるようにする
-        CutObj[0].tag = "CutObject";
-        CutObj[0].GetComponent<Rigidbody>().useGravity = true;
-
-        if (!CutObj[1].GetComponent<Rigidbody>())//Rigidbodyがなければ
+        if (CutObj[0] != null && CutObj[1] != null)
         {
-            CutObj[1].AddComponent<Rigidbody>();//コンポーネントする
-            CutObj[1].tag = "CutObject";
+            CutObj[0].AddComponent<MeshCollider>();
+            MeshCollider LeftObj = CutObj[0].GetComponent<MeshCollider>();//コンポーネントする
+            LeftObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
+            LeftObj.convex = true;//使えるようにする
+            CutObj[0].tag = "CutObject";
+            CutObj[0].GetComponent<Rigidbody>().useGravity = true;
+
+            if (!CutObj[1].GetComponent<Rigidbody>())//Rigidbodyがなければ
+            {
+                CutObj[1].AddComponent<Rigidbody>();//コンポーネントする
+                CutObj[1].tag = "CutObject";
+            }
+
+            if (!CutObj[1].GetComponent<MeshCollider>())
+            {
+                MeshCollider RightObj = CutObj[1].AddComponent<MeshCollider>();//コンポーネントする
+                RightObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
+                RightObj.convex = true;//使えるようにする
+            }
+
+            Destroy(CutObj[0], 5f);
+            Destroy(CutObj[1], 5f);
         }
 
-        if (!CutObj[1].GetComponent<MeshCollider>())
-        {
-            MeshCollider RightObj = CutObj[1].AddComponent<MeshCollider>();//コンポーネントする
-            RightObj.cookingOptions = MeshColliderCookingOptions.InflateConvexMesh;
-            RightObj.convex = true;//使えるようにする
-        }
-
-        Destroy(CutObj[0], 5f);
-        Destroy(CutObj[1], 5f);
     }
 
     // Use this for initialization

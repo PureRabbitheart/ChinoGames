@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisplayCamera : MonoBehaviour {
+public class DisplayCamera : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
+    [SerializeField]
+    private Transform Camera;
+    private Vector3 offset;         //プレイヤーとカメラ間のオフセット距離を格納する Public 変数
+
+    // Use this for initialization
+    void Start()
+    {
+        offset = transform.position - Camera.transform.position;
         UnityEngine.XR.XRSettings.showDeviceView = false;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        transform.position = Camera.transform.position + offset;
+
+    }
 }

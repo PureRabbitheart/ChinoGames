@@ -15,7 +15,7 @@ public class FlightWarp : MonoBehaviour
     private bool isMove;//移動するよ
 
     private float startTime;//開始時間
-    private float fTime = 5.0f;//乗り移るときの移動時間
+    private float fTime = 1.0f;//乗り移るときの移動時間
     private Vector3 vStartPos;
     bool isMovingWarp = false;
     private Vector3 tEndPos;//ゴール
@@ -43,7 +43,7 @@ public class FlightWarp : MonoBehaviour
 
     void Moving(Vector2 stickL)
     {
-        if (WarpPos != null && stickL.x <= 0.03f && stickL.x >= -0.03f && stickL.y <= 0.03f && stickL.y >= -0.03f)//アナログスティックをいじっていなくて移動になったら
+        if (isMovingWarp == false && WarpPos != null && stickL.x <= 0.03f && stickL.x >= -0.03f && stickL.y <= 0.03f && stickL.y >= -0.03f)//アナログスティックをいじっていなくて移動になったら
         {
             startTime = Time.timeSinceLevelLoad;
             vStartPos = transform.root.position;
@@ -52,8 +52,7 @@ public class FlightWarp : MonoBehaviour
             WarpPos = null;
 
         }
-
-        if(isMovingWarp == true)
+        else if (isMovingWarp == true)
         {
             Warp();
         }
@@ -117,7 +116,7 @@ public class FlightWarp : MonoBehaviour
         RaycastHit Hit;
         if (Physics.Raycast(ray, out Hit, 10.0f))//手からレイを飛ばす
         {
-            if(Hit.transform.tag =="FlightWarp")
+            if (Hit.transform.tag == "FlightWarp")
             {
                 WarpPos = Hit.transform;
             }

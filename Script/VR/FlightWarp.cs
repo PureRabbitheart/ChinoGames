@@ -50,6 +50,7 @@ public class FlightWarp : MonoBehaviour
             tEndPos = WarpPos.position;
             isMovingWarp = true;
             WarpPos = null;
+
         }
 
         if(isMovingWarp == true)

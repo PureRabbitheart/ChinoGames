@@ -65,7 +65,7 @@ public class VRWarp : MonoBehaviour
                 }
                 isMove = false;//移動をストップ
                 transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + fHeight, targetMarker.transform.position.z);//座標を代入
-                
+
                 Quaternion setQuat = new Quaternion();
                 setQuat.eulerAngles = new Vector3(0, targetMarker.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
                 transform.root.rotation = setQuat;//回転を代入

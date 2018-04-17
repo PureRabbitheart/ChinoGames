@@ -198,7 +198,7 @@ public class EnemyManager : MonoBehaviour
 
         if (isAIEnemy == false && PlayerHP <= 0)
         {
-            Debug.Log("死にました");
+           // Debug.Log("死にました");
         }
 
     }

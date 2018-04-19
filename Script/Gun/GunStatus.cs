@@ -15,8 +15,7 @@ public class GunStatus : Gun
     private int LeftOrRight;// 0と1で左手か右手を決める
     [SerializeField]
     private bool isEnemy;// 敵に使うか自分に使うか
-    [SerializeField]
-    private bool shot;// 敵に使うか自分に使うか
+    public bool isEnemyShot;// 敵に使うか自分に使うか
 
     void Update()// 弾を打つ処理
     {
@@ -33,7 +32,8 @@ public class GunStatus : Gun
         }
         else//敵なら
         {
-            Shot(true);//自動で弾を撃つ
+            Shot(isEnemyShot);//自動で弾を撃つ
+            isEnemyShot = false;
         }
     }
 
@@ -80,6 +80,11 @@ public class GunStatus : Gun
 
                 p_Gun.strInput[1] = EditorGUILayout.TextField("右のコントローラーの名前", p_Gun.strInput[1]);
                 p_Gun.strTagName[1] = EditorGUILayout.TextField("右手で持ったときのTag名", p_Gun.strTagName[1]);
+
+            }
+            else
+            {
+                p_Gun.isEnemyShot = EditorGUILayout.Toggle("敵用のトリガー", p_Gun.isEnemyShot);
 
             }
 

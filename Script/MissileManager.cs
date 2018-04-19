@@ -14,7 +14,7 @@ public class MissileManager : MonoBehaviour
     private Rigidbody p_Rigidbody;
 
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision other)
     {
         Instantiate(Explosion, transform.position, Quaternion.identity);
         Destroy(gameObject);

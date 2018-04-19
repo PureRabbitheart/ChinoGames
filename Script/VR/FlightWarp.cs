@@ -15,7 +15,7 @@ public class FlightWarp : MonoBehaviour
     private bool isMove;//移動するよ
 
     private float startTime;//開始時間
-    private float fTime = 1.0f;//乗り移るときの移動時間
+    private float fTime = 0.5f;//乗り移るときの移動時間
     private Vector3 vStartPos;
     bool isMovingWarp = false;
     private Vector3 tEndPos;//ゴール

@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Explosion: {fileID: 1308268244499688, guid: 3f74307097baa164b874346497279c29, type: 2}
-  fSpeed: 0.3
+  fSpeed: 2
 --- !u!123 &123703492592721542
 LensFlare:
   m_ObjectHideFlags: 1

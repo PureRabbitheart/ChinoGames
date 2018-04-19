@@ -5,6 +5,9 @@ using UnityEngine;
 public class TankManager : MonoBehaviour
 {
 
+    [SerializeField]
+    private GameObject Tank;
+
     // Use this for initialization
     void Start()
     {
@@ -14,6 +17,6 @@ public class TankManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(new Vector3(0, 0, 5));
+        Tank.transform.Rotate(new Vector3(0, 0, 5));
     }
 }

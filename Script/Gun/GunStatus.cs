@@ -6,7 +6,7 @@ using UnityEditor;//Editor拡張で使うためのusing
 #endif
 
 
-public class Gun_Status : Gun
+public class GunStatus : Gun
 {
     [SerializeField]
     private string[] strInput = new string[2];//コントローラーのボタンの名前
@@ -15,7 +15,8 @@ public class Gun_Status : Gun
     private int LeftOrRight;// 0と1で左手か右手を決める
     [SerializeField]
     private bool isEnemy;// 敵に使うか自分に使うか
-
+    [SerializeField]
+    private bool shot;// 敵に使うか自分に使うか
 
     void Update()// 弾を打つ処理
     {
@@ -63,12 +64,12 @@ public class Gun_Status : Gun
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(Gun_Status))]
+    [CustomEditor(typeof(GunStatus))]
     public class CharacterEditor : Editor
     {
         public override void OnInspectorGUI()
         {
-            Gun_Status p_Gun = target as Gun_Status;
+            GunStatus p_Gun = target as GunStatus;
 
             p_Gun.isEnemy = EditorGUILayout.Toggle("敵用ですか？", p_Gun.isEnemy);
 

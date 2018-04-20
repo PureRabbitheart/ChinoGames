@@ -6,11 +6,11 @@ public class MissileManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject Explosion;
+    private GameObject Explosion;//爆破Effect
     [SerializeField]
-    private float fSpeed;
+    private float fSpeed;//移動スピード
 
-    private float Power;
+    private float Power;//威力
     private Rigidbody p_Rigidbody;
 
 

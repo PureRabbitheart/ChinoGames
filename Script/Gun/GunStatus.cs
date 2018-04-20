@@ -33,7 +33,6 @@ public class GunStatus : Gun
         else//敵なら
         {
             Shot(isEnemyShot);//自動で弾を撃つ
-            isEnemyShot = false;
         }
     }
 
@@ -95,7 +94,7 @@ public class GunStatus : Gun
             p_Gun.fDamage = EditorGUILayout.FloatField("ダメージ", p_Gun.fDamage);
             p_Gun.fBulletSpeed = EditorGUILayout.FloatField("弾の速度", p_Gun.fBulletSpeed);
             p_Gun.eShotType = (ShotType)EditorGUILayout.EnumPopup("銃の種類", p_Gun.eShotType);
-            p_Gun.fFireRate = EditorGUILayout.FloatField("リロードにかかる時間", p_Gun.fFireRate);
+            p_Gun.fReloadTime = EditorGUILayout.FloatField("リロードにかかる時間", p_Gun.fReloadTime);
             p_Gun.clipSize = EditorGUILayout.IntField("最大装填数", p_Gun.clipSize);
             p_Gun.ammoMax = EditorGUILayout.IntField("弾の最大所持数", p_Gun.ammoMax);
             p_Gun.ammo = EditorGUILayout.IntField("現在の装填数", p_Gun.ammo);

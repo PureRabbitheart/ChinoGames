@@ -7,38 +7,38 @@ using UnityEngine.EventSystems;
 
 public class Gun : MonoBehaviour
 {
-    public float fFireRate = 0.1f;// 弾の間隔
-    public float fSpread = 0;// 拡散度
-    public float fRange = 0;// //射程 未実装
-    public float fDamage = 0;//ダメージ
-    public float fBulletSpeed = 100f;// 弾の速度
+    public float fFireRate;// 弾の間隔
+    public float fSpread;// 拡散度
+    public float fRange;// //射程 未実装
+    public float fDamage;//ダメージ
+    public float fBulletSpeed;// 弾の速度
     public enum ShotType// 銃の種類
     {
         Full,
         Semi,
         Burst　//未実装
     }
-    public ShotType eShotType = ShotType.Full;// 銃の種類をいれる変数
-    public float fReloadTime = 1f;// リロードにかかる時間
-    public int clipSize = 10;// 最大装填数
-    public int ammoMax = 30;// 弾の最大所持数
+    public ShotType eShotType;// 銃の種類をいれる変数
+    public float fReloadTime;// リロードにかかる時間
+    public int clipSize;// 最大装填数
+    public int ammoMax;// 弾の最大所持数
     [SerializeField]
     public int ammo;// 現在の装填数
     [SerializeField]
     public int ammoHave;// 現在の弾の所持数
-    public int ammoUsep = 1;// 一発あたりの消費弾数
-    public int shotPerRound = 1;// 発射弾数
+    public int ammoUsep;// 一発あたりの消費弾数
+    public int shotPerRound;// 発射弾数
     public GameObject Bullet;// 発射するオブジェクト
-    private float fTimeS = 0f;// Shotのタイム
-    private float fTimeR = 0f;// Reloadのタイム
-    private bool isShot = false;// 弾を打っているかのフラグ
-    private bool isReload = false;// リロードをするかのフラグ
+    private float fTimeS;// Shotのタイム
+    private float fTimeR;// Reloadのタイム
+    private bool isShot;// 弾を打っているかのフラグ
+    private bool isReload;// リロードをするかのフラグ
     public bool isHitScan;// ヒットスキャンにするか
     private Quaternion initRotation;// 角度初期化する際にでも
     [SerializeField]
     public Transform tMuzzle;// 発射位置を指定
     public Transform tStartRay;// Rayの開始位置
-    private int layer = 100;// layerの距離
+    private int layer;// layerの距離
     public GameObject Shell;// 薬莢
     public Transform tShellOuter;// 薬莢の排出口
     public bool isShell; // 薬きょうを出すか

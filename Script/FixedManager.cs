@@ -14,7 +14,7 @@ public class FixedManager : MonoBehaviour
         FixedMissile,//まっすぐに固定ミサイル打つやつ
         Fire,//火炎放射
         Gatling,//ガトリング
-        Laser,
+        Laser,//レーザー
     }
 
     [SerializeField]
@@ -24,6 +24,10 @@ public class FixedManager : MonoBehaviour
     private GameObject gTank;//タンク本体
     [SerializeField]
     private GameObject gBattery;//砲撃部分
+    [SerializeField]
+    private ParticleSystem PsysFire;//炎
+    [SerializeField]
+    private ParticleSystem PsysSmoke;//煙
     [SerializeField]
     private float fRotateSpeed;//回転スピード
     [SerializeField]
@@ -43,18 +47,18 @@ public class FixedManager : MonoBehaviour
         switch (eEnemyType)
         {
             case _type.PerpetratedMissile:
+                LockMissileInit();
                 break;
             case _type.FixedMissile:
                 FixedMissileInit();
                 break;
             case _type.Fire:
+                FireInit();
                 break;
             case _type.Gatling:
                 GatlingInit();
                 break;
             case _type.Laser:
-                break;
-            default:
                 break;
         }
     }
@@ -64,19 +68,20 @@ public class FixedManager : MonoBehaviour
         switch (eEnemyType)
         {
             case _type.PerpetratedMissile:
+                LockMissileUpdate();
                 break;
             case _type.FixedMissile:
                 FixedMissileUpdate();
                 break;
             case _type.Fire:
+                FireUpdate();
                 break;
             case _type.Gatling:
                 GatlingUpdate();
                 break;
             case _type.Laser:
                 break;
-            default:
-                break;
+
         }
     }
 
@@ -172,6 +177,48 @@ public class FixedManager : MonoBehaviour
         p_RigiBattery.rotation = Quaternion.Slerp(p_RigiBattery.rotation, Quaternion.LookRotation(tTarget - p_RigiBattery.position), fRotateSpeed);//ターゲットの方向を向く
     }
 
+    void FireInit()//火炎放射の初期化
+    {
+        p_RigiTank = gTank.GetComponent<Rigidbody>();
+        p_GunStatus = GetComponent<GunStatus>();
+
+    }
+
+    void FireUpdate()//火炎放射のアップデート
+    {
+        FireShot();
+        TankAim(FieldSearch());
+
+    }
+
+    void FireShot()//炎を出す
+    {
+        PsysFire.Play();
+        PsysSmoke.Play();
+    }
+
+    void LockMissileInit()//ロックオンミサイルの初期化
+    {
+        p_RigiTank = gTank.GetComponent<Rigidbody>();
+        p_RigiBattery = gBattery.GetComponent<Rigidbody>();
+        p_GunStatus = GetComponent<GunStatus>();
+        p_GunStatus.isEnemyShot = true;
+    }
+
+    void LockMissileUpdate()//ロックオンミサイルのアップデート
+    {
+        fSearchTime += Time.deltaTime;
+        float fTime = 10;
+        if (fSearchTime > fTime)
+        {
+            tmpTarget = FieldSearch();
+            if (fSearchTime > fTime + 5)
+            {
+                fSearchTime = 0.0f;
+            }
+        }
+        Rotation(tmpTarget);
+    }
 
 
 #if UNITY_EDITOR
@@ -206,57 +253,28 @@ public class FixedManager : MonoBehaviour
                 EditorGUILayout.LabelField("Searchの半径");
                 p_FixedManager.fRadius = EditorGUILayout.Slider(p_FixedManager.fRadius, 0.0f, 500.0f);
             }
-            //if (p_Gun.isEnemy == false)
-            //{
-            //    p_Gun.strInput[0] = EditorGUILayout.TextField("左のコントローラーの名前", p_Gun.strInput[0]);
-            //    p_Gun.strTagName[0] = EditorGUILayout.TextField("左手で持ったときのTag名", p_Gun.strTagName[0]);
+            else if(p_FixedManager.eEnemyType == _type.Fire)
+            {
+                p_FixedManager.gTank = EditorGUILayout.ObjectField("本体部分", p_FixedManager.gTank, typeof(GameObject), true) as GameObject;
+                p_FixedManager.gBattery = EditorGUILayout.ObjectField("砲撃部分", p_FixedManager.gBattery, typeof(GameObject), true) as GameObject;
+                p_FixedManager.PsysFire = EditorGUILayout.ObjectField("炎のエフェクト", p_FixedManager.PsysFire, typeof(ParticleSystem), true) as ParticleSystem;
+                p_FixedManager.PsysSmoke = EditorGUILayout.ObjectField("煙のエフェクト", p_FixedManager.PsysSmoke, typeof(ParticleSystem), true) as ParticleSystem;
 
-            //    p_Gun.strInput[1] = EditorGUILayout.TextField("右のコントローラーの名前", p_Gun.strInput[1]);
-            //    p_Gun.strTagName[1] = EditorGUILayout.TextField("右手で持ったときのTag名", p_Gun.strTagName[1]);
+                EditorGUILayout.LabelField("本体の回転スピード");
+                p_FixedManager.fRotateSpeed = EditorGUILayout.Slider(p_FixedManager.fRotateSpeed, 0.0f, 1.0f);
+                EditorGUILayout.LabelField("Searchの半径");
+                p_FixedManager.fRadius = EditorGUILayout.Slider(p_FixedManager.fRadius, 0.0f, 500.0f);
+            }
+            else if (p_FixedManager.eEnemyType == _type.PerpetratedMissile)
+            {
+                p_FixedManager.gTank = EditorGUILayout.ObjectField("横回転するTank部分", p_FixedManager.gTank, typeof(GameObject), true) as GameObject;
+                p_FixedManager.gBattery = EditorGUILayout.ObjectField("縦回転する砲台部分", p_FixedManager.gBattery, typeof(GameObject), true) as GameObject;
+                EditorGUILayout.LabelField("回転スピード");
+                p_FixedManager.fRotateSpeed = EditorGUILayout.Slider(p_FixedManager.fRotateSpeed, 0.0f, 1.0f);
+                EditorGUILayout.LabelField("Searchの半径");
+                p_FixedManager.fRadius = EditorGUILayout.Slider(p_FixedManager.fRadius, 0.0f, 500.0f);
 
-            //}
-            //else
-            //{
-            //    p_Gun.isEnemyShot = EditorGUILayout.Toggle("敵用のトリガー", p_Gun.isEnemyShot);
-
-            //}
-
-            //p_Gun.fFireRate = EditorGUILayout.FloatField("弾の間隔", p_Gun.fFireRate);
-            //EditorGUILayout.LabelField("拡散度");
-            //p_Gun.fSpread = EditorGUILayout.Slider(p_Gun.fSpread, 0.0f, 1.0f);
-            //p_Gun.fRange = EditorGUILayout.FloatField("射程", p_Gun.fRange);
-            //p_Gun.fDamage = EditorGUILayout.FloatField("ダメージ", p_Gun.fDamage);
-            //p_Gun.fBulletSpeed = EditorGUILayout.FloatField("弾の速度", p_Gun.fBulletSpeed);
-            //p_Gun.eShotType = (ShotType)EditorGUILayout.EnumPopup("銃の種類", p_Gun.eShotType);
-            //p_Gun.fFireRate = EditorGUILayout.FloatField("リロードにかかる時間", p_Gun.fFireRate);
-            //p_Gun.clipSize = EditorGUILayout.IntField("最大装填数", p_Gun.clipSize);
-            //p_Gun.ammoMax = EditorGUILayout.IntField("弾の最大所持数", p_Gun.ammoMax);
-            //p_Gun.ammo = EditorGUILayout.IntField("現在の装填数", p_Gun.ammo);
-            //p_Gun.ammoHave = EditorGUILayout.IntField("現在の弾の所持数", p_Gun.ammoHave);
-            //p_Gun.ammoUsep = EditorGUILayout.IntField("一発あたりの消費弾数", p_Gun.ammoUsep);
-            //p_Gun.shotPerRound = EditorGUILayout.IntField("発射弾数", p_Gun.shotPerRound);
-            //p_Gun.Bullet = EditorGUILayout.ObjectField("発射する弾", p_Gun.Bullet, typeof(GameObject), true) as GameObject;
-            //p_Gun.isHitScan = EditorGUILayout.Toggle("ヒットスキャンにするか", p_Gun.isHitScan);
-            //p_Gun.tMuzzle = EditorGUILayout.ObjectField("発射位置を指定", p_Gun.tMuzzle, typeof(Transform), true) as Transform;
-            //p_Gun.tStartRay = EditorGUILayout.ObjectField("Rayの開始位置", p_Gun.tStartRay, typeof(Transform), true) as Transform;
-
-            //p_Gun.isShell = EditorGUILayout.Toggle("薬莢を出すか", p_Gun.isShell);
-            //if (p_Gun.isShell == true)
-            //{
-            //    p_Gun.Shell = EditorGUILayout.ObjectField("薬莢", p_Gun.Shell, typeof(GameObject), true) as GameObject;
-            //    p_Gun.tShellOuter = EditorGUILayout.ObjectField("薬莢の排出口", p_Gun.tShellOuter, typeof(Transform), true) as Transform;
-
-            //}
-
-            //p_Gun.MuzzleFX = EditorGUILayout.ObjectField("発射エフェクト", p_Gun.MuzzleFX, typeof(GameObject), true) as GameObject;
-            //p_Gun.isShotSE = EditorGUILayout.Toggle("弾の発射音を鳴らすか", p_Gun.isShotSE);
-            //if (p_Gun.isShotSE == true)
-            //{
-            //    p_Gun.ShotSE = EditorGUILayout.ObjectField("発射時の音", p_Gun.ShotSE, typeof(AudioClip), true) as AudioClip;
-            //    p_Gun.ShotEndSE = EditorGUILayout.ObjectField("弾切れの音", p_Gun.ShotEndSE, typeof(AudioClip), true) as AudioClip;
-
-            //}
-
+            }
         }
     }
 

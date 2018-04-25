@@ -41,7 +41,6 @@ public class DoorController : MonoBehaviour
                 break;
             case _type.Door3:
                 p_Animator.SetBool("③", true);
-                Debug.Log(eDoorType);
                 break;
             case _type.Other:
                 break;
@@ -52,8 +51,6 @@ public class DoorController : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("Ope");
-
         switch (eDoorType)
         {
             case _type.Door1:

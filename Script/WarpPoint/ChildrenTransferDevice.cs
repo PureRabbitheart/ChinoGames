@@ -7,15 +7,28 @@ public class ChildrenTransferDevice : MonoBehaviour
 
     TransferDevice p_TransferDevice;
 
+    private float fNowTime;
+
+
     void OnTriggerEnter(Collider other)
     {
-        p_TransferDevice.eWarpInfo.isWarp = true;
-        p_TransferDevice.eWarpInfo.WarpName = transform.name;
+        Debug.Log("イリュージョン");
+        fNowTime = 0.0f;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        fNowTime += Time.deltaTime;
+        if (fNowTime > 5)
+        {
+            other.transform.position = p_TransferDevice.NextPos(transform.name);
+            fNowTime = 0.0f;
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-
+        fNowTime = 0.0f;
     }
 
     void Awake()

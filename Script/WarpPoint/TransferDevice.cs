@@ -8,6 +8,7 @@ public class TransferDevice : MonoBehaviour
     [SerializeField]
     private GameObject[] gPort = new GameObject[2];
 
+
     void Awake()
     {
 
@@ -17,10 +18,15 @@ public class TransferDevice : MonoBehaviour
             {
                 gPort[i].AddComponent<CapsuleCollider>();
             }
+            gPort[i].GetComponent<CapsuleCollider>().isTrigger = true;
+
+
             if (!gPort[i].GetComponent<Rigidbody>())//Rigidbodyがついていなかったら
             {
                 gPort[i].AddComponent<Rigidbody>();
             }
+            gPort[i].GetComponent<Rigidbody>().useGravity = false;
+
             if (!gPort[i].GetComponent<ChildrenTransferDevice>())
             {
                 gPort[i].AddComponent<ChildrenTransferDevice>();
@@ -38,6 +44,7 @@ public class TransferDevice : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.DrawLine(gPort[0].transform.position, gPort[1].transform.position, Color.white);
     }
 
 
@@ -54,4 +61,6 @@ public class TransferDevice : MonoBehaviour
         return new Vector3(0, 0, 0);
 
     }
+
+
 }

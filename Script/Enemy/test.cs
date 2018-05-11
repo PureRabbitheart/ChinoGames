@@ -57,4 +57,17 @@ public class test : MonoBehaviour
             smr.sharedMesh.SetIndices(smr.sharedMesh.GetIndices(0), MeshTopology.Triangles, 0);
         }
     }
+
+    public void Hit()
+    {
+
+    }
+    public void FootR()
+    {
+
+    }
+    public void FootL()
+    {
+
+    }
 }

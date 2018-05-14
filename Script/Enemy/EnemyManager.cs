@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
-    public enum mode
+    public enum eMode
     {
         Wander,//徘徊モード
         Attack,//戦闘モード
@@ -13,13 +13,28 @@ public class EnemyManager : MonoBehaviour
         Pursuit,//追跡モード
         Aid,//援護モード
     }
+    public enum eAttackType
+    {
+        Gun,
+        Sword,//剣
+    }
+    public enum eModelType
+    {
+        Boss,
+        Gundam,
+    }
 
     public bool isAIEnemy;//AIか乗っ取っているか
-    public mode Mode;
+    public float fActiveTime;
+    public eMode Mode;
+    public eAttackType AttackType;
+
 
     private Vector3 AidTarget;//援護を呼ばれた場所
     private float fAttackTime;//攻撃後のクールタイム
     private float fNowTime;//経過時間
+    private float fStartTime;//乗りうつり始めた時間
+
     private bool[] isTarget;//ターゲット
     private bool isAttack;//攻撃したか
     private bool isAfter = false;//乗り移ってからもとに戻ったとき
@@ -33,15 +48,20 @@ public class EnemyManager : MonoBehaviour
     [SerializeField, Range(0, 100)]
     private float PlayerHP;//体力
     [SerializeField]
-    private float fTimeOut;//色を変えるスキン
+    private float fMaxActiveTime;//乗りうつって居られる時間
+
+    [SerializeField]
+    private float fTimeOut;//警戒モードが切れる時間
     [SerializeField]
     private float fRadius;//半径
     [SerializeField]
     private GameObject SkinMeshModel;//色を変えるスキン
     [SerializeField]
     private Transform[] tTarget;//目的場所
-
-
+    [SerializeField]
+    private Animator p_Animator;
+    [SerializeField]
+    private GunStatus p_GunStatus;
 
 
     void OnTriggerEnter(Collider other)//触れたら
@@ -122,6 +142,7 @@ public class EnemyManager : MonoBehaviour
         {
             isAfter = true;//乗っ取りました
             isAIEnemy = false;//乗り移っている
+            fStartTime = Time.timeSinceLevelLoad;//乗りうつり始めた時間を入れる
             agent.SetDestination(transform.position);
         }
         else
@@ -141,19 +162,19 @@ public class EnemyManager : MonoBehaviour
         {
             switch (Mode)
             {
-                case mode.Wander://徘徊
+                case eMode.Wander://徘徊
                     WanderingAround();
                     break;
-                case mode.Attack://攻撃
+                case eMode.Attack://攻撃
                     Attacking();
                     break;
-                case mode.Vigilance://警戒
+                case eMode.Vigilance://警戒
                     WatchOut();
                     break;
-                case mode.Pursuit://追跡
+                case eMode.Pursuit://追跡
                     Chase();
                     break;
-                case mode.Aid://援護
+                case eMode.Aid://援護
                     Assistance();
                     break;
 
@@ -168,7 +189,7 @@ public class EnemyManager : MonoBehaviour
         if (/*lTarget.Count > 0*/foundObj.tag == "Player")
         {
             fNowTime = 0.0f;
-            Mode = mode.Vigilance;//警戒モードに移行
+            Mode = eMode.Vigilance;//警戒モードに移行
             Debug.Log("HIt");
         }
     }
@@ -179,7 +200,7 @@ public class EnemyManager : MonoBehaviour
 
         if (lTarget.Count == 0)
         {
-            //Mode = mode.Wander;
+            //Mode = eMode.Wander;
         }
     }
 
@@ -190,18 +211,32 @@ public class EnemyManager : MonoBehaviour
 
     void HPController()//HPの制御
     {
+
+
         if (isAIEnemy == true && EnemyHP <= 0)//体力がなくなったら
         {
-            //gameObject.transform.DetachChildren();//親子関係を消して
             Destroy(transform.root.gameObject);//消す
         }
-
-        if (isAIEnemy == false && PlayerHP <= 0)
+        else if (TimeActive(isAIEnemy) || isAIEnemy == false && PlayerHP <= 0)
         {
-           // Debug.Log("死にました");
+            Debug.Log("死にました");
         }
 
     }
+
+    bool TimeActive(bool palyer)//乗りうつって居られる時間の計算
+    {
+        if (palyer)
+        {
+            fActiveTime = Time.timeSinceLevelLoad - fStartTime;
+            if (fActiveTime > fMaxActiveTime)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     void WanderingAround()//徘徊モード
     {
@@ -248,7 +283,7 @@ public class EnemyManager : MonoBehaviour
         if (Target == null)//範囲内にプレイヤーがいなければ
         {
             fNowTime = 0.0f;//経過時間をリセット
-            Mode = mode.Vigilance;//警戒モードに移行
+            Mode = eMode.Vigilance;//警戒モードに移行
 
             return;
         }
@@ -265,7 +300,7 @@ public class EnemyManager : MonoBehaviour
             fAttackTime = 0.0f;
             isAttack = true;
             agent.SetDestination(transform.position);
-            Mode = mode.Attack;//戦闘態勢に移行
+            Mode = eMode.Attack;//戦闘態勢に移行
         }
 
 
@@ -280,14 +315,14 @@ public class EnemyManager : MonoBehaviour
 
         if (fNowTime > fTimeOut)//警戒時間がある一定になったら
         {
-            Mode = mode.Wander;//徘徊モードに移行
+            Mode = eMode.Wander;//徘徊モードに移行
         }
 
         for (int i = 0; i < lTarget.Count; i++)//索敵内にプレイヤーがいるかチェック
         {
             if (lTarget[i] != null && lTarget[i].tag == "Player")//いたら
             {
-                Mode = mode.Pursuit;//追跡モードに移行
+                Mode = eMode.Pursuit;//追跡モードに移行
                 break;
             }
         }
@@ -324,6 +359,15 @@ public class EnemyManager : MonoBehaviour
         if (isAttack == true)
         {
             Debug.Log("攻撃した");
+            p_Animator.SetBool("isAttack", true);
+            switch (AttackType)
+            {
+                case eAttackType.Gun:
+                    GunShot(1);
+                    break;
+                case eAttackType.Sword:
+                    break;
+            }
             CollHelp();//援護を呼ぶ
             isAttack = false;
         }
@@ -332,9 +376,18 @@ public class EnemyManager : MonoBehaviour
         if (fAttackTime > 2.0f)
         {
             TargetInit();
-            Mode = mode.Pursuit;//追跡モードに移行する
+            Mode = eMode.Pursuit;//追跡モードに移行する
         }
 
+    }
+
+    void GunShot(int ShotCount)
+    {
+        while (true)
+        {
+            p_GunStatus.isEnemyShot = true;
+            break;
+        }
     }
 
     void TargetInit()//次の目的地を選ぶ　
@@ -349,6 +402,8 @@ public class EnemyManager : MonoBehaviour
                 break;
             }
         }
+
+
     }
 
     void CollHelp()//援護を呼ぶ
@@ -360,10 +415,10 @@ public class EnemyManager : MonoBehaviour
 
             if (enemy != null)
             {
-                if (enemy.Mode == mode.Wander)
+                if (enemy.Mode == eMode.Wander)
                 {
                     enemy.GetAidPos(transform.position);
-                    enemy.Mode = mode.Aid;//援護モードに移行
+                    enemy.Mode = eMode.Aid;//援護モードに移行
                     Debug.Log("援護を呼んだ");
                 }
             }
@@ -383,7 +438,7 @@ public class EnemyManager : MonoBehaviour
             {
                 AidTarget = new Vector3(0, 0, 0);
                 fNowTime = 0.0f;
-                Mode = mode.Vigilance;//警戒モード移行
+                Mode = eMode.Vigilance;//警戒モード移行
             }
         }
 
@@ -393,4 +448,31 @@ public class EnemyManager : MonoBehaviour
     {
         AidTarget = pos;
     }
+
+    void AnimatorUpdate()//アニメーションの切り替え
+    {
+        switch (Mode)
+        {
+            case EnemyManager.eMode.Wander://徘徊モード
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case EnemyManager.eMode.Attack://戦闘モード
+                p_Animator.SetBool("isWalk", false);
+                p_Animator.SetBool("isWarning", false);
+                break;
+            case EnemyManager.eMode.Vigilance://警戒モード
+                p_Animator.SetBool("isWalk", false);
+                p_Animator.SetBool("isWarning", true);
+                break;
+            case EnemyManager.eMode.Pursuit://追跡モード
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case EnemyManager.eMode.Aid://援護モード
+                p_Animator.SetBool("isWalk", true);
+
+                break;
+        }
+    }
+
+
 }

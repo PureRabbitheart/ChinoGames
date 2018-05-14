@@ -17,12 +17,14 @@ public class Radar : MonoBehaviour
     private Image[] TargetImage;
     [SerializeField]
     private List<string> EnemyTag;
-
+    [SerializeField]
+    private GameObject canvas;
 
     private Animator[] p_Animator;
     private RaycastHit hit;
     private bool isBadActive;
     private int ActiveMarker;
+    private Vector3 baseScale;
 
     void Awake()
     {
@@ -31,6 +33,7 @@ public class Radar : MonoBehaviour
 
     void Start()
     {
+        baseScale = TargetImage[0].transform.parent.localScale / MarkerScale(canvas.transform.position);
         for (int i = 0; i < TargetImage.Length; i++)
         {
             p_Animator[i] = TargetImage[i].GetComponent<Animator>();
@@ -85,6 +88,8 @@ public class Radar : MonoBehaviour
             TargetImage[num].enabled = true;
             Debug.DrawLine(hit.point, Camera.transform.position);
             TargetImage[num].rectTransform.position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+            TargetImage[num].transform.parent.localScale = baseScale * MarkerScale(hit.transform.position);
+            //スケールもここで変える
         }
         else
         {
@@ -93,6 +98,12 @@ public class Radar : MonoBehaviour
 
             StartCoroutine(DelayMethod(0.2f, num));
         }
+    }
+
+
+    float MarkerScale(Vector3 target)
+    {
+        return (target - Camera.transform.position).magnitude;
     }
 
     private IEnumerator DelayMethod(float waitTime, int num)

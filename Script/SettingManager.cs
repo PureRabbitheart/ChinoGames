@@ -60,7 +60,7 @@ public class SettingManager : MonoBehaviour
         p_StreamWriter.Close();
     }
 
-    public void SettingSave()
+    public void SettingSave()//書き込み
     {
         StreamWriter p_StreamWriter = new StreamWriter(Application.dataPath + "/Resources/Setting.csv", false, Encoding.UTF8);//第一引数path、第二引数追記するか最初からやるか
         for (int i = 0; i < SettingList.Count; i++)

@@ -5,10 +5,18 @@ using UnityEngine;
 public class charctor : MonoBehaviour
 {
     public float fSpeed;
+
+    enum _test
+    {
+        t,
+        b,
+    }
+    _test Test;
+
     // Use this for initialization
     void Start()
     {
-
+       // _test = 
     }
 
     // Update is called once per frame

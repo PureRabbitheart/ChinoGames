@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -203,6 +203,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1931244197}
   - component: {fileID: 1931244196}
+  - component: {fileID: 1931244201}
+  - component: {fileID: 1931244200}
+  - component: {fileID: 1931244199}
+  - component: {fileID: 1931244198}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -259,3 +263,75 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1931244198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931244195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbab63afab243544976c56a4aa5766b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GunShot: {fileID: 0}
+  Reload: {fileID: 0}
+  Source: {fileID: 0}
+  MouseLookCamera: {fileID: 0}
+  Flash: {fileID: 0}
+  ReloadAnim: {fileID: 0}
+  HideAnim: {fileID: 0}
+  MuzzleFlash: {fileID: 0}
+  exploder: {fileID: 0}
+--- !u!114 &1931244199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931244195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcfd6c398df89f14791b0f87ddbf7639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audio: {fileID: 0}
+  shoot: {fileID: 0}
+  FireParticle: {fileID: 0}
+  fireLight: {fileID: 0}
+  delay: 0
+--- !u!114 &1931244200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931244195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbab63afab243544976c56a4aa5766b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GunShot: {fileID: 0}
+  Reload: {fileID: 0}
+  Source: {fileID: 0}
+  MouseLookCamera: {fileID: 0}
+  Flash: {fileID: 0}
+  ReloadAnim: {fileID: 0}
+  HideAnim: {fileID: 0}
+  MuzzleFlash: {fileID: 0}
+  exploder: {fileID: 0}
+--- !u!114 &1931244201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931244195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcfd6c398df89f14791b0f87ddbf7639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audio: {fileID: 0}
+  shoot: {fileID: 0}
+  FireParticle: {fileID: 0}
+  fireLight: {fileID: 0}
+  delay: 0

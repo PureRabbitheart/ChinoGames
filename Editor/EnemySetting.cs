@@ -6,6 +6,9 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Reflection;
+
 
 public class EnemySpawnSetting : EditorWindow
 {
@@ -19,23 +22,36 @@ public class EnemySpawnSetting : EditorWindow
     }
 
     private SpawnResourcesSetting p_SpawnResource;
-    private Vector2 leftScrollPos = Vector2.zero;
+    private EnemyDetails p_EnemyDetails;
+    private Vector2 vScrollPos = Vector2.zero;
+    private Vector2 vLeftScroll = Vector2.zero;
     private List<string[]> SettingList = new List<string[]>();//設定ファイルを読み込んだデータを入れておく
-    private List<bool> TabChange = new List<bool>();
-    private List<bool> PatternTab = new List<bool>();
-    private List<SpawnResourcesSetting.PatternInfo> PatternList = new List<SpawnResourcesSetting.PatternInfo>();
+    private List<bool> TabChange = new List<bool>();//スポーンの設定を拡大縮小するList
+    private List<bool> PatternTab = new List<bool>();//パターンのTabを拡大縮小するList
+    private List<SpawnResourcesSetting.PatternInfo> PatternList = new List<SpawnResourcesSetting.PatternInfo>();//パターンの設定を行うためのList
     private List<string> newName = new List<string>();//新しい名前を保存できるようの変数
+    public List<string[]> PatternChoiceList = new List<string[]>();//パターンの名前を入れるList
+    static Texture2D bannerTex = null;
+
+    private bool isWeb;
 
 
     private void OnGUI()
     {
+
         if (p_SpawnResource == null)
         {
             p_SpawnResource = ScriptableObject.CreateInstance<SpawnResourcesSetting>();
             ListInit();
             SettingList = ResourceLoad(p_SpawnResource.eRoom.ToString());
             TabReset(SettingList.Count);
+            PatternChoiceList = ResourceLoad("Pattern");
 
+        }
+
+        if (p_EnemyDetails == null)
+        {
+            p_EnemyDetails = ScriptableObject.CreateInstance<EnemyDetails>();
         }
 
         using (new GUILayout.HorizontalScope())
@@ -43,12 +59,24 @@ public class EnemySpawnSetting : EditorWindow
             p_SpawnResource.eRoom = (SpawnResourcesSetting.eWORLD)EditorGUILayout.EnumPopup("設定する項目", p_SpawnResource.eRoom);
             if (p_SpawnResource.eRoom != p_SpawnResource.eTmpRoom)
             {
-                if (p_SpawnResource.eRoom != SpawnResourcesSetting.eWORLD.Pattern)
+                if (p_SpawnResource.eTmpRoom == SpawnResourcesSetting.eWORLD.Pattern)//パターンから離れたら
                 {
+                    PatternSave(PatternList);
+                    p_SpawnResource.eTmpRoom = p_SpawnResource.eRoom;
+                    PatternList.Clear();
+                }
+                if (p_SpawnResource.eRoom == SpawnResourcesSetting.eWORLD.Chino)
+                {
+
+                }
+                else if (p_SpawnResource.eRoom != SpawnResourcesSetting.eWORLD.Pattern)
+                {
+                    PatternChoiceList.Clear();
                     ResourceSave(SettingList, p_SpawnResource.eTmpRoom.ToString());
                     p_SpawnResource.eTmpRoom = p_SpawnResource.eRoom;
                     ListInit();
                     SettingList = ResourceLoad(p_SpawnResource.eRoom.ToString());
+                    PatternChoiceList = ResourceLoad("Pattern");
                     TabReset(SettingList.Count);
                 }
                 else if (p_SpawnResource.eRoom == SpawnResourcesSetting.eWORLD.Pattern)//パターンを選んだら
@@ -60,14 +88,7 @@ public class EnemySpawnSetting : EditorWindow
                     PatternListConvert(tempList);
                     TabReset(tempList.Count);
                 }
-                else if (p_SpawnResource.eTmpRoom == SpawnResourcesSetting.eWORLD.Pattern)//パターンから離れたら
-                {
-                    PatternSave(PatternList);
-                    p_SpawnResource.eTmpRoom = p_SpawnResource.eRoom;
-                    ListInit();
-                    SettingList = ResourceLoad(p_SpawnResource.eRoom.ToString());
-                    TabReset(SettingList.Count);
-                }
+
             }
         }
         EditorGUILayout.Separator();
@@ -77,10 +98,17 @@ public class EnemySpawnSetting : EditorWindow
         EditorGUILayout.Separator();
         EditorGUILayout.LabelField("ようこそ！　Unityエディタ拡張の沼へ！");
 
+
+
+
+
         switch (p_SpawnResource.eRoom)
         {
             case SpawnResourcesSetting.eWORLD.Pattern:
                 PatternUpdate();
+                break;
+            case SpawnResourcesSetting.eWORLD.Chino:
+                ChinoUpdate();
                 break;
             default:
                 SpawnUpdate();
@@ -92,7 +120,7 @@ public class EnemySpawnSetting : EditorWindow
         {
             using (new GUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("保存", GUILayout.MinWidth(500.0f), GUILayout.MinHeight(30.0f)))
+                if (GUILayout.Button("ファイル保存", GUILayout.MinWidth(500.0f), GUILayout.MinHeight(30.0f)))
                 {
                     ResourceSave(SettingList, p_SpawnResource.eRoom.ToString());
                 }
@@ -104,8 +132,9 @@ public class EnemySpawnSetting : EditorWindow
                     SettingList.Clear();
                     PatternList.Clear();
                     newName.Clear();
-                    TabReset(SettingList.Count);
+
                     ListInit();
+                    TabReset(SettingList.Count);
                     PatternListInit("New");
 
                 }
@@ -128,7 +157,6 @@ public class EnemySpawnSetting : EditorWindow
         }
         return tmpFile;
     }
-
 
     void ResourceSave(List<string[]> file, string fileName)//データ出力
     {
@@ -158,13 +186,13 @@ public class EnemySpawnSetting : EditorWindow
 
     void ListInit()//リストの初期化
     {
-        string[] line = { "-0" };
+        string[] line = { "-0", "0", "0" };
         SettingList.Add(line);
     }
 
     void PatternUpdate()//パターンのアップデート
     {
-        leftScrollPos = EditorGUILayout.BeginScrollView(leftScrollPos, GUI.skin.box);
+        vScrollPos = EditorGUILayout.BeginScrollView(vScrollPos, GUI.skin.box);
         {
             // スクロール範囲
             for (int i = 0; i < PatternList.Count; i++)
@@ -215,6 +243,9 @@ public class EnemySpawnSetting : EditorWindow
 
         }
         EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.BeginHorizontal(GUI.skin.box);
+
         if (GUILayout.Button("保存", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
         {
             PatternSave(PatternList);//パターンファイルの保存
@@ -241,6 +272,7 @@ public class EnemySpawnSetting : EditorWindow
             }
         }
 
+        EditorGUILayout.EndHorizontal();
 
     }
 
@@ -320,10 +352,10 @@ public class EnemySpawnSetting : EditorWindow
         return 0;
     }
 
-    void SpawnUpdate()
+    void SpawnUpdate()//スポーンの設定のアップデート
     {
 
-        leftScrollPos = EditorGUILayout.BeginScrollView(leftScrollPos, GUI.skin.box);
+        vScrollPos = EditorGUILayout.BeginScrollView(vScrollPos, GUI.skin.box);
         {
             // スクロール範囲
             for (int i = 0; i < SettingList.Count; ++i)
@@ -359,57 +391,110 @@ public class EnemySpawnSetting : EditorWindow
                     }
                     EditorGUILayout.EndHorizontal();
 
-                    SettingList[i][0] = EditorGUILayout.TextField("パターン", SettingList[i][0]);
 
-                    SettingList[i][0] = EditorGUILayout.TextField("出てくる場所", SettingList[i][0]);
+                    EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                    {
+                        EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(Screen.width / 2), GUILayout.Height(100.0f));//パターンのListを出す
+                        {
+                            vLeftScroll = EditorGUILayout.BeginScrollView(vLeftScroll);
+                            {
+                                SettingList[i][1] = PatternChoice(PatternChoiceList, int.Parse(SettingList[i][1])).ToString();
+                            }
+                            EditorGUILayout.EndScrollView();
+                            if (GUILayout.Button("詳細表示"))
+                            {
+                                p_EnemyDetails.Create();
+                                p_EnemyDetails.ReLoad();
+                            }
+                        }
+                        EditorGUILayout.EndVertical();
 
+
+                        EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(Screen.width / 2), GUILayout.Height(100.0f));//パターンのListを出す
+                        {
+                            int name = 0;
+                            switch (p_SpawnResource.eRoom)
+                            {
+                                case SpawnResourcesSetting.eWORLD.A:
+                                    var enumA = (SpawnResourcesSetting.eA_POS)System.Enum.ToObject(typeof(SpawnResourcesSetting.eA_POS), int.Parse(SettingList[i][2]));//intからenumにする
+                                    enumA = (SpawnResourcesSetting.eA_POS)EditorGUILayout.EnumPopup("出現ポイント", enumA);//enumにして
+                                    name = (int)enumA;
+                                    break;
+                                case SpawnResourcesSetting.eWORLD.B:
+                                    var enumB = (SpawnResourcesSetting.eB_POS)System.Enum.ToObject(typeof(SpawnResourcesSetting.eB_POS), int.Parse(SettingList[i][2]));//intからenumにする
+                                    enumB = (SpawnResourcesSetting.eB_POS)EditorGUILayout.EnumPopup("出現ポイント", enumB);//enumにして
+                                    name = (int)enumB;
+                                    break;
+                                case SpawnResourcesSetting.eWORLD.C:
+                                    var enumC = (SpawnResourcesSetting.eC_POS)System.Enum.ToObject(typeof(SpawnResourcesSetting.eC_POS), int.Parse(SettingList[i][2]));//intからenumにする
+                                    enumC = (SpawnResourcesSetting.eC_POS)EditorGUILayout.EnumPopup("出現ポイント", enumC);//enumにして
+                                    name = (int)enumC;
+                                    break;
+                                case SpawnResourcesSetting.eWORLD.D:
+                                    var enumD = (SpawnResourcesSetting.eD_POS)System.Enum.ToObject(typeof(SpawnResourcesSetting.eD_POS), int.Parse(SettingList[i][2]));//intからenumにする
+                                    enumD = (SpawnResourcesSetting.eD_POS)EditorGUILayout.EnumPopup("出現ポイント", enumD);//enumにして
+                                    name = (int)enumD;
+                                    break;
+                            }
+
+
+                            SettingList[i][2] = name.ToString();//enumからstringにする
+                        }
+                        EditorGUILayout.EndVertical();
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
             }
 
         }
         EditorGUILayout.EndScrollView();
 
-        if (GUILayout.Button("ソート", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
+        EditorGUILayout.BeginHorizontal(GUI.skin.box);
         {
-
-            for (int start = 1; start < SettingList.Count; start++)
+            if (GUILayout.Button("ソート", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
             {
-                for (int end = SettingList.Count - 1; end >= start; end--)
+
+                for (int start = 1; start < SettingList.Count; start++)
                 {
-                    if (float.Parse(SettingList[end - 1][0]) > float.Parse(SettingList[end][0]))
+                    for (int end = SettingList.Count - 1; end >= start; end--)
                     {
-                        string[] tmp = SettingList[end - 1];
-                        SettingList[end - 1] = SettingList[end];
-                        SettingList[end] = tmp;
+                        if (float.Parse(SettingList[end - 1][0]) > float.Parse(SettingList[end][0]))
+                        {
+                            string[] tmp = SettingList[end - 1];
+                            SettingList[end - 1] = SettingList[end];
+                            SettingList[end] = tmp;
+                        }
                     }
                 }
+
+                ResourceSave(SettingList, p_SpawnResource.eTmpRoom.ToString());
+                ListInit();
+                SettingList = ResourceLoad(p_SpawnResource.eRoom.ToString());
+
             }
 
-            ResourceSave(SettingList, p_SpawnResource.eTmpRoom.ToString());
-            ListInit();
-            SettingList = ResourceLoad(p_SpawnResource.eRoom.ToString());
-
-        }
-
-        if (GUILayout.Button("追加", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
-        {
-            string[] tmp = { "0" };
-            SettingList.Add(tmp);
-            TabChange.Add(false);
-        }
-
-        if (GUILayout.Button("最後から１つ消す", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
-        {
-            if (SettingList.Count - 1 > 0)
+            if (GUILayout.Button("追加", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
             {
-                SettingList.RemoveAt(SettingList.Count - 1);
-                TabChange.RemoveAt(SettingList.Count - 1);
+                string[] tmp = { "0", "0", "0" };
+                SettingList.Add(tmp);
+                TabChange.Add(false);
             }
-            else
+
+            if (GUILayout.Button("最後から１つ消す", GUILayout.MinWidth(300.0f), GUILayout.MinHeight(30.0f)))
             {
-                Debug.Log("これ以上消せません");
+                if (SettingList.Count - 1 > 0)
+                {
+                    SettingList.RemoveAt(SettingList.Count - 1);
+                    TabChange.RemoveAt(SettingList.Count - 1);
+                }
+                else
+                {
+                    Debug.Log("これ以上消せません");
+                }
             }
         }
+        EditorGUILayout.EndHorizontal();
+
     }
 
     void TimeFluctuation(ref string Timer, float Difference)
@@ -419,28 +504,133 @@ public class EnemySpawnSetting : EditorWindow
         Timer = value.ToString();
     }
 
+    public int PatternChoice(List<string[]> textList, int index)//パターンの選んでいるものを返す
+    {
+        for (int i = 0; i < textList.Count; ++i)
+        {
+            bool flg = GUILayout.Toggle(index == i, textList[i][0]);
 
+            if (flg == true)
+            {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    void ChinoUpdate()
+    {
+        if (bannerTex == null)
+            bannerTex = Resources.Load<Texture2D>("kasima");
+
+        GUILayout.Space(3);
+        var rect = GUILayoutUtility.GetRect(0, int.MaxValue, 30, 30);
+        EditorGUI.DrawPreviewTexture(rect, bannerTex, null, ScaleMode.ScaleAndCrop);
+
+        if (isWeb == false)
+        {
+            Web();
+            isWeb = true;
+        }
+    }
+
+    void Web()
+    {
+        string YoutubeURL = "https://youtu.be/h4tlNlbuIm0";
+        string typeName = "UnityEditor.Web.WebViewEditorWindowTabs";
+        Type type = Assembly.Load("UnityEditor.dll").GetType(typeName);
+
+        BindingFlags Flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+        var methodInfo = type.GetMethod("Create", Flags);
+        methodInfo = methodInfo.MakeGenericMethod(type);
+
+        methodInfo.Invoke(null, new object[] { "WebView", YoutubeURL, 200, 530, 800, 600 });
+
+
+    }
 }
 
 
-//public class ConfirmationWindow : EditorWindow
-//{
+public class EnemyDetails : EditorWindow
+{
 
-//    private void OnGUI()
-//    {
-//        EditorGUILayout.LabelField("ようこそ！　Unityエディタ拡張の沼へ！");
-//        using (new GUILayout.HorizontalScope())
-//        {
+    public void Create()
+    {
+        // 生成
+        var window = GetWindow<EnemyDetails>("PatternList");
+        window.minSize = new Vector2(1280, 640);
 
-//            if (GUILayout.Button("キャンセル"))
-//            {
-//                ScriptableObject.CreateInstance<EnemySpawnSetting>().isWindowDes = "false";
-//            }
-//            if (GUILayout.Button("OK"))
-//            {
-//                ScriptableObject.CreateInstance<EnemySpawnSetting>().isWindowDes = "true";
-//            }
+    }
 
-//        }
-//    }
-//}
+
+    private List<bool> TabChange = new List<bool>();
+    private List<string[]> EnemyList = new List<string[]>();
+    private SpawnResourcesSetting p_SpawnResourcesSetting;
+    private Vector2 vScrollPos = Vector2.zero;
+
+
+    private void OnGUI()
+    {
+        if (p_SpawnResourcesSetting == null)
+        {
+            p_SpawnResourcesSetting = ScriptableObject.CreateInstance<SpawnResourcesSetting>();
+
+            ReLoad();
+        }
+
+        EditorGUILayout.LabelField("敵のパターンリストです");
+        vScrollPos = EditorGUILayout.BeginScrollView(vScrollPos, GUI.skin.box);
+        {
+            for (int i = 0; i < EnemyList.Count; i++)
+            {
+                TabChange[i] = EditorGUILayout.Foldout(TabChange[i], EnemyList[i][0]);
+                if (TabChange[i] == true)
+                {
+                    for (int m = 1; m < EnemyList[i].Length; m++)
+                    {
+
+                        var enmVal = (SpawnResourcesSetting.eTYPE)System.Enum.ToObject(typeof(SpawnResourcesSetting.eTYPE), int.Parse(EnemyList[i][m]));//intからenumにする
+                        var Name = System.Enum.GetName(typeof(SpawnResourcesSetting.eTYPE), enmVal);//enumからstringにする
+                        EditorGUILayout.LabelField(Name);
+                    }
+                }
+            }
+        }
+        EditorGUILayout.EndScrollView();
+
+        //p_EnemySpawnSetting.PatternChoiceList[0];
+
+    }
+
+    public void ReLoad()
+    {
+        EnemyList.Clear();
+        EnemyList = ResourceLoad("Pattern");
+        TabReset(EnemyList.Count);
+    }
+
+    List<string[]> ResourceLoad(string FileName)//データの読み込み
+    {
+
+        List<string[]> tmpFile = new List<string[]>();
+        TextAsset CSVFile = Resources.Load(FileName) as TextAsset; /* Resouces/CSV下のCSV読み込み */
+        StringReader reader = new StringReader(CSVFile.text);
+
+        while (reader.Peek() > -1)
+        {
+            string line = reader.ReadLine();
+            tmpFile.Add(line.Split(',')); // リストに入れる
+        }
+        return tmpFile;
+    }
+
+    void TabReset(int count)
+    {
+        TabChange.Clear();
+        for (int i = 0; i < count; i++)
+        {
+            TabChange.Add(false);
+        }
+        Debug.Log(TabChange.Count);
+    }
+}

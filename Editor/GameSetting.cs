@@ -4,7 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Text;
-
+using System;
+using System.Reflection;
 
 public class GameSetting
 {

@@ -8,11 +8,11 @@ public class EffectManager : MonoBehaviour
     [SerializeField]
     private float fDestroyTime;
 
-
     [SerializeField]
     private ParticleSystem[] Psys;
 
     private bool isTime;
+
 
     void Start()
     {
@@ -25,8 +25,8 @@ public class EffectManager : MonoBehaviour
         {
             isTime = false;
         }
-
     }
+
 
     void Update()
     {
@@ -34,8 +34,5 @@ public class EffectManager : MonoBehaviour
         {
             Destroy(gameObject, fDestroyTime);
         }
-    }
-
-    
-    
+    }      
 }

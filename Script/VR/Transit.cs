@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Transit : MonoBehaviour
 {
+
     private int NowCount = 0;//索敵範囲の半径のカウントを数える
-    private float fTime = 0.5f;//乗り移るときの移動時間
+    private float fTime = 0.1f;//乗り移るときの移動時間
     private float startTime;//開始時間
     private bool isMoveAction;//乗り移っている状況
     private bool isAction;
-    private Vector3 tEndPos;//ゴール
     private Vector3 startPosition;//開始地点
+    private Vector3 tEndPos;//ゴール
     private GameObject Soul;//乗り移る先
     private LineRenderer laser;
     private RaycastHit hit;
 
+    [SerializeField]
+    private GameObject[] System = new GameObject[2];//索敵範囲
     [SerializeField]
     private GameObject Sphere;//索敵範囲
     [SerializeField]
@@ -24,24 +28,26 @@ public class Transit : MonoBehaviour
     [SerializeField]
     private int MaxCount;//最大半径
     [SerializeField]
-    private LayerMask mask;
+    private LayerMask EnemyMask;
     [SerializeField]
     private LayerMask FloorMask;
-    [SerializeField]
-    private Image p_Image;
-    [SerializeField]
-    private Sonar p_Sonar;
+   
 
-
+    //private GameObject system;
 
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
+
+        ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
+        ps.GetComponent<Renderer>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
         Sphere.transform.position = transform.position;
         if (isAction == false)
         {
@@ -61,16 +67,15 @@ public class Transit : MonoBehaviour
 
             if (OVRInput.GetUp(OVRInput.RawButton.A) && Soul != null && isMoveAction == false)
             {
-                if (p_Image != null)
-                {
-                    p_Image.color = new Vector4(255, 255, 255, 100);
-                }
+                ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
+                ps.GetComponent<Renderer>().enabled = true;
+
                 isAction = true;
                 Invoke("ChangeSouls", 0.2f);//もし触れているなら魂を変える
             }
 
-        }
 
+        }
 
 
         if (isMoveAction == true)
@@ -78,8 +83,11 @@ public class Transit : MonoBehaviour
             MoveAction();
         }
 
+        System[0].transform.position = Camera.transform.position;
 
     }
+
+
 
     //触れているオブジェクトの判定
     Collider[] HitJudge()
@@ -107,32 +115,35 @@ public class Transit : MonoBehaviour
         transform.root.Find("Model").gameObject.SetActive(true);//取り付いていた敵のモデルを出す
         transform.root.Find("VRModel").gameObject.SetActive(false);//取り付いていた自分用のモデルを消す
 
+    
 
         Camera.transform.parent = Soul.transform.root;//親子関係の移動
-        //Camera.transform.position = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 0.6f, Soul.transform.root.position.z);//カメラの移動
+                                                      //Camera.transform.position = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 0.6f, Soul.transform.root.position.z);//カメラの移動
 
         startTime = Time.timeSinceLevelLoad;
         startPosition = transform.position;
+
         Vector3 vTmpPos = Soul.transform.position;
-        Ray ray = new Ray(Soul.transform.position, -transform.up);//下に向かってレイを飛ばす
+        Ray ray = new Ray(Soul.transform.position, new Vector3(0, -1, 0));//下に向かってレイを飛ばす
         Debug.DrawRay(ray.origin, ray.direction * 40, Color.black);
         RaycastHit HitFloor;
         if (Physics.Raycast(ray, out HitFloor, 40.0f, FloorMask))//手からレイを飛ばす
         {
             tEndPos = new Vector3(Soul.transform.position.x, HitFloor.point.y + ((Soul.transform.localScale.y - 1) * 2), Soul.transform.position.z);
         }
+
+
         isMoveAction = true;
-        Debug.Log(tEndPos.y);
 
     }
 
     //右手から出るRayの処理
     void RayHit(Collider[] hitEnemy)
     {
-        Ray ray = new Ray(transform.position, -transform.right);
+        Ray ray = new Ray(transform.position, transform.right);
         Debug.DrawRay(ray.origin, ray.direction * 40, Color.black);
 
-        if (Physics.Raycast(ray, out hit, 40.0f, mask))//手からレイを飛ばす
+        if (Physics.Raycast(ray, out hit, 40.0f, EnemyMask))//手からレイを飛ばす
         {
             for (int i = 0; i < hitEnemy.Length; i++)//円に触れているオブジェクト分
             {
@@ -141,6 +152,8 @@ public class Transit : MonoBehaviour
                     laser.SetPosition(0, ray.origin);//始点
                     laser.SetPosition(1, hit.point);//終点
                     Soul = hit.transform.gameObject;
+                    System[1].transform.position = hit.transform.position;
+
                 }
             }
         }
@@ -163,7 +176,6 @@ public class Transit : MonoBehaviour
         }
         else if (Camera.transform.position == tEndPos)
         {
-            Camera.transform.position = tEndPos;
             Arrival();//最終地点についたら
         }
 
@@ -178,22 +190,19 @@ public class Transit : MonoBehaviour
     void Arrival()//到着後の処理
     {
         isMoveAction = false;
-        isAction = false;
 
         Quaternion setQuat = new Quaternion();
         setQuat.eulerAngles = new Vector3(0, hit.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
         Camera.transform.rotation = setQuat;//回転を代入
 
-        hit.transform.root.Find("Model").gameObject.SetActive(false);//敵を消す
+        hit.transform.gameObject.SetActive(false);//敵を消す
         hit.transform.root.Find("VRModel").gameObject.SetActive(true);//自分用の敵を出す
 
-        if (p_Sonar != null)
-        {
-            p_Sonar.isPlay = true;
-        }
-        if (p_Image != null)
-        {
-            p_Image.color = new Vector4(255, 255, 255, 0);
-        }
+
+
+
+
+        ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
+        ps.GetComponent<Renderer>().enabled = false;
     }
 }

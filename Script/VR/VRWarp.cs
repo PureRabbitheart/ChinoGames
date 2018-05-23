@@ -12,7 +12,7 @@ public class VRWarp : MonoBehaviour
     private float Gravity = 9.81f;//重力
 
     [SerializeField]
-    private TrailRenderer p_TrailRenderer;
+    private LineRenderer p_LineRenderer;
     [SerializeField]
     private Animator p_Animator;
     [SerializeField]
@@ -59,9 +59,9 @@ public class VRWarp : MonoBehaviour
             if (isMove == true && stickR.x <= 0.03f && stickR.x >= -0.03f && stickR.y <= 0.03f && stickR.y >= -0.03f)//アナログスティックをいじっていなくて移動になったら
             {
 
-                if (p_TrailRenderer != null)
+                if (p_LineRenderer != null)
                 {
-                    p_TrailRenderer.enabled = true;
+                    p_LineRenderer.enabled = true;
                 }
                 isMove = false;//移動をストップ
                 transform.root.position = new Vector3(targetMarker.transform.position.x, targetMarker.transform.position.y + fHeight, targetMarker.transform.position.z);//座標を代入
@@ -95,9 +95,9 @@ public class VRWarp : MonoBehaviour
 
     void OFF()
     {
-        if (p_TrailRenderer != null)
+        if (p_LineRenderer != null)
         {
-            p_TrailRenderer.enabled = false;
+            p_LineRenderer.enabled = false;
         }
     }
 

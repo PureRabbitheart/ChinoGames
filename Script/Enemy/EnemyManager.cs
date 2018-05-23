@@ -68,16 +68,16 @@ public class EnemyManager : MonoBehaviour
     {
         if (isAIEnemy == true)
         {
-            if (other.tag == "Sonar" && SkinMeshModel != null)
-            {
-                foreach (Transform child in SkinMeshModel.transform)
-                {
-                    if (child.GetComponent<Renderer>())
-                    {
-                        child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 1, 0));
-                    }
-                }
-            }
+            //if (other.tag == "Sonar" && SkinMeshModel != null)
+            //{
+            //    foreach (Transform child in SkinMeshModel.transform)
+            //    {
+            //        if (child.GetComponent<Renderer>())
+            //        {
+            //            child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 1, 0));
+            //        }
+            //    }
+            //}
         }
         else
         {
@@ -91,16 +91,16 @@ public class EnemyManager : MonoBehaviour
     {
         if (isAIEnemy == true)
         {
-            if (other.tag == "Sonar" && SkinMeshModel != null)
-            {
-                foreach (Transform child in SkinMeshModel.transform)
-                {
-                    if (child.GetComponent<Renderer>())
-                    {
-                        child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
-                    }
-                }
-            }
+            //if (other.tag == "Sonar" && SkinMeshModel != null)
+            //{
+            //    foreach (Transform child in SkinMeshModel.transform)
+            //    {
+            //        if (child.GetComponent<Renderer>())
+            //        {
+            //            child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
+            //        }
+            //    }
+            //}
         }
         else
         {
@@ -134,6 +134,7 @@ public class EnemyManager : MonoBehaviour
         TakeOverControl();//乗り移っているかAI制御か判断する
         EnemyControl();//敵の制御
         HPController();//死亡判定
+        AnimatorUpdate();//アニメーション判定
     }
 
     void TakeOverControl()//乗っ取られているか
@@ -356,39 +357,24 @@ public class EnemyManager : MonoBehaviour
 
     void Attacking()//攻撃モード
     {
-        if (isAttack == true)
-        {
-            Debug.Log("攻撃した");
-            p_Animator.SetBool("isAttack", true);
-            switch (AttackType)
-            {
-                case eAttackType.Gun:
-                    GunShot(1);
-                    break;
-                case eAttackType.Sword:
-                    break;
-            }
-            CollHelp();//援護を呼ぶ
-            isAttack = false;
-        }
+        //if (isAttack == true)
+        //{
+        //    Debug.Log("攻撃した");
+        //    p_Animator.SetBool("isAttack", true);
+        //    CollHelp();//援護を呼ぶ
+        //    isAttack = false;
+        //}
 
-        fAttackTime += Time.deltaTime;
-        if (fAttackTime > 2.0f)
-        {
-            TargetInit();
-            Mode = eMode.Pursuit;//追跡モードに移行する
-        }
-
+        //fAttackTime += Time.deltaTime;
+        //if (fAttackTime > 2.0f)
+        //{
+        //    TargetInit();
+        //    Mode = eMode.Pursuit;//追跡モードに移行する
+        //}
+        Debug.Log("戦闘モード");
     }
 
-    void GunShot(int ShotCount)
-    {
-        while (true)
-        {
-            p_GunStatus.isEnemyShot = true;
-            break;
-        }
-    }
+
 
     void TargetInit()//次の目的地を選ぶ　
     {
@@ -457,6 +443,7 @@ public class EnemyManager : MonoBehaviour
                 p_Animator.SetBool("isWalk", true);
                 break;
             case EnemyManager.eMode.Attack://戦闘モード
+                p_Animator.SetBool("isAttack", true);
                 p_Animator.SetBool("isWalk", false);
                 p_Animator.SetBool("isWarning", false);
                 break;
@@ -474,5 +461,18 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void GunShot()//敵の玉を打つ処理
+    {
+        p_GunStatus.isEnemyShot = true;
+    }
 
+    public void AttackEnd()//攻撃終了の合図
+    {
+        TargetInit();
+        Mode = eMode.Pursuit;//追跡モードに移行する
+    }
+    public void HelpCall()//仲間を呼ぶ
+    {
+        CollHelp();//援護を呼ぶ
+    }
 }

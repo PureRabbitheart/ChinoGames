@@ -44,7 +44,7 @@ public class SpawnResourcesSetting : ScriptableObject
     {
         ボス,
         雑魚,
-
+        ドローン,
     }
 
     public struct PatternInfo

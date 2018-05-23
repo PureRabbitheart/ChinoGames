@@ -67,7 +67,6 @@ public class FlightWarp : MonoBehaviour
             transform.root.position = tEndPos;
             WarpPos = null;
             isMovingWarp = false;
-
         }
         else if (transform.root.position == tEndPos)
         {

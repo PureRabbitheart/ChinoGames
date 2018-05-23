@@ -8,7 +8,6 @@ public class TransferDevice : MonoBehaviour
     [SerializeField]
     private GameObject[] gPort = new GameObject[2];
 
-
     void Awake()
     {
 

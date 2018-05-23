@@ -12,18 +12,21 @@ public class ChildrenTransferDevice : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("イリュージョン");
         fNowTime = 0.0f;
     }
 
     void OnTriggerStay(Collider other)
     {
-        fNowTime += Time.deltaTime;
-        if (fNowTime > 5)
+        if(other.tag == "Player")
         {
-            other.transform.root.position = p_TransferDevice.NextPos(transform.name);
-            fNowTime = 0.0f;
+            fNowTime += Time.deltaTime;
+            if (fNowTime > 5.0f)
+            {
+                other.transform.root.position = p_TransferDevice.NextPos(transform.name);
+                fNowTime = 0.0f;
+            }
         }
+       
     }
 
     void OnTriggerExit(Collider other)

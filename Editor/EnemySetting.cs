@@ -360,7 +360,7 @@ public class EnemySpawnSetting : EditorWindow
             // スクロール範囲
             for (int i = 0; i < SettingList.Count; ++i)
             {
-                TabChange[i] = EditorGUILayout.Foldout(TabChange[i], SettingList[i][0]);
+                TabChange[i] = EditorGUILayout.Foldout(TabChange[i], "Timer　" + SettingList[i][0]);
                 if (TabChange[i] == true)
                 {
 

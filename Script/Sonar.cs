@@ -63,20 +63,20 @@ public class Sonar : MonoBehaviour
 
     void Update()
     {
-        if(isButton)
-        {
-            if (OVRInput.GetDown(OVRInput.RawButton.A))
-            {
-                StartSonarRing(transform.position, 3.0f);
-            }
+        //if(isButton)
+        //{
+        //    if (OVRInput.GetDown(OVRInput.RawButton.A))
+        //    {
+        //        StartSonarRing(transform.position, 3.0f);
+        //    }
 
-            if(isPlay == true)
-            {
-                isPlay = false;
-                StartSonarRing(transform.position, 8.0f);
+        //    if(isPlay == true)
+        //    {
+        //        isPlay = false;
+        //        StartSonarRing(transform.position, 8.0f);
 
-            }
-        }
+        //    }
+        //}
     }
 
 }

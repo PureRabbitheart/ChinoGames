@@ -27,17 +27,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> EnemyList = new List<GameObject>();//敵の情報を管理するリスト
     [SerializeField]
-    private List<GameObject> A_PosList = new List<GameObject>();//敵の出現パターンリスト
+    private List<GameObject> A_PosList = new List<GameObject>();//敵の場所リスト
     [SerializeField]
-    private List<GameObject> B_PosList = new List<GameObject>();//敵の出現パターンリスト
+    private List<GameObject> B_PosList = new List<GameObject>();//敵の場所リスト
     [SerializeField]
-    private List<GameObject> C_PosList = new List<GameObject>();//敵の出現パターンリスト
+    private List<GameObject> C_PosList = new List<GameObject>();//敵の場所リスト
     [SerializeField]
-    private List<GameObject> D_PosList = new List<GameObject>();//敵の出現パターンリスト
+    private List<GameObject> D_PosList = new List<GameObject>();//敵の場所リスト
 
     private List<string[]> PatternList = new List<string[]>();//敵の出現パターンリスト
     private int[] CreateCount = { 0, 0, 0, 0 };
-    private float fNowTime = 0.0f;
+    private float[] fNowTime = { 0.0f, 0.0f, 0.0f, 0.0f };
 
     void Awake()
     {
@@ -52,22 +52,49 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        EnemyCreate(0);
-        Debug.Log(CreateCount[0]);
+
     }
 
-    void EnemyCreate(int count)//敵の生成プログラム
+    public void AreaUpdate(char posName)
     {
-        fNowTime += Time.deltaTime;
+        switch (posName)
+        {
+            case 'A':
+                EnemyCreate(A_ManagerList, A_PosList, 0);
+                break;
+            case 'B':
+                EnemyCreate(A_ManagerList, A_PosList, 0);
+                break;
+            case 'C':
+                EnemyCreate(A_ManagerList, A_PosList, 0);
+                break;
+            case 'D':
+                EnemyCreate(A_ManagerList, A_PosList, 0);
+                break;
+        }
 
-        if (fNowTime > float.Parse(A_ManagerList[CreateCount[count]][0]))//時間になったら
+    }
+
+    public void AreaReset(int count)
+    {
+        CreateCount[count] = 0;
+        fNowTime[count] = 0.0f;
+    }
+
+
+    void EnemyCreate(List<string[]> managerList, List<GameObject> posList, int count)//敵の生成プログラム  引数…ManagerList,position,count
+    {
+        fNowTime[count] += Time.deltaTime;
+        if (managerList.Count > CreateCount[0] && fNowTime[count] > float.Parse(managerList[CreateCount[count]][0]))//時間になったら
         {
 
-            int PatternNum = int.Parse(A_ManagerList[CreateCount[count]][1]);//どのパターンか調べる
-            for (int i = 1; i < PatternList[PatternNum][0].Length; i++)//そのパターンがどのくらいの敵を出すのか調べる
+            int PatternNum = int.Parse(managerList[CreateCount[count]][1]);//どのパターンか調べる
+
+            for (int i = 1; i < PatternList[PatternNum].Length; i++)//そのパターンがどのくらいの敵を出すのか調べる
             {
                 int EnemyNum = int.Parse(PatternList[PatternNum][i]);//どの敵を出すかを識別
-                Instantiate(EnemyList[EnemyNum], transform.position, Quaternion.identity);//生成
+
+                Instantiate(EnemyList[EnemyNum], posList[int.Parse(managerList[PatternNum][2])].transform.position, Quaternion.identity);//生成
             }
             CreateCount[count]++;
 
@@ -119,11 +146,11 @@ public class GameManager : MonoBehaviour
             if (p_GameManager == null)
             {
                 p_GameManager = target as GameManager;
-                //ResetList(ref p_GameManager.EnemyList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eTYPE)).Length);
-                //ResetList(ref p_GameManager.A_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eA_POS)).Length);
-                //ResetList(ref p_GameManager.B_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eB_POS)).Length);
-                //ResetList(ref p_GameManager.C_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eC_POS)).Length);
-                //ResetList(ref p_GameManager.D_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eD_POS)).Length);
+                ListAdd(ref p_GameManager.EnemyList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eTYPE)).Length);
+                ListAdd(ref p_GameManager.A_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eA_POS)).Length);
+                ListAdd(ref p_GameManager.B_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eB_POS)).Length);
+                ListAdd(ref p_GameManager.C_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eC_POS)).Length);
+                ListAdd(ref p_GameManager.D_PosList, System.Enum.GetNames(typeof(SpawnResourcesSetting.eD_POS)).Length);
             }
 
             p_GameManager.EnemyFile[0] = EditorGUILayout.ObjectField("Aの場所のレベルデータ", p_GameManager.EnemyFile[0], typeof(TextAsset), true) as TextAsset;
@@ -215,6 +242,14 @@ public class GameManager : MonoBehaviour
         {
             list.Clear();
             for (int i = 0; i < count; i++)
+            {
+                list.Add(null);
+            }
+        }
+
+        void ListAdd(ref List<GameObject> list, int count)
+        {
+            for (int i = list.Count; i < count; i++)
             {
                 list.Add(null);
             }

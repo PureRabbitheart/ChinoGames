@@ -23,21 +23,19 @@ public class Grab : MonoBehaviour
     [SerializeField]
     private string having_TagName;// 持った時のTagを指定
 
-    //private enum Trigger
-    //{
-    //    LTrigger,
-    //    RTrigger
-    //}
-    //[SerializeField]
-    //private Trigger trigger;
+    [SerializeField]
+    private GameObject HandTransform;
 
-
+    public Quaternion vRote;
+    public Vector3 test;
 
     void Start()
     {
         grabbing = false;
-
+        vRote = transform.rotation;
     }
+
+
 
     void GrabObject()// 握っているとき
     {
@@ -90,6 +88,9 @@ public class Grab : MonoBehaviour
 
     void Update()// 持つオブジェクトの処理
     {
+        Quaternion qua = Quaternion.Euler(test);
+        transform.rotation = HandTransform.transform.rotation * qua;
+
         //Debug.DrawRay(transform.position, transform.forward,Color.red);
         if (grabbedObject != null)
         {
@@ -110,16 +111,4 @@ public class Grab : MonoBehaviour
 
     }
 
-    //bool JudgeInput()
-    //{
-    //    switch (trigger)
-    //    {
-    //        case Trigger.LTrigger:
-    //            return OVRInput.GetDown(OVRInput.RawButton.LHandTrigger);
-    //        case Trigger.RTrigger:
-    //            return OVRInput.GetDown(OVRInput.RawButton.RHandTrigger);
-
-    //    }
-    //    return false;
-    //}
 }

@@ -15,7 +15,8 @@ public class EnemyManager : MonoBehaviour
     }
     public enum eAttackType
     {
-        Gun,
+        OneGun,//1つの銃だけ
+        DoubleGun,//２つの銃だけ
         Sword,//剣
     }
     public enum eModelType
@@ -61,7 +62,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private Animator p_Animator;
     [SerializeField]
-    private GunStatus p_GunStatus;
+    private GunStatus[] p_GunStatus = new GunStatus[3];
 
 
     void OnTriggerEnter(Collider other)//触れたら
@@ -329,30 +330,30 @@ public class EnemyManager : MonoBehaviour
         }
 
 
-        if (count > 150)
-        {
-            switch (isLeftRight)
-            {
-                case true:
-                    isLeftRight = false;
-                    break;
-                case false:
-                    isLeftRight = true;
-                    break;
-            }
-            count = 0;
-        }
-        switch (isLeftRight)
-        {
-            case true:
-                transform.Rotate(new Vector3(0, 1, 0));
-                count++;
-                break;
-            case false:
-                transform.Rotate(new Vector3(0, -1, 0));
-                count++;
-                break;
-        }
+        //if (count > 150)
+        //{
+        //    switch (isLeftRight)
+        //    {
+        //        case true:
+        //            isLeftRight = false;
+        //            break;
+        //        case false:
+        //            isLeftRight = true;
+        //            break;
+        //    }
+        //    count = 0;
+        //}
+        //switch (isLeftRight)
+        //{
+        //    case true:
+        //        transform.Rotate(new Vector3(0, 1, 0));
+        //        count++;
+        //        break;
+        //    case false:
+        //        transform.Rotate(new Vector3(0, -1, 0));
+        //        count++;
+        //        break;
+        //}
     }
 
     void Attacking()//攻撃モード
@@ -422,6 +423,7 @@ public class EnemyManager : MonoBehaviour
             }
             else
             {
+                p_Animator.SetBool("isRun", false);
                 AidTarget = new Vector3(0, 0, 0);
                 fNowTime = 0.0f;
                 Mode = eMode.Vigilance;//警戒モード移行
@@ -445,29 +447,39 @@ public class EnemyManager : MonoBehaviour
             case EnemyManager.eMode.Attack://戦闘モード
                 p_Animator.SetBool("isAttack", true);
                 p_Animator.SetBool("isWalk", false);
-                p_Animator.SetBool("isWarning", false);
                 break;
             case EnemyManager.eMode.Vigilance://警戒モード
                 p_Animator.SetBool("isWalk", false);
-                p_Animator.SetBool("isWarning", true);
                 break;
             case EnemyManager.eMode.Pursuit://追跡モード
                 p_Animator.SetBool("isWalk", true);
                 break;
             case EnemyManager.eMode.Aid://援護モード
-                p_Animator.SetBool("isWalk", true);
-
+                p_Animator.SetBool("isRun", true);
                 break;
         }
     }
 
-    public void GunShot()//敵の玉を打つ処理
+    public void OneGunShot()//敵の玉を打つ処理
     {
-        p_GunStatus.isEnemyShot = true;
+        p_GunStatus[0].isEnemyShot = true;
+    }
+    public void TwoGunShot()//敵の玉を打つ処理
+    {
+        p_GunStatus[1].isEnemyShot = true;
+    }
+
+    public void TripleGunShot()//敵の玉を打つ処理
+    {
+        p_GunStatus[0].isEnemyShot = true;
+        p_GunStatus[1].isEnemyShot = true;
+        p_GunStatus[2].isEnemyShot = true;
+
     }
 
     public void AttackEnd()//攻撃終了の合図
     {
+        p_Animator.SetBool("isAttack", false);
         TargetInit();
         Mode = eMode.Pursuit;//追跡モードに移行する
     }

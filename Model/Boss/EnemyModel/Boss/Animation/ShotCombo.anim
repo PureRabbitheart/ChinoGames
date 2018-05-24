@@ -66837,29 +66837,29 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
-  - time: 1.4166666
-    functionName: GunShot
+  - time: 1.25
+    functionName: OneGunShot
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.8333334
-    functionName: GunShot
+    functionName: OneGunShot
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 3.5833333
-    functionName: GunShot
+    functionName: TwoGunShot
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 3.75
-    functionName: GunShot
+    functionName: OneGunShot
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

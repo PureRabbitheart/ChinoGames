@@ -21,10 +21,14 @@ public class AnimatorManager : MonoBehaviour
 
     }
 
-    void GunShot()//敵の玉を打つ処理
+    void OneGunShot()//敵の玉を打つ処理
     {
-        p_EnemyManager.GunShot();
-        Debug.Log("バンバン");
+        p_EnemyManager. OneGunShot();
+    }
+
+    void TwoGunShot()//敵の玉を打つ処理
+    {
+        p_EnemyManager.TwoGunShot();
     }
 
     void AttackEnd()//攻撃終了の合図
@@ -34,6 +38,10 @@ public class AnimatorManager : MonoBehaviour
     void HelpCall()//仲間を呼ぶ
     {
         p_EnemyManager.HelpCall();
-        
+    }
+
+    void TripleGunShot()//敵の玉を打つ処理
+    {
+        p_EnemyManager.TripleGunShot();
     }
 }

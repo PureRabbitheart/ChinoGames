@@ -7,6 +7,10 @@ public class TransferDevice : MonoBehaviour
 
     [SerializeField]
     private GameObject[] gPort = new GameObject[2];
+    [SerializeField]
+    private Transform[] tWarpPoint = new Transform[2];
+    [SerializeField]
+    private Animator[] p_Animator = new Animator[2];
 
     void Awake()
     {
@@ -51,15 +55,25 @@ public class TransferDevice : MonoBehaviour
     {
         if (gPort[0].name == name)
         {
-            return gPort[1].transform.position;
+            return tWarpPoint[1].position;
         }
         else if (gPort[1].name == name)
         {
-            return gPort[0].transform.position;
+            return tWarpPoint[0].position;
         }
         return new Vector3(0, 0, 0);
 
     }
 
+    public void TeleportationAnim()
+    {
+        p_Animator[0].SetBool("isActivate", true);
+        p_Animator[1].SetBool("isActivate", true);
+    }
 
+    public void TeleportationBadAnim()
+    {
+        p_Animator[0].SetBool("isActivate", false);
+        p_Animator[1].SetBool("isActivate", false);
+    }
 }

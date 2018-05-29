@@ -5,7 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
-    public enum eMode
+
+    public enum eMODE
     {
         Wander,//徘徊モード
         Attack,//戦闘モード
@@ -13,23 +14,27 @@ public class EnemyManager : MonoBehaviour
         Pursuit,//追跡モード
         Aid,//援護モード
     }
-    public enum eAttackType
+    public enum eATTACK_TYPE
     {
         OneGun,//1つの銃だけ
         DoubleGun,//２つの銃だけ
         Sword,//剣
     }
-    public enum eModelType
+    public enum eMODEL_TYPE
     {
         Boss,
+        Drone,
+        FourLeg,
+        BigRobo,
         Gundam,
     }
 
     public bool isAIEnemy;//AIか乗っ取っているか
     public float fActiveTime;
-    public eMode Mode;
-    public eAttackType AttackType;
-
+    public eMODE Mode;
+    public eATTACK_TYPE AttackType;
+    public eMODEL_TYPE ModelType;
+    public List<Transform> LTarget;//目的場所
 
     private Vector3 AidTarget;//援護を呼ばれた場所
     private float fAttackTime;//攻撃後のクールタイム
@@ -42,7 +47,8 @@ public class EnemyManager : MonoBehaviour
     private bool isLeftRight;//警戒時の左右を見る
     private NavMeshAgent agent;
     private List<GameObject> lTarget = new List<GameObject>();//触れたやつ
-    int count = 0;
+
+    private bool isInit;
 
     [SerializeField, Range(0, 100)]
     private float EnemyHP;//体力
@@ -58,12 +64,11 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private GameObject SkinMeshModel;//色を変えるスキン
     [SerializeField]
-    private Transform[] tTarget;//目的場所
-    [SerializeField]
     private Animator p_Animator;
     [SerializeField]
     private GunStatus[] p_GunStatus = new GunStatus[3];
-
+    [SerializeField]
+    private TimeGage p_TimeGage;
 
     void OnTriggerEnter(Collider other)//触れたら
     {
@@ -112,10 +117,15 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        if (GetComponent<NavMeshAgent>() != null && tTarget.Length > 0)//NavMeshがあれば
+        Invoke("Init", 0.4f);
+    }
+
+    void Init()
+    {
+        if (GetComponent<NavMeshAgent>() != null && LTarget.Count > 0)//NavMeshがあれば
         {
-            isTarget = new bool[tTarget.Length];//ターゲット分フラグの配列を大きくする
-            int nextTarget = Random.Range(0, tTarget.Length);//次に行く場所をランダムで決める
+            isTarget = new bool[LTarget.Count];//ターゲット分フラグの配列を大きくする
+            int nextTarget = Random.Range(0, LTarget.Count);//次に行く場所をランダムで決める
             isTarget[nextTarget] = true;//フラグをON
             agent = GetComponent<NavMeshAgent>();
         }
@@ -127,15 +137,19 @@ public class EnemyManager : MonoBehaviour
             searching.onFound += OnFound;
             searching.onLost += OnLost;
         }
+        isInit = true;
     }
 
 
     void Update()
     {
-        TakeOverControl();//乗り移っているかAI制御か判断する
-        EnemyControl();//敵の制御
-        HPController();//死亡判定
-        AnimatorUpdate();//アニメーション判定
+        if(isInit == true)
+        {
+            TakeOverControl();//乗り移っているかAI制御か判断する
+            EnemyControl();//敵の制御
+            HPController();//死亡判定
+        }
+      
     }
 
     void TakeOverControl()//乗っ取られているか
@@ -144,8 +158,10 @@ public class EnemyManager : MonoBehaviour
         {
             isAfter = true;//乗っ取りました
             isAIEnemy = false;//乗り移っている
-            fStartTime = Time.timeSinceLevelLoad;//乗りうつり始めた時間を入れる
-            agent.SetDestination(transform.position);
+            if (agent != null)
+            {
+                agent.SetDestination(transform.position);
+            }
         }
         else
         {
@@ -164,23 +180,24 @@ public class EnemyManager : MonoBehaviour
         {
             switch (Mode)
             {
-                case eMode.Wander://徘徊
+                case eMODE.Wander://徘徊
                     WanderingAround();
                     break;
-                case eMode.Attack://攻撃
+                case eMODE.Attack://攻撃
                     Attacking();
                     break;
-                case eMode.Vigilance://警戒
+                case eMODE.Vigilance://警戒
                     WatchOut();
                     break;
-                case eMode.Pursuit://追跡
+                case eMODE.Pursuit://追跡
                     Chase();
                     break;
-                case eMode.Aid://援護
+                case eMODE.Aid://援護
                     Assistance();
                     break;
 
             }
+            AnimatorUpdate();//アニメーション判定
         }
     }
 
@@ -191,7 +208,7 @@ public class EnemyManager : MonoBehaviour
         if (/*lTarget.Count > 0*/foundObj.tag == "Player")
         {
             fNowTime = 0.0f;
-            Mode = eMode.Vigilance;//警戒モードに移行
+            Mode = eMODE.Vigilance;//警戒モードに移行
             Debug.Log("HIt");
         }
     }
@@ -202,7 +219,7 @@ public class EnemyManager : MonoBehaviour
 
         if (lTarget.Count == 0)
         {
-            //Mode = eMode.Wander;
+            //Mode = eMODE.Wander;
         }
     }
 
@@ -228,9 +245,11 @@ public class EnemyManager : MonoBehaviour
 
     bool TimeActive(bool palyer)//乗りうつって居られる時間の計算
     {
-        if (palyer)
+        if (palyer == false)
         {
-            fActiveTime = Time.timeSinceLevelLoad - fStartTime;
+            fActiveTime += Time.deltaTime;
+            p_TimeGage.Now = fMaxActiveTime - fActiveTime;
+            p_TimeGage.Max = fMaxActiveTime;
             if (fActiveTime > fMaxActiveTime)
             {
                 return true;
@@ -242,17 +261,17 @@ public class EnemyManager : MonoBehaviour
 
     void WanderingAround()//徘徊モード
     {
-        if (GetComponent<NavMeshAgent>() != null && tTarget.Length > 0)
+        if (GetComponent<NavMeshAgent>() != null && LTarget.Count > 0)
         {
             GetComponent<NavMeshAgent>().enabled = true;
 
             float fDis = 0.0f;//距離
-            for (int i = 0; i < tTarget.Length; i++)
+            for (int i = 0; i < LTarget.Count; i++)
             {
                 if (isTarget[i] == true)
                 {
-                    fDis = Vector3.Distance(transform.position, tTarget[i].position);//目的地までの距離を設定
-                    agent.SetDestination(tTarget[i].position);//目的地まで突っ走る
+                    fDis = Vector3.Distance(transform.position, LTarget[i].position);//目的地までの距離を設定
+                    agent.SetDestination(LTarget[i].position);//目的地まで突っ走る
                     break;
                 }
             }
@@ -285,7 +304,7 @@ public class EnemyManager : MonoBehaviour
         if (Target == null)//範囲内にプレイヤーがいなければ
         {
             fNowTime = 0.0f;//経過時間をリセット
-            Mode = eMode.Vigilance;//警戒モードに移行
+            Mode = eMODE.Vigilance;//警戒モードに移行
 
             return;
         }
@@ -302,7 +321,7 @@ public class EnemyManager : MonoBehaviour
             fAttackTime = 0.0f;
             isAttack = true;
             agent.SetDestination(transform.position);
-            Mode = eMode.Attack;//戦闘態勢に移行
+            Mode = eMODE.Attack;//戦闘態勢に移行
         }
 
 
@@ -317,14 +336,14 @@ public class EnemyManager : MonoBehaviour
 
         if (fNowTime > fTimeOut)//警戒時間がある一定になったら
         {
-            Mode = eMode.Wander;//徘徊モードに移行
+            Mode = eMODE.Wander;//徘徊モードに移行
         }
 
         for (int i = 0; i < lTarget.Count; i++)//索敵内にプレイヤーがいるかチェック
         {
             if (lTarget[i] != null && lTarget[i].tag == "Player")//いたら
             {
-                Mode = eMode.Pursuit;//追跡モードに移行
+                Mode = eMODE.Pursuit;//追跡モードに移行
                 break;
             }
         }
@@ -370,7 +389,7 @@ public class EnemyManager : MonoBehaviour
         //if (fAttackTime > 2.0f)
         //{
         //    TargetInit();
-        //    Mode = eMode.Pursuit;//追跡モードに移行する
+        //    Mode = eMODE.Pursuit;//追跡モードに移行する
         //}
         Debug.Log("戦闘モード");
     }
@@ -379,12 +398,12 @@ public class EnemyManager : MonoBehaviour
 
     void TargetInit()//次の目的地を選ぶ　
     {
-        for (int i = 0; i < tTarget.Length; i++)
+        for (int i = 0; i < LTarget.Count; i++)
         {
             if (isTarget[i] == true)
             {
                 isTarget[i] = false;//今までの目的地を消す
-                int nextTarget = Random.Range(0, tTarget.Length);//ランダム
+                int nextTarget = Random.Range(0, LTarget.Count);//ランダム
                 isTarget[nextTarget] = true;//次の目的地を設定
                 break;
             }
@@ -402,10 +421,10 @@ public class EnemyManager : MonoBehaviour
 
             if (enemy != null)
             {
-                if (enemy.Mode == eMode.Wander)
+                if (enemy.Mode == eMODE.Wander)
                 {
                     enemy.GetAidPos(transform.position);
-                    enemy.Mode = eMode.Aid;//援護モードに移行
+                    enemy.Mode = eMODE.Aid;//援護モードに移行
                     Debug.Log("援護を呼んだ");
                 }
             }
@@ -426,7 +445,7 @@ public class EnemyManager : MonoBehaviour
                 p_Animator.SetBool("isRun", false);
                 AidTarget = new Vector3(0, 0, 0);
                 fNowTime = 0.0f;
-                Mode = eMode.Vigilance;//警戒モード移行
+                Mode = eMODE.Vigilance;//警戒モード移行
             }
         }
 
@@ -441,23 +460,161 @@ public class EnemyManager : MonoBehaviour
     {
         switch (Mode)
         {
-            case EnemyManager.eMode.Wander://徘徊モード
+            case EnemyManager.eMODE.Wander://徘徊モード
+                WanderAnim(ModelType);
+                break;
+            case EnemyManager.eMODE.Attack://戦闘モード
+                AttackAnim(ModelType);
+                break;
+            case EnemyManager.eMODE.Vigilance://警戒モード
+                VigilanceAnim(ModelType);
+                break;
+            case EnemyManager.eMODE.Pursuit://追跡モード
+                PursuitAnim(ModelType);
+                break;
+            case EnemyManager.eMODE.Aid://援護モード
+                AidAnim(ModelType);
+                break;
+        }
+    }
+
+    void WanderAnim(eMODEL_TYPE type)//キャラごとのアニメーションの切り替え　徘徊
+    {
+        switch (type)
+        {
+            case eMODEL_TYPE.Boss:
                 p_Animator.SetBool("isWalk", true);
                 break;
-            case EnemyManager.eMode.Attack://戦闘モード
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.BigRobo:
+                p_Animator.SetBool("isWarning", false);
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.FourLeg:
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.Gundam:
+                break;
+        }
+
+    }
+
+    void AttackAnim(eMODEL_TYPE type)//キャラごとのアニメーションの切り替え　攻撃
+    {
+        switch (type)
+        {
+            case eMODEL_TYPE.Boss:
                 p_Animator.SetBool("isAttack", true);
                 p_Animator.SetBool("isWalk", false);
                 break;
-            case EnemyManager.eMode.Vigilance://警戒モード
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isAttack", true);
                 p_Animator.SetBool("isWalk", false);
                 break;
-            case EnemyManager.eMode.Pursuit://追跡モード
-                p_Animator.SetBool("isWalk", true);
+            case eMODEL_TYPE.BigRobo:
+                BigRoboAttack(true);
                 break;
-            case EnemyManager.eMode.Aid://援護モード
-                p_Animator.SetBool("isRun", true);
+            case eMODEL_TYPE.FourLeg:
+                p_Animator.SetBool("isAttack", true);
+                p_Animator.SetBool("isWalk", false);
+                break;
+            case eMODEL_TYPE.Gundam:
                 break;
         }
+    }
+
+    void VigilanceAnim(eMODEL_TYPE type)//キャラごとのアニメーションの切り替え　警戒
+    {
+        switch (type)
+        {
+            case eMODEL_TYPE.Boss:
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.BigRobo:
+                p_Animator.SetBool("isWarning", true);
+                break;
+            case eMODEL_TYPE.FourLeg:
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.Gundam:
+                break;
+        }
+    }
+
+    void PursuitAnim(eMODEL_TYPE type)//キャラごとのアニメーションの切り替え　追跡
+    {
+        switch (type)
+        {
+            case eMODEL_TYPE.Boss:
+                p_Animator.SetBool("isWalk", false);
+                break;
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isWalk", false);
+                break;
+            case eMODEL_TYPE.BigRobo:
+                p_Animator.SetBool("isWarning", false);
+                p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.FourLeg:
+                p_Animator.SetBool("isWalk", false);
+                break;
+            case eMODEL_TYPE.Gundam:
+                break;
+        }
+    }
+
+    void AidAnim(eMODEL_TYPE type)//キャラごとのアニメーションの切り替え　援護
+    {
+        switch (type)
+        {
+            case eMODEL_TYPE.Boss:
+                p_Animator.SetBool("isRun", true);
+                break;
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isRun", true);
+                break;
+            case eMODEL_TYPE.BigRobo:
+                p_Animator.SetBool("isWarning", false);
+                p_Animator.SetBool("isRun", true);
+                break;
+            case eMODEL_TYPE.FourLeg:
+                break;
+            case eMODEL_TYPE.Gundam:
+                break;
+        }
+    }
+
+    void BigRoboAttack(bool isAnim)
+    {
+
+        if (isAttack == true || isAnim == false)
+        {
+            p_Animator.SetBool("isWalk", false);
+            p_Animator.SetBool("isWarning", false);
+            p_Animator.SetBool("isAttack", false);
+            p_Animator.SetBool("isAttackRoket", false);
+            p_Animator.SetBool("isAttackShot", false);
+            p_Animator.SetBool("isAttackRote", false);
+
+
+            switch (Random.Range(0, 2))
+            {
+                case 0:
+                    p_Animator.SetBool("isAttackShot", isAnim);
+                    break;
+                case 1:
+                    p_Animator.SetBool("isAttackRoket", isAnim);
+                    break;
+            }
+        }
+        isAttack = false;
+
+
     }
 
     public void OneGunShot()//敵の玉を打つ処理
@@ -479,9 +636,24 @@ public class EnemyManager : MonoBehaviour
 
     public void AttackEnd()//攻撃終了の合図
     {
-        p_Animator.SetBool("isAttack", false);
+        switch (ModelType)
+        {
+            case eMODEL_TYPE.Boss:
+                p_Animator.SetBool("isAttack", false);
+                break;
+            case eMODEL_TYPE.Drone:
+                p_Animator.SetBool("isAttack", false);
+                break;
+            case eMODEL_TYPE.BigRobo:
+                BigRoboAttack(false);
+                break;
+            case eMODEL_TYPE.FourLeg:
+                break;
+            case eMODEL_TYPE.Gundam:
+                break;
+        }
         TargetInit();
-        Mode = eMode.Pursuit;//追跡モードに移行する
+        Mode = eMODE.Pursuit;//追跡モードに移行する
     }
     public void HelpCall()//仲間を呼ぶ
     {

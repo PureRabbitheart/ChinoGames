@@ -22,14 +22,14 @@ namespace RootMotion.Demos {
 		[Tooltip("How is the root of the character rotated when weight is blended out?")]
 		[HideInInspector] public Quaternion rootTargetRotation;
 
-		[SerializeField] Transform target;
-		[SerializeField] Transform leftHandTarget;
-		[SerializeField] Transform rightHandTarget;
-		[SerializeField] Transform leftFootTarget;
-		[SerializeField] Transform rightFootTarget;
-		[SerializeField] Transform pelvisTarget;
-		[SerializeField] Transform bodyTarget;
-		[SerializeField] Transform headTarget;
+        public Transform target;
+        public Transform leftHandTarget;
+        public Transform rightHandTarget;
+        public Transform leftFootTarget;
+        public Transform rightFootTarget;
+        public Transform pelvisTarget;
+        public Transform bodyTarget;
+		public Transform headTarget;
 		[SerializeField] Vector3 pelvisDownAxis = Vector3.right;
 
 		private FullBodyBipedIK ik;

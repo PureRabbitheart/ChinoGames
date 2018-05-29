@@ -11,6 +11,7 @@ public class Transit : MonoBehaviour
     private float startTime;//開始時間
     private bool isMoveAction;//乗り移っている状況
     private bool isAction;
+    //private bool isSystemAnim = true;
     private Vector3 startPosition;//開始地点
     private Vector3 tEndPos;//ゴール
     private GameObject Soul;//乗り移る先
@@ -31,9 +32,9 @@ public class Transit : MonoBehaviour
     private LayerMask EnemyMask;
     [SerializeField]
     private LayerMask FloorMask;
-   
+    [SerializeField]
+    private Animator SystemImageAnim;
 
-    //private GameObject system;
 
     void Start()
     {
@@ -115,7 +116,7 @@ public class Transit : MonoBehaviour
         transform.root.Find("Model").gameObject.SetActive(true);//取り付いていた敵のモデルを出す
         transform.root.Find("VRModel").gameObject.SetActive(false);//取り付いていた自分用のモデルを消す
 
-    
+
 
         Camera.transform.parent = Soul.transform.root;//親子関係の移動
                                                       //Camera.transform.position = new Vector3(Soul.transform.root.position.x, Soul.transform.root.position.y + 0.6f, Soul.transform.root.position.z);//カメラの移動
@@ -168,6 +169,15 @@ public class Transit : MonoBehaviour
 
     void MoveAction()
     {
+        float test = Vector3.Distance(transform.position, tEndPos);
+
+        //if (isSystemAnim == true && test < 4.0f)
+        //{
+        //    SystemImageAnim.SetTrigger("isActivate");
+        //    isSystemAnim = false;
+        //}
+        SystemImageAnim.SetTrigger("isActivate");
+
         float fnowTime = Time.timeSinceLevelLoad - startTime;//開始時間と今の時間を計算する
         if (fnowTime > fTime)//移動時間よりも経過時間が超えたら
         {
@@ -178,6 +188,8 @@ public class Transit : MonoBehaviour
         {
             Arrival();//最終地点についたら
         }
+
+
 
         float rate = fnowTime / fTime;//経過時間と移動時間の計算
         Camera.transform.position = Vector3.Lerp(startPosition, tEndPos, rate);
@@ -191,6 +203,7 @@ public class Transit : MonoBehaviour
     {
         isMoveAction = false;
 
+
         Quaternion setQuat = new Quaternion();
         setQuat.eulerAngles = new Vector3(0, hit.transform.eulerAngles.y, 0);//Controllerの向きとアナログスティックの傾きを合わせる
         Camera.transform.rotation = setQuat;//回転を代入
@@ -200,9 +213,8 @@ public class Transit : MonoBehaviour
 
 
 
-
-
         ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
         ps.GetComponent<Renderer>().enabled = false;
+       // isSystemAnim = true;
     }
 }

@@ -17,6 +17,7 @@ public class GunStatus : Gun
     private bool isEnemy;// 敵に使うか自分に使うか
     public bool isEnemyShot;// 敵に使うか自分に使うか
 
+
     void Update()// 弾を打つ処理
     {
         if (isEnemy == false)//自分で使うなら
@@ -67,6 +68,9 @@ public class GunStatus : Gun
     [CustomEditor(typeof(GunStatus))]
     public class CharacterEditor : Editor
     {
+
+     
+
         public override void OnInspectorGUI()
         {
             GunStatus p_Gun = target as GunStatus;

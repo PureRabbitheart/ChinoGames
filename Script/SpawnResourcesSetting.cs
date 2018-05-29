@@ -20,9 +20,15 @@ public class SpawnResourcesSetting : ScriptableObject
 
     public enum eA_POS
     {
+        上,
+        中央,
+        下,
         右,
+        右上,
+        右下,
         左,
-
+        左上,
+        左下,
     }
     public enum eB_POS
     {
@@ -43,8 +49,11 @@ public class SpawnResourcesSetting : ScriptableObject
     public enum eTYPE
     {
         ボス,
-        雑魚,
+        青雑魚,
         ドローン,
+        四足,
+        ゴリラ,
+        ビックロボ,
     }
 
     public struct PatternInfo

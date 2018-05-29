@@ -4,31 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TimeGage : MonoBehaviour {
-    
-    //時間
-    [SerializeField]
-    private float Max;
-    [SerializeField]
-    private float Now;
+public class TimeGage : MonoBehaviour
+{
 
-   
-    TextMeshProUGUI Text;
-    public Image Circle;
+    public float Max;//最大値
+    public float Now;//現在の値
+    [SerializeField]
+    private TextMeshProUGUI Text;
+    [SerializeField]
+    private Image Circle;//残りの％
 
 
     // Use this for initialization
-    void Start () {
-        Text = GetComponent<TextMeshProUGUI>();
+    void Start()
+    {
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
 
+    // Update is called once per frame
+    void Update()
+    {
         Circle.fillAmount = Now / Max;
-        Text.SetText(Now.ToString());
-
-
+        int ConvertNowTime =(int) Now;
+        Text.SetText(ConvertNowTime.ToString());
     }
 }

@@ -35,7 +35,7 @@ public class MixerManager : MonoBehaviour
     void Start()
     {
         InitVolume();
-        isUIActive = false;
+        isUIActive = true;
         gSettingUI.SetActive(isUIActive);
     }
 

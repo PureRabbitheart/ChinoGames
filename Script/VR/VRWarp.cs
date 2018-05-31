@@ -10,11 +10,10 @@ public class VRWarp : MonoBehaviour
     private List<Vector3> vArrow = new List<Vector3>();
     private bool isMove;//移動中か
     private float Gravity = 9.81f;//重力
+    private Animator p_Animator;
 
     [SerializeField]
     private LineRenderer p_LineRenderer;
-    [SerializeField]
-    private Animator p_Animator;
     [SerializeField]
     private GameObject targetMarker;
     [SerializeField]
@@ -35,6 +34,7 @@ public class VRWarp : MonoBehaviour
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
+        p_Animator = GameObject.Find("WarpAnim").GetComponent<Animator>();
     }
 
 

@@ -18,6 +18,7 @@ public class FieldManager : MonoBehaviour
 
     public AREA eArea;
 
+    private bool isAreaTime;
     void OnTriggerEnter(Collider other)
     {
         EnemyManager p_EnemyManager = other.transform.root.GetComponent<EnemyManager>();
@@ -57,13 +58,20 @@ public class FieldManager : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.tag == "MainCamera")
+        if (other.tag == "Player")
         {
-            p_GameManager.AreaUpdate(eArea.ToString());
+            isAreaTime = true;
         }
-
     }
 
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isAreaTime = false;
+        }
+    }
 
     // Use this for initialization
     void Start()
@@ -74,6 +82,10 @@ public class FieldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isAreaTime == true)
+        {
+            p_GameManager.AreaUpdate(eArea.ToString());
+        }
 
     }
 }

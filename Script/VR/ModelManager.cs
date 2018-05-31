@@ -22,9 +22,9 @@ public class ModelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.parent.Find("Camera/OVRCameraRig").GetComponent<OVRCameraRig>().vLHandRote = vLHandRote;
-        transform.parent.Find("Camera/OVRCameraRig").GetComponent<OVRCameraRig>().vRHandRote = vRHandRote;
-        transform.parent.Find("Camera/OVRCameraRig").GetComponent<OVRCameraRig>().vHeadRote = vHeadRote;
-        transform.parent.Find("Camera/OVRCameraRig").GetComponent<OVRCameraRig>().vLookPos = vLookPos;
+        transform.parent.Find("MainCamera/OVRCameraRig").GetComponent<OVRCameraRig>().vLHandRote = vLHandRote;
+        transform.parent.Find("MainCamera/OVRCameraRig").GetComponent<OVRCameraRig>().vRHandRote = vRHandRote;
+        transform.parent.Find("MainCamera/OVRCameraRig").GetComponent<OVRCameraRig>().vHeadRote = vHeadRote;
+        transform.parent.Find("MainCamera/OVRCameraRig").GetComponent<OVRCameraRig>().vLookPos = vLookPos;
     }
 }

@@ -41,16 +41,14 @@ public class BulletManager : MonoBehaviour
                     // Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
 
                 }
+                else
+                {
+                    other.transform.root.gameObject.SendMessage("Damage", Power);
+                    //Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
+                }
 
+                Destroy(gameObject);//弾を消す
 
-                //    else
-                //    {
-                //        other.transform.root.gameObject.SendMessage("Damage", Power);
-                //        Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
-                //    }
-
-                //    Destroy(gameObject);//弾を消す
-                //}
 
                 //else if (other.tag == "LastEnemy")
                 //{

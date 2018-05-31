@@ -11,7 +11,6 @@ public class Transit : MonoBehaviour
     private float startTime;//開始時間
     private bool isMoveAction;//乗り移っている状況
     private bool isAction;
-    //private bool isSystemAnim = true;
     private Vector3 startPosition;//開始地点
     private Vector3 tEndPos;//ゴール
     private GameObject Soul;//乗り移る先
@@ -141,7 +140,9 @@ public class Transit : MonoBehaviour
     //右手から出るRayの処理
     void RayHit(Collider[] hitEnemy)
     {
-        Ray ray = new Ray(transform.position, transform.right);
+        //WireFrame(hitEnemy);
+
+            Ray ray = new Ray(transform.position, transform.right);
         Debug.DrawRay(ray.origin, ray.direction * 40, Color.black);
 
         if (Physics.Raycast(ray, out hit, 40.0f, EnemyMask))//手からレイを飛ばす
@@ -171,12 +172,10 @@ public class Transit : MonoBehaviour
     {
         float test = Vector3.Distance(transform.position, tEndPos);
 
-        //if (isSystemAnim == true && test < 4.0f)
-        //{
-        //    SystemImageAnim.SetTrigger("isActivate");
-        //    isSystemAnim = false;
-        //}
-        SystemImageAnim.SetTrigger("isActivate");
+        if (test < 10.0f)
+        {
+            SystemImageAnim.SetBool("isActivate", true);
+        }
 
         float fnowTime = Time.timeSinceLevelLoad - startTime;//開始時間と今の時間を計算する
         if (fnowTime > fTime)//移動時間よりも経過時間が超えたら
@@ -186,6 +185,7 @@ public class Transit : MonoBehaviour
         }
         else if (Camera.transform.position == tEndPos)
         {
+
             Arrival();//最終地点についたら
         }
 
@@ -215,6 +215,20 @@ public class Transit : MonoBehaviour
 
         ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
         ps.GetComponent<Renderer>().enabled = false;
-       // isSystemAnim = true;
+
+        SystemImageAnim.SetBool("isActivate", false);
+
+    }
+
+    void WireFrame(Collider[] hitEnemy)
+    {
+        for (int i = 0; i < hitEnemy.Length; i++)//円に触れているオブジェクト分
+        {
+            EnemyMaterialManager p_EMM = hitEnemy[i].transform.root.GetComponent<EnemyMaterialManager>();
+            if (p_EMM != null)
+            {
+                p_EMM.isWireFrame = true;
+            }
+        }
     }
 }

@@ -53,7 +53,7 @@ public class MissileManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         switch (eMissileType)
         {
@@ -99,7 +99,7 @@ public class MissileManager : MonoBehaviour
 
         for (int i = 0; i < EnemyTag.Count; i++)
         {
-            foreach (GameObject obs in GameObject.FindGameObjectsWithTag(EnemyTag[0]))
+            foreach (GameObject obs in GameObject.FindGameObjectsWithTag(EnemyTag[i]))
             {
 
                 TmpDistance = Vector3.Distance(obs.transform.position, transform.position);

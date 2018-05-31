@@ -61,6 +61,27 @@ public class Sonar : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        EnemyMaterialManager p_EMM = other.transform.root.GetComponent<EnemyMaterialManager>();
+
+        if(p_EMM != null)
+        {
+            p_EMM.isWireFrame = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        EnemyMaterialManager p_EMM = other.transform.root.GetComponent<EnemyMaterialManager>();
+
+        if (p_EMM != null)
+        {
+            p_EMM.isWireFrame = false;
+        }
+    }
+
+
     void Update()
     {
         //if(isButton)

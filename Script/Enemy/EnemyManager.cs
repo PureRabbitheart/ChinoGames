@@ -45,10 +45,10 @@ public class EnemyManager : MonoBehaviour
     private bool isAttack;//攻撃したか
     private bool isAfter = false;//乗り移ってからもとに戻ったとき
     private bool isLeftRight;//警戒時の左右を見る
+    private bool isInit;//初期化フラグ
     private NavMeshAgent agent;
     private List<GameObject> lTarget = new List<GameObject>();//触れたやつ
-
-    private bool isInit;
+    private TimeGage p_TimeGage;
 
     [SerializeField, Range(0, 100)]
     private float EnemyHP;//体力
@@ -62,28 +62,15 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private float fRadius;//半径
     [SerializeField]
-    private GameObject SkinMeshModel;//色を変えるスキン
-    [SerializeField]
     private Animator p_Animator;
     [SerializeField]
     private GunStatus[] p_GunStatus = new GunStatus[3];
-    [SerializeField]
-    private TimeGage p_TimeGage;
 
     void OnTriggerEnter(Collider other)//触れたら
     {
         if (isAIEnemy == true)
         {
-            //if (other.tag == "Sonar" && SkinMeshModel != null)
-            //{
-            //    foreach (Transform child in SkinMeshModel.transform)
-            //    {
-            //        if (child.GetComponent<Renderer>())
-            //        {
-            //            child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 1, 0));
-            //        }
-            //    }
-            //}
+
         }
         else
         {
@@ -97,16 +84,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (isAIEnemy == true)
         {
-            //if (other.tag == "Sonar" && SkinMeshModel != null)
-            //{
-            //    foreach (Transform child in SkinMeshModel.transform)
-            //    {
-            //        if (child.GetComponent<Renderer>())
-            //        {
-            //            child.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
-            //        }
-            //    }
-            //}
+
         }
         else
         {
@@ -122,6 +100,8 @@ public class EnemyManager : MonoBehaviour
 
     void Init()
     {
+        p_TimeGage = GameObject.Find("TimeGage").GetComponent<TimeGage>();
+
         if (GetComponent<NavMeshAgent>() != null && LTarget.Count > 0)//NavMeshがあれば
         {
             isTarget = new bool[LTarget.Count];//ターゲット分フラグの配列を大きくする
@@ -143,13 +123,13 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
-        if(isInit == true)
+        if (isInit == true)
         {
             TakeOverControl();//乗り移っているかAI制御か判断する
             EnemyControl();//敵の制御
             HPController();//死亡判定
         }
-      
+
     }
 
     void TakeOverControl()//乗っ取られているか
@@ -268,12 +248,16 @@ public class EnemyManager : MonoBehaviour
             float fDis = 0.0f;//距離
             for (int i = 0; i < LTarget.Count; i++)
             {
-                if (isTarget[i] == true)
+                if(LTarget[i] != null)
                 {
-                    fDis = Vector3.Distance(transform.position, LTarget[i].position);//目的地までの距離を設定
-                    agent.SetDestination(LTarget[i].position);//目的地まで突っ走る
-                    break;
+                    if (isTarget[i] == true)
+                    {
+                        fDis = Vector3.Distance(transform.position, LTarget[i].position);//目的地までの距離を設定
+                        agent.SetDestination(LTarget[i].position);//目的地まで突っ走る
+                        break;
+                    }
                 }
+             
             }
 
 
@@ -316,7 +300,7 @@ public class EnemyManager : MonoBehaviour
         {
             agent.SetDestination(Target.transform.position);//プレイヤーのところまでイクゥゥゥゥゥウウウウ
         }
-        else if (fDis < 3.0f)
+        else if (fDis < 15.0f)
         {
             fAttackTime = 0.0f;
             isAttack = true;
@@ -436,7 +420,7 @@ public class EnemyManager : MonoBehaviour
         if (AidTarget != new Vector3(0, 0, 0))
         {
             float fDis = Vector3.Distance(transform.position, AidTarget);//目的地までの距離を設定
-            if (fDis > 4.0f)
+            if (fDis > 10.0f)
             {
                 agent.SetDestination(AidTarget);//プレイヤーのところまでイクゥゥゥゥゥウウウウ
             }

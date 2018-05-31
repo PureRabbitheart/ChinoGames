@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> B_PosList = new List<GameObject>();//Bの場所リスト
     public List<GameObject> C_PosList = new List<GameObject>();//Cの場所リスト
     public List<GameObject> D_PosList = new List<GameObject>();//Dの場所リスト
+    public bool[] isAreaClear = { false, false, false, false };
 
     private List<string[]> PatternList = new List<string[]>();//敵の出現パターンリスト
     private int[] CreateCount = { 0, 0, 0, 0 };
@@ -60,13 +61,13 @@ public class GameManager : MonoBehaviour
                 EnemyCreate(A_ManagerList, A_PosList, 0);
                 break;
             case "B":
-                EnemyCreate(A_ManagerList, A_PosList, 1);
+                EnemyCreate(B_ManagerList, B_PosList, 1);
                 break;
             case "C":
-                EnemyCreate(A_ManagerList, A_PosList, 2);
+                EnemyCreate(C_ManagerList, C_PosList, 2);
                 break;
             case "D":
-                EnemyCreate(A_ManagerList, A_PosList, 3);
+                EnemyCreate(D_ManagerList, D_PosList, 3);
                 break;
         }
 
@@ -82,7 +83,7 @@ public class GameManager : MonoBehaviour
     void EnemyCreate(List<string[]> managerList, List<GameObject> posList, int count)//敵の生成プログラム  引数…ManagerList,position,count
     {
         fNowTime[count] += Time.deltaTime;
-        if (managerList.Count > CreateCount[0] && fNowTime[count] > float.Parse(managerList[CreateCount[count]][0]))//時間になったら
+        if (managerList.Count > CreateCount[count] && fNowTime[count] > float.Parse(managerList[CreateCount[count]][0]))//時間になったら
         {
 
             int PatternNum = int.Parse(managerList[CreateCount[count]][1]);//どのパターンか調べる
@@ -95,6 +96,10 @@ public class GameManager : MonoBehaviour
             }
             CreateCount[count]++;
 
+        }
+        else if (managerList.Count <= CreateCount[count])//最後まで出し終わったら
+        {
+            isAreaClear[count] = true;
         }
     }
 

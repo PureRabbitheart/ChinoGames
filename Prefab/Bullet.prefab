@@ -244,6 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   strTagName:
   - EnemyHead
+  - MainCamera
 --- !u!135 &135208035210348526
 SphereCollider:
   m_ObjectHideFlags: 1

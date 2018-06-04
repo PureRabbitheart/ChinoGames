@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Transit : MonoBehaviour
 {
+    public Transform tStartPos;
 
     private int NowCount = 0;//索敵範囲の半径のカウントを数える
     private float fTime = 0.1f;//乗り移るときの移動時間
@@ -16,6 +17,7 @@ public class Transit : MonoBehaviour
     private GameObject Soul;//乗り移る先
     private LineRenderer laser;
     private RaycastHit hit;
+
 
     [SerializeField]
     private GameObject[] System = new GameObject[2];//索敵範囲
@@ -142,7 +144,7 @@ public class Transit : MonoBehaviour
     {
         //WireFrame(hitEnemy);
 
-            Ray ray = new Ray(transform.position, transform.right);
+        Ray ray = new Ray(tStartPos.position, -tStartPos.right);
         Debug.DrawRay(ray.origin, ray.direction * 40, Color.black);
 
         if (Physics.Raycast(ray, out hit, 40.0f, EnemyMask))//手からレイを飛ばす
@@ -217,6 +219,7 @@ public class Transit : MonoBehaviour
         ps.GetComponent<Renderer>().enabled = false;
 
         SystemImageAnim.SetBool("isActivate", false);
+        isAction = false;
 
     }
 

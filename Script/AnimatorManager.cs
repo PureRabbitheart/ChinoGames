@@ -44,4 +44,9 @@ public class AnimatorManager : MonoBehaviour
     {
         p_EnemyManager.TripleGunShot();
     }
+
+    void DamageEnd()//敵の玉を打つ処理
+    {
+        p_EnemyManager.DamageEnd();
+    }
 }

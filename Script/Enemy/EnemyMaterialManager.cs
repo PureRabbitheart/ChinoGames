@@ -21,12 +21,12 @@ public class EnemyMaterialManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        fMateAnim = 1.0f;
+        fMateAnim = 0.2f;
         isStart = true;
         Light.SetActive(false);
         for (int i = 0; i < ModelMesh.Length; i++)
         {
-            ModelMesh[i].GetComponent<Renderer>().material.SetFloat("_CutOff", 0.0f);
+            ModelMesh[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
         }
     }
 
@@ -37,30 +37,29 @@ public class EnemyMaterialManager : MonoBehaviour
         {
             StartMaterialAnim();
         }
-
-
-        if (Input.GetKeyDown(KeyCode.M) || isWireFrame == true)
+        else
         {
-            for (int i = 0; i < ModelMesh.Length; i++)
+            if (Input.GetKeyDown(KeyCode.M) || isWireFrame == true)
             {
-                FrameUpdate(ModelMesh[i], true);
-                ModelMesh[i].GetComponent<Renderer>().material = mFrame;
+                for (int i = 0; i < ModelMesh.Length; i++)
+                {
+                    FrameUpdate(ModelMesh[i], true);
+                    ModelMesh[i].GetComponent<Renderer>().material = mFrame;
+                }
+                Light.SetActive(true);
             }
-            Light.SetActive(true);
-        }
-        else if (Input.GetKeyUp(KeyCode.M) || isWireFrame == false)
-        {
-            for (int i = 0; i < ModelMesh.Length; i++)
+            else if (Input.GetKeyUp(KeyCode.M) || isWireFrame == false)
             {
-                FrameUpdate(ModelMesh[i], false);
-                ModelMesh[i].GetComponent<Renderer>().material = mNormal;
+                for (int i = 0; i < ModelMesh.Length; i++)
+                {
+                    FrameUpdate(ModelMesh[i], false);
+                    ModelMesh[i].GetComponent<Renderer>().material = mNormal;
+
+                }
+                Light.SetActive(false);
 
             }
-            Light.SetActive(false);
-
         }
-
-
 
     }
 
@@ -72,7 +71,7 @@ public class EnemyMaterialManager : MonoBehaviour
             {
                 ModelMesh[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
             }
-            fMateAnim -= 0.01f;
+            fMateAnim -= 0.002f;
         }
         else
         {

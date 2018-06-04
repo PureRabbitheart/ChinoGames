@@ -15,7 +15,7 @@ public class SonarCollider : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Sonar")
+        if (other.tag == "Sonar" && transform.tag == "MainCamera")
         {
             other.transform.root.GetComponent<EnemyMaterialManager>().isWireFrame = false;
         }

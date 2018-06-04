@@ -245,6 +245,7 @@ MonoBehaviour:
   strTagName:
   - EnemyHead
   - MainCamera
+  - Player
 --- !u!135 &135208035210348526
 SphereCollider:
   m_ObjectHideFlags: 1

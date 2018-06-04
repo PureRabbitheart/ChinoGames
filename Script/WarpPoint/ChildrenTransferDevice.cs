@@ -24,7 +24,7 @@ public class ChildrenTransferDevice : MonoBehaviour
             if (fNowTime > 3.2f)
             {
                 other.transform.root.position = p_TransferDevice.NextPos(transform.name);
-                fNowTime = 0.0f;
+                fNowTime = -5.0f;
             }
         }
 

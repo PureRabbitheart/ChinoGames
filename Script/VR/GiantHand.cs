@@ -10,7 +10,8 @@ public class GiantHand : MonoBehaviour
     private Transform Hand;//TouchControllerの位置
     [SerializeField]
     float scale = 3.0f;
-
+    [SerializeField]
+    private Vector3 vRote;
     void Start()
     {
 
@@ -23,8 +24,8 @@ public class GiantHand : MonoBehaviour
 
         //  差分の距離に割り合いを掛ける
         abst *= scale;
-
-        transform.rotation = Hand.rotation;
+        Quaternion qua = Quaternion.Euler(vRote);
+        transform.rotation = Hand.rotation * qua;
         transform.position = HeadMountPoint.position - abst;
     }
 }

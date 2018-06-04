@@ -212,6 +212,7 @@ public class Gun : MonoBehaviour
                 {
                     var fx = Instantiate(MuzzleFX, tMuzzle.position, tMuzzle.rotation) as GameObject;
                     fx.transform.parent = tMuzzle;
+                    Destroy(fx, 1.0f);
 
                 }
                 isShellPut = true;

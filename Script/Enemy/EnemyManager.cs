@@ -206,6 +206,8 @@ public class EnemyManager : MonoBehaviour
     void Damage(float Damage)//ダメージ処理
     {
         EnemyHP -= Damage;
+        agent.SetDestination(transform.position);//そこの場所で一旦止まる
+        p_Animator.SetBool("isDamage", true);
     }
 
     void HPController()//HPの制御
@@ -248,7 +250,7 @@ public class EnemyManager : MonoBehaviour
             float fDis = 0.0f;//距離
             for (int i = 0; i < LTarget.Count; i++)
             {
-                if(LTarget[i] != null)
+                if (LTarget[i] != null)
                 {
                     if (isTarget[i] == true)
                     {
@@ -257,7 +259,7 @@ public class EnemyManager : MonoBehaviour
                         break;
                     }
                 }
-             
+
             }
 
 
@@ -643,4 +645,18 @@ public class EnemyManager : MonoBehaviour
     {
         CollHelp();//援護を呼ぶ
     }
+    public void DamageEnd()//仲間を呼ぶ
+    {
+        p_Animator.SetBool("isDamage", false);
+        p_Animator.SetBool("isWalk", false);
+        p_Animator.SetBool("isRun", false);
+        p_Animator.SetBool("isAttack", false);
+        p_Animator.SetBool("isWarning", false);
+        p_Animator.SetBool("isAttackShot", false);
+        p_Animator.SetBool("isAttackRoket", false);
+
+        TargetInit();
+        Mode = eMODE.Pursuit;//追跡モードに移行する
+    }
+
 }

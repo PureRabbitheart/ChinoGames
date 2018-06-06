@@ -24,6 +24,8 @@ public class MissileManager : MonoBehaviour
     private float fSpeed;//移動スピード
     [SerializeField]
     private List<string> EnemyTag;
+    [SerializeField]
+    private List<string> DamageTag;
 
     private float Power;//威力
     private Rigidbody p_Rigidbody;
@@ -33,6 +35,13 @@ public class MissileManager : MonoBehaviour
     {
         Instantiate(Explosion, transform.position, Quaternion.identity);
         Destroy(gameObject);
+        for (int i = 0; i < DamageTag.Count; i++)
+        {
+            if (DamageTag[i] == other.transform.tag)
+            {
+                SendMessage("Damage",Power);
+            }
+        }
     }
 
     // Use this for initialization
@@ -120,8 +129,8 @@ public class MissileManager : MonoBehaviour
     [CustomEditor(typeof(MissileManager))]
     public class CharacterEditor : Editor
     {
-        bool isTab = true;
-
+        bool isSearchTab = true;
+        bool isDamageTab = true;
 
         public override void OnInspectorGUI()
         {
@@ -133,13 +142,13 @@ public class MissileManager : MonoBehaviour
 
             p_MissileManager.Explosion = EditorGUILayout.ObjectField("爆発のエフェクト", p_MissileManager.Explosion, typeof(GameObject), true) as GameObject;
 
-            if (p_MissileManager.eMissileType == _type.Lock　|| p_MissileManager.eMissileType == _type.Pursue)//遊撃ミサイル
+            if (p_MissileManager.eMissileType == _type.Lock || p_MissileManager.eMissileType == _type.Pursue)//遊撃ミサイル
             {
 
                 int i, len = p_MissileManager.EnemyTag.Count;
 
                 // 折りたたみ表示
-                if (isTab = EditorGUILayout.Foldout(isTab, "サーチするTag名"))
+                if (isSearchTab = EditorGUILayout.Foldout(isSearchTab, "サーチするTag名"))
                 {
                     // リスト表示
                     for (i = 0; i < len; ++i)
@@ -157,11 +166,35 @@ public class MissileManager : MonoBehaviour
                     }
 
                 }
-                else if (p_MissileManager.eMissileType == _type.Straight)//固定ミサイル
-                {
 
-                }
             }
+            else if (p_MissileManager.eMissileType == _type.Straight)//固定ミサイル
+            {
+
+            }
+
+            int j, size = p_MissileManager.DamageTag.Count;
+
+            // 折りたたみ表示
+            if (isSearchTab = EditorGUILayout.Foldout(isSearchTab, "ダメージを与えるTag名"))
+            {
+                // リスト表示
+                for (j = 0; j < size; ++j)
+                {
+                    p_MissileManager.DamageTag[j] = EditorGUILayout.TextField("タグ名" + j.ToString(), p_MissileManager.DamageTag[j]);
+                }
+
+                string tmpName = null;
+                string go = EditorGUILayout.TextField("追加", tmpName);
+                if (go != null)
+                    p_MissileManager.DamageTag.Add(go);
+                if (GUILayout.Button("リセット"))
+                {
+                    p_MissileManager.DamageTag.Clear();
+                }
+
+            }
+
         }
     }
 

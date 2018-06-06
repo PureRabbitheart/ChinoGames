@@ -6,10 +6,10 @@ using UnityEngine;
 public class Grab : MonoBehaviour
 {
 
-
     private Quaternion lastRootation;// 回転の情報を入れる変数
     private Quaternion currentRoation;// 回転の情報を入れる変数
-    private GameObject grabbedObject;// 持った物のObjectの情報を入れる変数
+    private bool isStartHaving;
+
     [SerializeField]
     private bool grabbing;// 握っているかのフラグ
     [SerializeField]
@@ -26,6 +26,9 @@ public class Grab : MonoBehaviour
     [SerializeField]
     private GameObject HandTransform;
 
+    [SerializeField]
+    private GameObject grabbedObject;// 持った物のObjectの情報を入れる変数
+
     public Quaternion vRote;
     public Vector3 test;
 
@@ -33,6 +36,14 @@ public class Grab : MonoBehaviour
     {
         grabbing = false;
         vRote = transform.rotation;
+        if (grabbedObject != null)
+        {
+            isStartHaving = true;
+            grabbedObject.GetComponent<Rigidbody>().isKinematic = true;                                             //掴んだ瞬間Rigidbodyを消す
+            grabbedObject.tag = having_TagName;//タグの名前変更
+            grabbedObject.layer = 0;//レイヤーをデフォルトにする
+
+        }
     }
 
 
@@ -98,16 +109,32 @@ public class Grab : MonoBehaviour
             currentRoation = grabbedObject.transform.rotation;
         }
 
-
-        if (!grabbing && Input.GetAxis(buttonName) > 0.8f)//何も持っていなかったら
+        if (isStartHaving == true && Input.GetAxis(buttonName) > 0.8f)
         {
-            GrabObject();//持つ
+            isStartHaving = false;
+        }
+
+
+        if (isStartHaving == false)
+        {
+            if (!grabbing && Input.GetAxis(buttonName) > 0.8f)//何も持っていなかったら
+            {
+                GrabObject();//持つ
+
+            }
+            if (grabbing && Input.GetAxis(buttonName) < 0.8f)//何か持っていたら
+            {
+                DropObject();//離したら
+            }
+        }
+        else
+        {
+            grabbedObject.transform.parent = transform;                                                             //親離れ　自立する
+            grabbedObject.transform.position = transform.position;                                                  //掴んだオブジェクトに手の座標を入れて動かす
+            grabbedObject.transform.rotation = transform.rotation;
 
         }
-        if (grabbing && Input.GetAxis(buttonName) < 0.8f)//何か持っていたら
-        {
-            DropObject();//離したら
-        }
+
 
     }
 

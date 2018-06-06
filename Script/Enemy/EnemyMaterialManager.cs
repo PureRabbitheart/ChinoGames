@@ -5,9 +5,8 @@ using UnityEngine;
 public class EnemyMaterialManager : MonoBehaviour
 {
     public bool isWireFrame;
-
     [SerializeField]
-    private GameObject[] ModelMesh;
+    private GameObject ModelParent;
     [SerializeField]
     private Material mNormal;
     [SerializeField]
@@ -17,6 +16,14 @@ public class EnemyMaterialManager : MonoBehaviour
 
     private float fMateAnim;
     private bool isStart;
+    [SerializeField]
+    private List<GameObject> RenderMeshList = new List<GameObject>();
+
+    void Awake()
+    {
+
+        GetChildren(ModelParent, ref RenderMeshList);
+    }
 
     // Use this for initialization
     void Start()
@@ -24,9 +31,13 @@ public class EnemyMaterialManager : MonoBehaviour
         fMateAnim = 0.2f;
         isStart = true;
         Light.SetActive(false);
-        for (int i = 0; i < ModelMesh.Length; i++)
+
+
+
+
+        for (int i = 0; i < RenderMeshList.Count; i++)
         {
-            ModelMesh[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
+            RenderMeshList[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
         }
     }
 
@@ -41,19 +52,19 @@ public class EnemyMaterialManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.M) || isWireFrame == true)
             {
-                for (int i = 0; i < ModelMesh.Length; i++)
+                for (int i = 0; i < RenderMeshList.Count; i++)
                 {
-                    FrameUpdate(ModelMesh[i], true);
-                    ModelMesh[i].GetComponent<Renderer>().material = mFrame;
+                    FrameUpdate(RenderMeshList[i], true);
+                    RenderMeshList[i].GetComponent<Renderer>().material = mFrame;
                 }
                 Light.SetActive(true);
             }
             else if (Input.GetKeyUp(KeyCode.M) || isWireFrame == false)
             {
-                for (int i = 0; i < ModelMesh.Length; i++)
+                for (int i = 0; i < RenderMeshList.Count; i++)
                 {
-                    FrameUpdate(ModelMesh[i], false);
-                    ModelMesh[i].GetComponent<Renderer>().material = mNormal;
+                    FrameUpdate(RenderMeshList[i], false);
+                    RenderMeshList[i].GetComponent<Renderer>().material = mNormal;
 
                 }
                 Light.SetActive(false);
@@ -67,18 +78,18 @@ public class EnemyMaterialManager : MonoBehaviour
     {
         if (fMateAnim >= 0.0f)
         {
-            for (int i = 0; i < ModelMesh.Length; i++)
+            for (int i = 0; i < RenderMeshList.Count; i++)
             {
-                ModelMesh[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
+                RenderMeshList[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
             }
             fMateAnim -= 0.002f;
         }
         else
         {
             isStart = false;
-            for (int i = 0; i < ModelMesh.Length; i++)
+            for (int i = 0; i < RenderMeshList.Count; i++)
             {
-                ModelMesh[i].GetComponent<Renderer>().material = mNormal;
+                RenderMeshList[i].GetComponent<Renderer>().material = mNormal;
             }
         }
 
@@ -123,6 +134,24 @@ public class EnemyMaterialManager : MonoBehaviour
         {
             SkinnedMeshRenderer smr = obj.GetComponent<SkinnedMeshRenderer>();
             smr.sharedMesh.SetIndices(smr.sharedMesh.GetIndices(0), MeshTopology.Triangles, 0);
+        }
+    }
+
+    void GetChildren(GameObject obj, ref List<GameObject> allChildren)
+    {
+        Transform children = obj.GetComponentInChildren<Transform>();
+        //子要素がいなければ終了
+        if (children.childCount == 0)
+        {
+            return;
+        }
+        foreach (Transform ob in children)
+        {
+            if (ob.gameObject.GetComponent<Renderer>())
+            {
+                allChildren.Add(ob.gameObject);
+            }
+            GetChildren(ob.gameObject, ref allChildren);
         }
     }
 }

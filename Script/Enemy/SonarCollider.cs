@@ -8,8 +8,11 @@ public class SonarCollider : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Sonar"&&transform.tag == "MainCamera")
-        {     
-            other.transform.root.GetComponent<EnemyMaterialManager>().isWireFrame = true;
+        {
+            if (other.transform.root.GetComponent<EnemyMaterialManager>())
+            {
+                other.transform.root.GetComponent<EnemyMaterialManager>().isWireFrame = true;
+            }
         }
     }
 
@@ -17,7 +20,10 @@ public class SonarCollider : MonoBehaviour
     {
         if (other.tag == "Sonar" && transform.tag == "MainCamera")
         {
-            other.transform.root.GetComponent<EnemyMaterialManager>().isWireFrame = false;
+            if(other.transform.root.GetComponent<EnemyMaterialManager>())
+            {
+                other.transform.root.GetComponent<EnemyMaterialManager>().isWireFrame = false;
+            }
         }
     }
 

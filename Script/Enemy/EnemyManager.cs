@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
+   
+
 
     public enum eMODE
     {
@@ -26,6 +28,9 @@ public class EnemyManager : MonoBehaviour
         Drone,
         FourLeg,
         BigRobo,
+        Dust,
+        DustMK2,
+        Gorilla,
         Gundam,
     }
 
@@ -481,6 +486,9 @@ public class EnemyManager : MonoBehaviour
             case eMODEL_TYPE.FourLeg:
                 p_Animator.SetBool("isWalk", true);
                 break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isWalk", true);
+                break;
             case eMODEL_TYPE.Gundam:
                 break;
         }
@@ -506,6 +514,10 @@ public class EnemyManager : MonoBehaviour
                 p_Animator.SetBool("isAttack", true);
                 p_Animator.SetBool("isWalk", false);
                 break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isAttack", true);
+                p_Animator.SetBool("isWalk", false);
+                break;
             case eMODEL_TYPE.Gundam:
                 break;
         }
@@ -526,6 +538,9 @@ public class EnemyManager : MonoBehaviour
                 break;
             case eMODEL_TYPE.FourLeg:
                 p_Animator.SetBool("isWalk", true);
+                break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isWarning", true);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -549,6 +564,9 @@ public class EnemyManager : MonoBehaviour
             case eMODEL_TYPE.FourLeg:
                 p_Animator.SetBool("isWalk", false);
                 break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isWalk", false);
+                break;
             case eMODEL_TYPE.Gundam:
                 break;
         }
@@ -569,6 +587,10 @@ public class EnemyManager : MonoBehaviour
                 p_Animator.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.FourLeg:
+                break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isWarning", false);
+                p_Animator.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -634,6 +656,9 @@ public class EnemyManager : MonoBehaviour
                 BigRoboAttack(false);
                 break;
             case eMODEL_TYPE.FourLeg:
+                break;
+            case eMODEL_TYPE.DustMK2:
+                p_Animator.SetBool("isAttack", false);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;

@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 23742033452636852}
   m_Layer: 0
   m_Name: gun1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -629,6 +629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4662774194627124}
   - component: {fileID: 114686323524563440}
+  - component: {fileID: 82455318538342708}
   m_Layer: 0
   m_Name: LHand
   m_TagString: LHandObject
@@ -648,7 +649,7 @@ GameObject:
   - component: {fileID: 23039212005599770}
   m_Layer: 0
   m_Name: R_gun1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -970,7 +971,7 @@ GameObject:
   - component: {fileID: 23563918877155766}
   m_Layer: 0
   m_Name: left
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1170,7 +1171,7 @@ GameObject:
   - component: {fileID: 23407610940716502}
   m_Layer: 0
   m_Name: guncover1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1204,6 +1205,7 @@ GameObject:
   - component: {fileID: 114791884800767280}
   - component: {fileID: 114828116423592508}
   - component: {fileID: 114331222112516798}
+  - component: {fileID: 82300339685505288}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -1420,7 +1422,7 @@ GameObject:
   - component: {fileID: 23807940021004858}
   m_Layer: 0
   m_Name: gannmenn
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1620,7 +1622,7 @@ GameObject:
   - component: {fileID: 23980357313443828}
   m_Layer: 0
   m_Name: L_cover
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1938,6 +1940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4935091088582896}
   - component: {fileID: 114976325291690158}
+  - component: {fileID: 82580103567354482}
   m_Layer: 0
   m_Name: RHand
   m_TagString: RHandObject
@@ -2082,7 +2085,7 @@ GameObject:
   - component: {fileID: 23757749883678748}
   m_Layer: 0
   m_Name: L_gun1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2556,7 +2559,7 @@ GameObject:
   - component: {fileID: 23371072264056078}
   m_Layer: 0
   m_Name: right
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2618,7 +2621,7 @@ GameObject:
   - component: {fileID: 23966934442351860}
   m_Layer: 0
   m_Name: hontai1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2850,7 +2853,7 @@ GameObject:
   - component: {fileID: 23318632792463792}
   m_Layer: 0
   m_Name: R_cover
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3191,9 +3194,10 @@ GameObject:
   - component: {fileID: 4233432986061092}
   - component: {fileID: 95087842608728514}
   - component: {fileID: 114121161039714418}
+  - component: {fileID: 136325190180645566}
   m_Layer: 0
   m_Name: ver1.1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4093,7 +4097,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1967068388855796}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.705, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4424657685630082}
@@ -5019,7 +5023,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334366162252522}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.0437088, y: 46.39599, z: 19.462406}
+  m_LocalPosition: {x: -292.6554, y: 53.945004, z: 6.49294}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4569825976118480}
@@ -6262,7 +6266,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6296,7 +6300,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6330,7 +6334,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6364,7 +6368,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6398,7 +6402,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6432,7 +6436,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6466,7 +6470,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6500,7 +6504,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6534,7 +6538,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6568,7 +6572,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 76f1f950ac53b7141be063a0ee9bb6cf, type: 3}
+  - {fileID: 2100000, guid: 27ef94acaf97a3b4fbb433b57b75de4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6688,6 +6692,246 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!82 &82300339685505288
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1334366162252522}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &82455318538342708
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1186628088635808}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &82580103567354482
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1566219775350072}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95034023841987098
 Animator:
   serializedVersion: 3
@@ -7024,12 +7268,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fdc3041a411ab64ba163173a8328a9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isWireFrame: 0
   ModelParent: {fileID: 1940800930471726}
-  mNormal: {fileID: 2100000, guid: 88e5201336f3d694da79883f678bc78d, type: 2}
+  mBody: {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
+  mLeg: {fileID: 0}
+  mHand: {fileID: 0}
   mFrame: {fileID: 2100000, guid: 17fc08f40bee29f44a78c1f584dc6bab, type: 2}
   Light: {fileID: 1359978599199940}
   RenderMeshList: []
+  p_EnemyManager: {fileID: 114649441620685332}
+  isWireFrame: 0
 --- !u!114 &114501374156224060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7124,7 +7371,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334366162252522}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10ce251a327629e4e8bf1e5a437d9d46, type: 3}
   m_Name: 
@@ -7140,7 +7387,7 @@ MonoBehaviour:
   fMaxActiveTime: 50
   fTimeOut: 5
   fRadius: 10
-  p_Animator: {fileID: 95034023841987098}
+  p_ModelAnim: {fileID: 95034023841987098}
   p_GunStatus:
   - {fileID: 114921269720335090}
   - {fileID: 114791884800767280}
@@ -7186,7 +7433,7 @@ MonoBehaviour:
   fFireRate: 0.1
   fSpread: 0
   fRange: 100
-  fDamage: 5
+  fDamage: 10
   fBulletSpeed: 10
   eShotType: 0
   fReloadTime: 0
@@ -7203,10 +7450,10 @@ MonoBehaviour:
   Shell: {fileID: 0}
   tShellOuter: {fileID: 0}
   isShell: 0
-  MuzzleFX: {fileID: 0}
-  isShotSE: 0
-  ShotSE: {fileID: 0}
-  ShotEndSE: {fileID: 0}
+  MuzzleFX: {fileID: 1951989566529764, guid: 8179fe3385464c1469256ecb95ccc385, type: 2}
+  isShotSE: 1
+  ShotSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
+  ShotEndSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
   strInput:
   - LFinger
   - RFinger
@@ -7229,7 +7476,7 @@ MonoBehaviour:
   fFireRate: 0
   fSpread: 0
   fRange: 100
-  fDamage: 0
+  fDamage: 10
   fBulletSpeed: 100
   eShotType: 0
   fReloadTime: 0
@@ -7239,14 +7486,14 @@ MonoBehaviour:
   ammoHave: 2147483647
   ammoUsep: 0
   shotPerRound: 1
-  Bullet: {fileID: 1993183012884172, guid: f5174220a1818bb4f844856bd0c7b0c3, type: 2}
+  Bullet: {fileID: 1993183012884172, guid: e06555a218f881d47a257f50b42d04b3, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4625540536719968}
   tStartRay: {fileID: 4625540536719968}
   Shell: {fileID: 0}
   tShellOuter: {fileID: 0}
   isShell: 0
-  MuzzleFX: {fileID: 0}
+  MuzzleFX: {fileID: 1951989566529764, guid: 8179fe3385464c1469256ecb95ccc385, type: 2}
   isShotSE: 0
   ShotSE: {fileID: 0}
   ShotEndSE: {fileID: 0}
@@ -7272,7 +7519,7 @@ MonoBehaviour:
   fFireRate: 0
   fSpread: 0
   fRange: 100
-  fDamage: 0
+  fDamage: 10
   fBulletSpeed: 100
   eShotType: 0
   fReloadTime: 0
@@ -7282,17 +7529,17 @@ MonoBehaviour:
   ammoHave: 2147483647
   ammoUsep: 0
   shotPerRound: 1
-  Bullet: {fileID: 1993183012884172, guid: f5174220a1818bb4f844856bd0c7b0c3, type: 2}
+  Bullet: {fileID: 1993183012884172, guid: e06555a218f881d47a257f50b42d04b3, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4312050215612578}
   tStartRay: {fileID: 4312050215612578}
   Shell: {fileID: 0}
   tShellOuter: {fileID: 0}
   isShell: 0
-  MuzzleFX: {fileID: 0}
-  isShotSE: 0
-  ShotSE: {fileID: 0}
-  ShotEndSE: {fileID: 0}
+  MuzzleFX: {fileID: 1951989566529764, guid: 8179fe3385464c1469256ecb95ccc385, type: 2}
+  isShotSE: 1
+  ShotSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
+  ShotEndSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
   strInput:
   - 
   - 
@@ -7327,7 +7574,7 @@ MonoBehaviour:
   fFireRate: 0
   fSpread: 0
   fRange: 100
-  fDamage: 0
+  fDamage: 10
   fBulletSpeed: 100
   eShotType: 0
   fReloadTime: 0
@@ -7337,14 +7584,14 @@ MonoBehaviour:
   ammoHave: 2147483647
   ammoUsep: 0
   shotPerRound: 1
-  Bullet: {fileID: 1993183012884172, guid: f5174220a1818bb4f844856bd0c7b0c3, type: 2}
+  Bullet: {fileID: 1993183012884172, guid: e06555a218f881d47a257f50b42d04b3, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4749542782911884}
   tStartRay: {fileID: 4749542782911884}
   Shell: {fileID: 0}
   tShellOuter: {fileID: 0}
   isShell: 0
-  MuzzleFX: {fileID: 0}
+  MuzzleFX: {fileID: 1951989566529764, guid: 8179fe3385464c1469256ecb95ccc385, type: 2}
   isShotSE: 0
   ShotSE: {fileID: 0}
   ShotEndSE: {fileID: 0}
@@ -7387,10 +7634,10 @@ MonoBehaviour:
   Shell: {fileID: 0}
   tShellOuter: {fileID: 0}
   isShell: 0
-  MuzzleFX: {fileID: 0}
-  isShotSE: 0
-  ShotSE: {fileID: 0}
-  ShotEndSE: {fileID: 0}
+  MuzzleFX: {fileID: 1951989566529764, guid: 8179fe3385464c1469256ecb95ccc385, type: 2}
+  isShotSE: 1
+  ShotSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
+  ShotEndSE: {fileID: 8300000, guid: 1ce8b3b5a2ac7034f9b54d6b8288f136, type: 3}
   strInput:
   - LFinger
   - RFinger
@@ -7513,6 +7760,19 @@ CapsuleCollider:
   m_Height: 2.4361095
   m_Direction: 1
   m_Center: {x: 0.0060002804, y: 0.6457739, z: -0.26975834}
+--- !u!136 &136325190180645566
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1967068388855796}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.3361588
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.35971642, z: -0}
 --- !u!137 &137050732527092710
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -7639,7 +7899,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7745,7 +8005,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7859,7 +8119,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7914,7 +8174,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8085,7 +8345,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8201,7 +8461,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8258,7 +8518,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8372,7 +8632,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8481,7 +8741,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8539,7 +8799,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8447fae897bbad248920c388675702cf, type: 3}
+  - {fileID: 2100000, guid: 4b422fc30ca72e14585c5a290a637a2c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8642,7 +8902,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.66
-  m_Speed: 5
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

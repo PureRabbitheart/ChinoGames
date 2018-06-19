@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1993183012884172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 95.10449, y: -10.3577, z: -17.5185}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4880226129015458}
@@ -153,7 +153,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 95e38b8d30886e44a92712c6ddefc990, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -244,6 +244,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   strTagName:
   - Player
+  - BackGround
+  HitFX: {fileID: 1760992571876156, guid: bfbb1577c0cf6194893d32135866cd83, type: 2}
+  lastFX: {fileID: 1574494614640840, guid: 8d9723a65f1e80144b96a0e0973549af, type: 2}
 --- !u!135 &135208035210348526
 SphereCollider:
   m_ObjectHideFlags: 1

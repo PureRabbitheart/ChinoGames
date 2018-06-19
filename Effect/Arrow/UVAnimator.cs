@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class UVAnimator : MonoBehaviour
 {
-
-    public float scrollSpeed = 0.5F;
-    public Renderer rend;
-    public bool LR;
+    [SerializeField]
+    private float scrollSpeed = 0.5F;
+    [SerializeField]
+    private Renderer rend;
+    [SerializeField]
+    private bool LR;
     void Start()
     {
         rend = GetComponent<Renderer>();

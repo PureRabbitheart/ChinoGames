@@ -34,8 +34,12 @@ public class GameManager : MonoBehaviour
     public bool[] isAreaClear = { false, false, false, false };
 
     private List<string[]> PatternList = new List<string[]>();//敵の出現パターンリスト
+    [SerializeField]
     private int[] CreateCount = { 0, 0, 0, 0 };
+    [SerializeField]
     private float[] fNowTime = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    private GameObject PlayerClear;
 
     void Awake()
     {
@@ -45,6 +49,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+
+        PlayerClear = GameObject.Find("Clear");
+        PlayerClear.SetActive(false);
 
     }
 
@@ -100,6 +107,8 @@ public class GameManager : MonoBehaviour
         else if (managerList.Count <= CreateCount[count])//最後まで出し終わったら
         {
             isAreaClear[count] = true;
+            PlayerClear.SetActive(true);
+            PlayerClear.GetComponent<Animator>().SetTrigger("Clear");
         }
     }
 
@@ -240,7 +249,16 @@ public class GameManager : MonoBehaviour
                     EditorGUILayout.EndHorizontal();
                 }
             }
+
+
+            p_GameManager.isAreaClear[0] = EditorGUILayout.Toggle("A", p_GameManager.isAreaClear[0]);
+            p_GameManager.isAreaClear[1] = EditorGUILayout.Toggle("B", p_GameManager.isAreaClear[1]);
+            p_GameManager.isAreaClear[2] = EditorGUILayout.Toggle("C", p_GameManager.isAreaClear[2]);
+            p_GameManager.isAreaClear[3] = EditorGUILayout.Toggle("D", p_GameManager.isAreaClear[3]);
+
         }
+
+
 
         void ResetList(ref List<GameObject> list, int count)
         {

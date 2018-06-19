@@ -54,6 +54,8 @@ public class SpawnResourcesSetting : ScriptableObject
         四足,
         ゴリラ,
         ビックロボ,
+        アイアンマンAxe,
+        アイアンマンGun,
     }
 
     public struct PatternInfo

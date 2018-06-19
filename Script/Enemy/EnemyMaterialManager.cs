@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class EnemyMaterialManager : MonoBehaviour
 {
-    public bool isWireFrame;
     [SerializeField]
     private GameObject ModelParent;
     [SerializeField]
-    private Material mNormal;
+    private Material mBody;
+    [SerializeField]
+    private Material mLeg;
+    [SerializeField]
+    private Material mHand;
     [SerializeField]
     private Material mFrame;
     [SerializeField]
     private GameObject Light;
-
-    private float fMateAnim;
-    private bool isStart;
     [SerializeField]
     private List<GameObject> RenderMeshList = new List<GameObject>();
+    [SerializeField]
+    private EnemyManager p_EnemyManager;
+
+    public bool isWireFrame;
+    private float fMateAnim;
+    private bool isStart;
 
     void Awake()
     {
@@ -64,8 +70,7 @@ public class EnemyMaterialManager : MonoBehaviour
                 for (int i = 0; i < RenderMeshList.Count; i++)
                 {
                     FrameUpdate(RenderMeshList[i], false);
-                    RenderMeshList[i].GetComponent<Renderer>().material = mNormal;
-
+                    TagMaterial(i);
                 }
                 Light.SetActive(false);
 
@@ -82,15 +87,16 @@ public class EnemyMaterialManager : MonoBehaviour
             {
                 RenderMeshList[i].GetComponent<Renderer>().material.SetFloat("_CutOff", fMateAnim);
             }
-            fMateAnim -= 0.002f;
+            fMateAnim -= 0.005f;
         }
         else
         {
             isStart = false;
             for (int i = 0; i < RenderMeshList.Count; i++)
             {
-                RenderMeshList[i].GetComponent<Renderer>().material = mNormal;
+                TagMaterial(i);
             }
+            p_EnemyManager.enabled = true;
         }
 
     }//燃えて出てくるアニメーション
@@ -152,6 +158,29 @@ public class EnemyMaterialManager : MonoBehaviour
                 allChildren.Add(ob.gameObject);
             }
             GetChildren(ob.gameObject, ref allChildren);
+        }
+    }
+
+
+    void TagMaterial(int num)
+    {
+
+        if (RenderMeshList[num].tag == "Body")
+        {
+            RenderMeshList[num].GetComponent<Renderer>().material = mBody;
+        }
+        else if (RenderMeshList[num].tag == "Hand")
+        {
+            RenderMeshList[num].GetComponent<Renderer>().material = mHand;
+        }
+        else if (RenderMeshList[num].tag == "Leg")
+        {
+            RenderMeshList[num].GetComponent<Renderer>().material = mLeg;
+        }
+        else if (RenderMeshList[num].tag == "DoubleMaterial")
+        {
+            Material[] mates = { mBody, mLeg };
+            RenderMeshList[num].GetComponent<Renderer>().materials = mates;
         }
     }
 }

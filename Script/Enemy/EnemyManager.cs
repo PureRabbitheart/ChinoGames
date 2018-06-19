@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
-   
-
 
     public enum eMODE
     {
@@ -51,13 +49,15 @@ public class EnemyManager : MonoBehaviour
     private bool isAfter = false;//乗り移ってからもとに戻ったとき
     private bool isLeftRight;//警戒時の左右を見る
     private bool isInit;//初期化フラグ
+
+    private GameObject PlayerDamage;
     private NavMeshAgent agent;
     private List<GameObject> lTarget = new List<GameObject>();//触れたやつ
     private TimeGage p_TimeGage;
 
-    [SerializeField, Range(0, 100)]
+    [SerializeField, Range(0, 1000)]
     private float EnemyHP;//体力
-    [SerializeField, Range(0, 100)]
+    [SerializeField, Range(0, 1000)]
     private float PlayerHP;//体力
     [SerializeField]
     private float fMaxActiveTime;//乗りうつって居られる時間
@@ -67,7 +67,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private float fRadius;//半径
     [SerializeField]
-    private Animator p_Animator;
+    private Animator p_ModelAnim;
     [SerializeField]
     private GunStatus[] p_GunStatus = new GunStatus[3];
 
@@ -106,6 +106,7 @@ public class EnemyManager : MonoBehaviour
     void Init()
     {
         p_TimeGage = GameObject.Find("TimeGage").GetComponent<TimeGage>();
+        PlayerDamage = GameObject.Find("Damage");
 
         if (GetComponent<NavMeshAgent>() != null && LTarget.Count > 0)//NavMeshがあれば
         {
@@ -208,11 +209,19 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    void Damage(float Damage)//ダメージ処理
+    public void Damage(float Damage)//ダメージ処理
     {
-        EnemyHP -= Damage;
-        agent.SetDestination(transform.position);//そこの場所で一旦止まる
-        p_Animator.SetBool("isDamage", true);
+        if (isAIEnemy == true)
+        {
+            EnemyHP -= Damage;
+            agent.SetDestination(transform.position);//そこの場所で一旦止まる
+            p_ModelAnim.SetBool("isDamage", true);
+        }
+        else
+        {
+            PlayerDamage.GetComponent<Animator>().SetTrigger("Damage");
+            fActiveTime += (Damage / 10);//ダメージを受けたら
+        }
     }
 
     void HPController()//HPの制御
@@ -226,6 +235,9 @@ public class EnemyManager : MonoBehaviour
         else if (TimeActive(isAIEnemy) || isAIEnemy == false && PlayerHP <= 0)
         {
             Debug.Log("死にました");
+            //フェードアウト
+            //中央に戻す
+            
         }
 
     }
@@ -371,7 +383,7 @@ public class EnemyManager : MonoBehaviour
         //if (isAttack == true)
         //{
         //    Debug.Log("攻撃した");
-        //    p_Animator.SetBool("isAttack", true);
+        //    p_ModelAnim.SetBool("isAttack", true);
         //    CollHelp();//援護を呼ぶ
         //    isAttack = false;
         //}
@@ -433,7 +445,7 @@ public class EnemyManager : MonoBehaviour
             }
             else
             {
-                p_Animator.SetBool("isRun", false);
+                p_ModelAnim.SetBool("isRun", false);
                 AidTarget = new Vector3(0, 0, 0);
                 fNowTime = 0.0f;
                 Mode = eMODE.Vigilance;//警戒モード移行
@@ -474,20 +486,20 @@ public class EnemyManager : MonoBehaviour
         switch (type)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.BigRobo:
-                p_Animator.SetBool("isWarning", false);
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWarning", false);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.FourLeg:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -500,23 +512,23 @@ public class EnemyManager : MonoBehaviour
         switch (type)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isAttack", true);
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isAttack", true);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isAttack", true);
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isAttack", true);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.BigRobo:
                 BigRoboAttack(true);
                 break;
             case eMODEL_TYPE.FourLeg:
-                p_Animator.SetBool("isAttack", true);
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isAttack", true);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isAttack", true);
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isAttack", true);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -528,19 +540,19 @@ public class EnemyManager : MonoBehaviour
         switch (type)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.BigRobo:
-                p_Animator.SetBool("isWarning", true);
+                p_ModelAnim.SetBool("isWarning", true);
                 break;
             case eMODEL_TYPE.FourLeg:
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isWarning", true);
+                p_ModelAnim.SetBool("isWarning", true);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -552,20 +564,20 @@ public class EnemyManager : MonoBehaviour
         switch (type)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.BigRobo:
-                p_Animator.SetBool("isWarning", false);
-                p_Animator.SetBool("isWalk", true);
+                p_ModelAnim.SetBool("isWarning", false);
+                p_ModelAnim.SetBool("isWalk", true);
                 break;
             case eMODEL_TYPE.FourLeg:
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isWalk", false);
+                p_ModelAnim.SetBool("isWalk", false);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -577,20 +589,20 @@ public class EnemyManager : MonoBehaviour
         switch (type)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isRun", true);
+                p_ModelAnim.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isRun", true);
+                p_ModelAnim.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.BigRobo:
-                p_Animator.SetBool("isWarning", false);
-                p_Animator.SetBool("isRun", true);
+                p_ModelAnim.SetBool("isWarning", false);
+                p_ModelAnim.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.FourLeg:
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isWarning", false);
-                p_Animator.SetBool("isRun", true);
+                p_ModelAnim.SetBool("isWarning", false);
+                p_ModelAnim.SetBool("isRun", true);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -602,21 +614,21 @@ public class EnemyManager : MonoBehaviour
 
         if (isAttack == true || isAnim == false)
         {
-            p_Animator.SetBool("isWalk", false);
-            p_Animator.SetBool("isWarning", false);
-            p_Animator.SetBool("isAttack", false);
-            p_Animator.SetBool("isAttackRoket", false);
-            p_Animator.SetBool("isAttackShot", false);
-            p_Animator.SetBool("isAttackRote", false);
+            p_ModelAnim.SetBool("isWalk", false);
+            p_ModelAnim.SetBool("isWarning", false);
+            p_ModelAnim.SetBool("isAttack", false);
+            p_ModelAnim.SetBool("isAttackRoket", false);
+            p_ModelAnim.SetBool("isAttackShot", false);
+            p_ModelAnim.SetBool("isAttackRote", false);
 
 
             switch (Random.Range(0, 2))
             {
                 case 0:
-                    p_Animator.SetBool("isAttackShot", isAnim);
+                    p_ModelAnim.SetBool("isAttackShot", isAnim);
                     break;
                 case 1:
-                    p_Animator.SetBool("isAttackRoket", isAnim);
+                    p_ModelAnim.SetBool("isAttackRoket", isAnim);
                     break;
             }
         }
@@ -647,10 +659,10 @@ public class EnemyManager : MonoBehaviour
         switch (ModelType)
         {
             case eMODEL_TYPE.Boss:
-                p_Animator.SetBool("isAttack", false);
+                p_ModelAnim.SetBool("isAttack", false);
                 break;
             case eMODEL_TYPE.Drone:
-                p_Animator.SetBool("isAttack", false);
+                p_ModelAnim.SetBool("isAttack", false);
                 break;
             case eMODEL_TYPE.BigRobo:
                 BigRoboAttack(false);
@@ -658,7 +670,7 @@ public class EnemyManager : MonoBehaviour
             case eMODEL_TYPE.FourLeg:
                 break;
             case eMODEL_TYPE.DustMK2:
-                p_Animator.SetBool("isAttack", false);
+                p_ModelAnim.SetBool("isAttack", false);
                 break;
             case eMODEL_TYPE.Gundam:
                 break;
@@ -672,13 +684,13 @@ public class EnemyManager : MonoBehaviour
     }
     public void DamageEnd()//仲間を呼ぶ
     {
-        p_Animator.SetBool("isDamage", false);
-        p_Animator.SetBool("isWalk", false);
-        p_Animator.SetBool("isRun", false);
-        p_Animator.SetBool("isAttack", false);
-        p_Animator.SetBool("isWarning", false);
-        p_Animator.SetBool("isAttackShot", false);
-        p_Animator.SetBool("isAttackRoket", false);
+        p_ModelAnim.SetBool("isDamage", false);
+        p_ModelAnim.SetBool("isWalk", false);
+        p_ModelAnim.SetBool("isRun", false);
+        p_ModelAnim.SetBool("isAttack", false);
+        p_ModelAnim.SetBool("isWarning", false);
+        p_ModelAnim.SetBool("isAttackShot", false);
+        p_ModelAnim.SetBool("isAttackRoket", false);
 
         TargetInit();
         Mode = eMODE.Pursuit;//追跡モードに移行する

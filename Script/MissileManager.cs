@@ -39,7 +39,7 @@ public class MissileManager : MonoBehaviour
         {
             if (DamageTag[i] == other.transform.tag)
             {
-                SendMessage("Damage",Power);
+                other.transform.root.SendMessage("Damage",Power);
             }
         }
     }

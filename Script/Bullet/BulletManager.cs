@@ -7,14 +7,14 @@ public class BulletManager : MonoBehaviour
 
 
     private float Power;//  弾の威力　銃側からセンドメッセージで来る
-    [Tooltip("あたり判定のあるTag名を入れてね")]
-    public string[] strTagName;//  敵のtagを入れておく配列
-                               //[Tooltip("当たった時のエフェクトのPrefabを入れてね")]
-                               //public GameObject Effect;//  弾と敵に当たった時のEffect
-                               //[Tooltip("ヘッドショットした時のエフェクトのPrefabを入れてね")]
-                               //public GameObject headFX;//  ヘッドショットした時のEffect
-                               //[Tooltip("壁とかに当たった時のエフェクトのPrefabを入れてね")]
-                               //public GameObject lastFX;//  かべなどに当たった時のエフェクト
+    [SerializeField]
+    private string[] strTagName;//  敵のtagを入れておく配列
+    [SerializeField]
+    private GameObject HitFX;//  弾と敵に当たった時のEffect
+                             //[Tooltip("ヘッドショットした時のエフェクトのPrefabを入れてね")]
+                             //public GameObject headFX;//  ヘッドショットした時のEffect
+    [SerializeField]
+    private GameObject lastFX;//  かべなどに当たった時のエフェクト
 
     void Start()
     {
@@ -38,30 +38,20 @@ public class BulletManager : MonoBehaviour
                         other.gameObject.AddComponent<Rigidbody>();
                     }
                     // Instantiate(headFX, transform.position, transform.rotation);
-                    // Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
+                    Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
 
+                }
+                else if (other.tag == "BackGround")
+                {
+                    Instantiate(lastFX, transform.position, Quaternion.identity);//エフェクトを生成
                 }
                 else
                 {
-                    other.transform.root.gameObject.SendMessage("Damage", Power);
-                    //Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
+                    other.transform.root.SendMessage("Damage", Power);
+                    Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
                 }
 
                 Destroy(gameObject);//弾を消す
-
-
-                //else if (other.tag == "LastEnemy")
-                //{
-                //    Instantiate(lastFX, transform.position, transform.rotation);
-                //    Destroy(gameObject);//弾を消す
-                //}
-                //else
-                //{
-                //    if (other.tag == "NAGANO")
-                //    {
-                //        Instantiate(Effect, gameObject.transform.position, Quaternion.Euler(0, 0, 0));//エフェクトを生成
-
-                //    }
             }
 
         }

@@ -15,7 +15,8 @@ public class DoorController : MonoBehaviour
 
     private Animator p_Animator;
     private int value;
-
+    [SerializeField]
+    private string[] TagName;
 
     void Awake()
     {
@@ -34,50 +35,64 @@ public class DoorController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        value++;
-        if (value == 1)
+        for (int i = 0; i < TagName.Length; i++)
         {
-            switch (eDoorType)
+            if (TagName[i] == other.tag)
             {
-                case _type.Door1:
-                    p_Animator.SetBool("①", true);
-                    break;
-                case _type.Door2:
-                    p_Animator.SetBool("②", true);
-                    break;
-                case _type.Door3:
-                    p_Animator.SetBool("③", true);
-                    break;
-                case _type.Other:
-                    break;
-                default:
-                    break;
+                value++;
+                if (value == 1)
+                {
+                    switch (eDoorType)
+                    {
+                        case _type.Door1:
+                            p_Animator.SetBool("①", true);
+                            break;
+                        case _type.Door2:
+                            p_Animator.SetBool("②", true);
+                            break;
+                        case _type.Door3:
+                            p_Animator.SetBool("③", true);
+                            break;
+                        case _type.Other:
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
+
         }
+
     }
 
 
 
     void OnTriggerExit(Collider other)
     {
-        value--;
-        if (value == 0)
+        for (int i = 0; i < TagName.Length; i++)
         {
-            switch (eDoorType)
+            if (TagName[i] == other.tag)
             {
-                case _type.Door1:
-                    p_Animator.SetBool("①", false);
-                    break;
-                case _type.Door2:
-                    p_Animator.SetBool("②", false);
-                    break;
-                case _type.Door3:
-                    p_Animator.SetBool("③", false);
-                    break;
-                case _type.Other:
-                    break;
-                default:
-                    break;
+                value--;
+                if (value == 0)
+                {
+                    switch (eDoorType)
+                    {
+                        case _type.Door1:
+                            p_Animator.SetBool("①", false);
+                            break;
+                        case _type.Door2:
+                            p_Animator.SetBool("②", false);
+                            break;
+                        case _type.Door3:
+                            p_Animator.SetBool("③", false);
+                            break;
+                        case _type.Other:
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 

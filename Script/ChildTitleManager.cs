@@ -8,6 +8,8 @@ public class ChildTitleManager : MonoBehaviour
     private float fMaxTime;
     [SerializeField]
     private TitleManager p_TitleManager;
+    [SerializeField]
+    private GameObject TeleportParticle;
 
     private float fNowTime;
 
@@ -29,6 +31,16 @@ public class ChildTitleManager : MonoBehaviour
         if (other.tag == "Player")
         {
             fNowTime = 0;
+            TeleportParticle.SetActive(true);
+        }
+
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            TeleportParticle.SetActive(false);
         }
     }
 

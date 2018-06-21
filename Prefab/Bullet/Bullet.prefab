@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strTagName:
-  - MainCamera
+  - EnemyModel
   - BackGround
   HitFX: {fileID: 1760992571876156, guid: bfbb1577c0cf6194893d32135866cd83, type: 2}
   lastFX: {fileID: 1574494614640840, guid: 8d9723a65f1e80144b96a0e0973549af, type: 2}

@@ -14,8 +14,6 @@ public class GameSetting
     [MenuItem("Tools/Reset/SettingReset")]
 #endif
 
-
-
     static void SettingReset()
     {
         StreamWriter StreamWriter_;
@@ -29,5 +27,18 @@ public class GameSetting
         StreamWriter_.Close();
 
         Debug.Log("ゲームの設定を初期化しました");
+    }
+
+#if UNITY_EDITOR
+    [MenuItem("Tools/Reset/RoomDataReset")]
+#endif
+
+    static void RoomDataReset()
+    {
+        bool[] isRoomData = { false, false, false, false };
+
+        PlayerPrefsX.SetBoolArray("RoomData", isRoomData);
+
+        Debug.Log("RoomDataを初期化しました");
     }
 }

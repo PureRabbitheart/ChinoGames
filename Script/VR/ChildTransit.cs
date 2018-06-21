@@ -8,15 +8,19 @@ public class ChildTransit : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        p_Transit = GameObject.Find("RightHandAnchor").GetComponent<Transit>();
+        p_Transit = GameObject.Find("TrackingSpace").GetComponent<Transit>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (p_Transit != null)
+        if (p_Transit != null　&& transform.tag == "LHandObject")
         {
-            p_Transit.tStartPos = transform;
+            p_Transit.tLStartPos = transform;
+        }
+        else if (p_Transit != null && transform.tag == "RHandObject")
+        {
+            p_Transit.tRStartPos = transform;
         }
     }
 }

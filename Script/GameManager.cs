@@ -8,7 +8,6 @@ using UnityEditor;
 #endif
 
 
-
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
@@ -49,16 +48,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-
+        isAreaClear = PlayerPrefsX.GetBoolArray("RoomData");
         PlayerClear = GameObject.Find("Clear");
         PlayerClear.SetActive(false);
 
     }
 
-    void Update()
-    {
-
-    }
 
     public void AreaUpdate(string posName)
     {
@@ -106,10 +101,27 @@ public class GameManager : MonoBehaviour
         }
         else if (managerList.Count <= CreateCount[count])//最後まで出し終わったら
         {
-            isAreaClear[count] = true;
-            PlayerClear.SetActive(true);
-            PlayerClear.GetComponent<Animator>().SetTrigger("Clear");
+            GameObject[] tagobjs = GameObject.FindGameObjectsWithTag("EnemyModel");
+            int EnemyCount = 0;
+            foreach (GameObject obj in tagobjs)
+            {
+                EnemyCount++;
+            }
+            if(EnemyCount == 0)
+            {
+                RoomClear(count);
+            }
+            Debug.Log(EnemyCount);
         }
+    }
+
+
+    public void RoomClear(int count)
+    {
+        isAreaClear[count] = true;
+        PlayerPrefsX.SetBoolArray("RoomData", isAreaClear);
+        PlayerClear.SetActive(true);
+        PlayerClear.GetComponent<Animator>().SetTrigger("Clear");
     }
 
     List<string[]> ResourceLoad(string FileName)//データの読み込み

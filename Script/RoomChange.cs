@@ -14,6 +14,9 @@ public class RoomChange : MonoBehaviour
     private bool isEvacuation;
     [SerializeField]
     private bool isStartAnim;
+
+    private float startTime;
+    private bool isStart;
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" && isEvacuation == true)
@@ -24,7 +27,7 @@ public class RoomChange : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player" && isEvacuation == false)
+        if (other.tag == "Player" && isEvacuation == false && isStart == true)
         {
             isEvacuation = true;
         }
@@ -42,7 +45,14 @@ public class RoomChange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (startTime < 5.0f)
+        {
+            startTime += Time.deltaTime;
+        }
+        else
+        {
+            isStart = true;
+        }
     }
 
     public void SceneChange()

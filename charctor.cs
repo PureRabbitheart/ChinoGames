@@ -32,6 +32,14 @@ public class charctor : MonoBehaviour
         {
             transform.position += new Vector3(-fSpeed * Time.deltaTime, 0, 0);
         }
+        if (Input.GetKey(KeyCode.E))
+        {
+            transform.position += new Vector3(0, fSpeed * Time.deltaTime, 0);
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            transform.position += new Vector3(0, -fSpeed * Time.deltaTime, 0);
+        }
         if (Input.GetKey(KeyCode.T))
         {
             transform.Rotate(50 * Time.deltaTime, 0, 0);
@@ -48,5 +56,6 @@ public class charctor : MonoBehaviour
         {
             transform.Rotate(0, 50 * Time.deltaTime, 0);
         }
+
     }
 }

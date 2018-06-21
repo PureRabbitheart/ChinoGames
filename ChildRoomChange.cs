@@ -17,6 +17,7 @@ public class ChildRoomChange : MonoBehaviour
     public void BadActivateEnd()
     {
         GetComponent<Animator>().SetBool("isBadActivate", false);
+        
     }
 
 }

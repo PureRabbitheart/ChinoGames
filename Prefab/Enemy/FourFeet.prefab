@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 54479618381619164}
   m_Layer: 12
   m_Name: Model
-  m_TagString: MainCamera
+  m_TagString: EnemyModel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 65037040868365274}
   m_Layer: 0
   m_Name: LHand
-  m_TagString: BackGround
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2531,6 +2531,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1636476083759432
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4273322865423016}
+  - component: {fileID: 114285774289957350}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: RHandObject
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1644035857712362
 GameObject:
   m_ObjectHideFlags: 1
@@ -3577,6 +3593,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1909043847069092
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4016796745336348}
+  - component: {fileID: 114370659556343986}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: LHandObject
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1913816245901798
 GameObject:
   m_ObjectHideFlags: 1
@@ -3708,7 +3740,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4129108824079988}
-  - component: {fileID: 114469733058682594}
   - component: {fileID: 65750509762892612}
   m_Layer: 0
   m_Name: GameObject
@@ -4083,6 +4114,19 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4508458515343612}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4016796745336348
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1909043847069092}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4432003817350822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4017154234323326
@@ -5038,6 +5082,19 @@ Transform:
   m_Father: {fileID: 4328289354945168}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -1.7886097, y: 4.407239, z: 20.930311}
+--- !u!4 &4273322865423016
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1636476083759432}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4716552097699192}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4276591496605336
 Transform:
   m_ObjectHideFlags: 1
@@ -5776,7 +5833,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4016796745336348}
   m_Father: {fileID: 4019400843598412}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6316,7 +6374,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1491721272999414}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -299.27396, y: 53.945004, z: 9.464251}
+  m_LocalPosition: {x: -283.04916, y: 53.945004, z: 4.7926693}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4392746661802500}
@@ -6685,6 +6743,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4129108824079988}
+  - {fileID: 4273322865423016}
   m_Father: {fileID: 4562601149476534}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: -90}
@@ -7969,6 +8028,17 @@ MonoBehaviour:
     m_Bits: 2048
   MoveMaterial: {fileID: 2100000, guid: 1c03771a25a0ffc4d919909dc0c9d117, type: 2}
   OutMaterial: {fileID: 2100000, guid: 3be84c2ea72ac3a419ca5944aa8b09d2, type: 2}
+--- !u!114 &114285774289957350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1636476083759432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7996aad0301dfcb43957e0b59f9f2a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114303814694531262
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7982,9 +8052,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fFireRate: 1
   fSpread: 0
-  fRange: 0
-  fDamage: 0
-  fBulletSpeed: 0
+  fRange: 100
+  fDamage: 45
+  fBulletSpeed: 10
   eShotType: 0
   fReloadTime: 0
   clipSize: 5000
@@ -7993,7 +8063,7 @@ MonoBehaviour:
   ammoHave: 5000
   ammoUsep: 1
   shotPerRound: 1
-  Bullet: {fileID: 1715843038198422, guid: 302060bee5412ea4185bdda2e3baa883, type: 2}
+  Bullet: {fileID: 1724877985189922, guid: 3e937de5dc96a5541b4c67fd911def3d, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4796898986735232}
   tStartRay: {fileID: 4796898986735232}
@@ -8024,6 +8094,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: LeftHandAnchor
+--- !u!114 &114370659556343986
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1909043847069092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7996aad0301dfcb43957e0b59f9f2a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114414587293332328
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8055,17 +8136,6 @@ MonoBehaviour:
   vRHandRote: {x: 0, y: -90, z: -90}
   vHeadRote: {x: 0, y: 0, z: 0}
   vLookPos: {x: 0, y: -0.05, z: -0.08}
---- !u!114 &114469733058682594
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1937331322762776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7996aad0301dfcb43957e0b59f9f2a64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114470714316907454
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8122,9 +8192,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fFireRate: 0
   fSpread: 0
-  fRange: 0
+  fRange: 100
   fDamage: 50
-  fBulletSpeed: 0
+  fBulletSpeed: 10
   eShotType: 0
   fReloadTime: 0
   clipSize: 5555555
@@ -8133,7 +8203,7 @@ MonoBehaviour:
   ammoHave: 5555555
   ammoUsep: 0
   shotPerRound: 1
-  Bullet: {fileID: 1430795023643044, guid: fd359da259266fb429ac732fccb239cb, type: 2}
+  Bullet: {fileID: 1073445110014264, guid: 03625ae04f335fc4d919b84fd62395dd, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4321862240529334}
   tStartRay: {fileID: 4321862240529334}
@@ -8165,9 +8235,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fFireRate: 0
   fSpread: 0
-  fRange: 0
+  fRange: 100
   fDamage: 50
-  fBulletSpeed: 0
+  fBulletSpeed: 10
   eShotType: 0
   fReloadTime: 0
   clipSize: 5555555
@@ -8176,7 +8246,7 @@ MonoBehaviour:
   ammoHave: 5555555
   ammoUsep: 0
   shotPerRound: 1
-  Bullet: {fileID: 1430795023643044, guid: fd359da259266fb429ac732fccb239cb, type: 2}
+  Bullet: {fileID: 1073445110014264, guid: 03625ae04f335fc4d919b84fd62395dd, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4326376687114124}
   tStartRay: {fileID: 4326376687114124}
@@ -8215,12 +8285,14 @@ MonoBehaviour:
   EnemyHP: 100
   PlayerHP: 100
   fMaxActiveTime: 50
-  fTimeOut: 5
+  fTimeOut: 0.5
   fRadius: 10
   p_ModelAnim: {fileID: 95631738004205590}
   p_GunStatus:
   - {fileID: 114545225495633550}
   - {fileID: 114674512641633960}
+  RestartScene:
+    SceneName: Main
 --- !u!114 &114880211162270222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8260,9 +8332,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fFireRate: 1
   fSpread: 0
-  fRange: 0
-  fDamage: 0
-  fBulletSpeed: 0
+  fRange: 100
+  fDamage: 45
+  fBulletSpeed: 10
   eShotType: 0
   fReloadTime: 0
   clipSize: 5000
@@ -8271,7 +8343,7 @@ MonoBehaviour:
   ammoHave: 5000
   ammoUsep: 1
   shotPerRound: 1
-  Bullet: {fileID: 1715843038198422, guid: 302060bee5412ea4185bdda2e3baa883, type: 2}
+  Bullet: {fileID: 1724877985189922, guid: 3e937de5dc96a5541b4c67fd911def3d, type: 2}
   isHitScan: 0
   tMuzzle: {fileID: 4064221622430392}
   tStartRay: {fileID: 4064221622430392}

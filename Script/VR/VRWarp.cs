@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VRWarp : MonoBehaviour
 {
-
+    
     private LineRenderer laser;
     private RaycastHit hit;
     private List<Vector3> vArrow = new List<Vector3>();
@@ -40,7 +40,6 @@ public class VRWarp : MonoBehaviour
 
     void Update()
     {
-
 
         Vector2 stickR = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);//アナログスティックの入力
         if (stickR.x > 0.5f || stickR.x < -0.5f || stickR.y > 0.5f || stickR.y < -0.5f)//入力があったら

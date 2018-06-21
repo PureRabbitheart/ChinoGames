@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Transit : MonoBehaviour
 {
-    public Transform tStartPos;
+    public Transform tLStartPos;//左レイの飛ばす位置
+    public Transform tRStartPos;//左レイの飛ばす位置
 
     private int NowCount = 0;//索敵範囲の半径のカウントを数える
     private float fTime = 0.1f;//乗り移るときの移動時間
@@ -53,11 +54,17 @@ public class Transit : MonoBehaviour
         Sphere.transform.position = transform.position;
         if (isAction == false)
         {
-            if (OVRInput.Get(OVRInput.RawButton.A))
+            if (OVRInput.Get(OVRInput.RawButton.A)|| OVRInput.Get(OVRInput.RawButton.B))
             {
                 laser.enabled = true;
                 Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
-                RayHit(HitEnemy);//範囲内にいて更にレイで触れているオブジェクトを処理
+                RayHit(HitEnemy,tRStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
+            }
+            else if (OVRInput.Get(OVRInput.RawButton.X) || OVRInput.Get(OVRInput.RawButton.Y))
+            {
+                laser.enabled = true;
+                Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
+                RayHit(HitEnemy,tLStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
             }
             else
             {
@@ -140,7 +147,7 @@ public class Transit : MonoBehaviour
     }
 
     //右手から出るRayの処理
-    void RayHit(Collider[] hitEnemy)
+    void RayHit(Collider[] hitEnemy,Transform tStartPos)
     {
         //WireFrame(hitEnemy);
 

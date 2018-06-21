@@ -17,7 +17,8 @@ public class PunchManager : MonoBehaviour
     private BUTTON eButtonType;
     [SerializeField]
     private GameObject PunchFx;
-
+    [SerializeField]
+    private GameObject PunchHitFx;
     private bool isGrab;
 
 
@@ -30,9 +31,11 @@ public class PunchManager : MonoBehaviour
                 other.GetComponent<ExploderObject>().ExplodeObject(other.gameObject);
             }
 
-            if (other.tag == "MainCamera")
+            if (other.tag == "EnemyModel")
             {
                 other.transform.root.GetComponent<EnemyManager>().Damage(fPunchPower);
+                GameObject HitFx = Instantiate(PunchHitFx, transform.position, Quaternion.identity);
+                Destroy(HitFx, 1.0f);
             }
         }
     }
@@ -52,14 +55,20 @@ public class PunchManager : MonoBehaviour
 
     void GrabPunch(string buttonName)
     {
-        if (Input.GetAxis(buttonName) > 0.8f)
+        if (Input.GetAxis(buttonName) > 0.5f)
         {
             isGrab = true;
-            PunchFx.SetActive(true);
+            if (PunchFx.activeSelf == false)
+            {
+                PunchFx.SetActive(true);
+            }
         }
         else
         {
-            PunchFx.SetActive(false);
+            if (PunchFx.activeSelf == true)
+            {
+                PunchFx.SetActive(false);
+            }
             isGrab = false;
         }
     }

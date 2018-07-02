@@ -5052,7 +5052,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334366162252522}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -290.1798, y: 53.945004, z: 4.185647}
+  m_LocalPosition: {x: -294.90582, y: 53.945004, z: 3.7656078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4569825976118480}
@@ -7009,8 +7009,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vLHandRote: {x: 0, y: 0, z: 0}
   vRHandRote: {x: 0, y: 0, z: 0}
-  vHeadRote: {x: 0, y: 0, z: 0}
-  vLookPos: {x: 0, y: 0.2, z: -0.08}
+  vHeadRote: {x: 0, y: 0, z: -45}
+  vLookPos: {x: 0, y: 0, z: -0.08}
 --- !u!114 &114032726693695608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7262,7 +7262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 0.5
   rend: {fileID: 120005337593645308}
-  LR: 0
+  eType: 0
 --- !u!114 &114278314493874686
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7435,6 +7435,8 @@ MonoBehaviour:
   - {fileID: 114828116423592508}
   RestartScene:
     SceneName: Main
+  ExplosionFX: {fileID: 1308268244499688, guid: 3f74307097baa164b874346497279c29,
+    type: 2}
 --- !u!114 &114669050634195736
 MonoBehaviour:
   m_ObjectHideFlags: 1

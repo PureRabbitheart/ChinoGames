@@ -7,12 +7,14 @@ public class Transit : MonoBehaviour
 {
     public Transform tLStartPos;//左レイの飛ばす位置
     public Transform tRStartPos;//左レイの飛ばす位置
+    public float ChargeRate;//チャージ率
 
     private int NowCount = 0;//索敵範囲の半径のカウントを数える
     private float fTime = 0.1f;//乗り移るときの移動時間
     private float startTime;//開始時間
-    private bool isMoveAction;//乗り移っている状況
-    private bool isAction;
+    private float fChargeTime;//次乗り移れるまでの時間
+    private bool isMoveAction;//乗り移っている最中
+    private bool isAction;//乗り移れる状態なら
     private Vector3 startPosition;//開始地点
     private Vector3 tEndPos;//ゴール
     private GameObject Soul;//乗り移る先
@@ -36,35 +38,37 @@ public class Transit : MonoBehaviour
     private LayerMask FloorMask;
     [SerializeField]
     private Animator SystemImageAnim;
-
+    [SerializeField]
+    private float fMaxChargeTime;//チャージするまでにかかる時間
+    [SerializeField]
+    private VRWarp pVRWarp;
 
     void Start()
     {
         laser = this.GetComponent<LineRenderer>();
-
+        ChargeRate = 1.0f;
         ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
         ps.GetComponent<Renderer>().enabled = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
 
-
+        ChargeTime();
         Sphere.transform.position = transform.position;
         if (isAction == false)
         {
-            if (OVRInput.Get(OVRInput.RawButton.A)|| OVRInput.Get(OVRInput.RawButton.B))
+            if (OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B))//右手
             {
                 laser.enabled = true;
                 Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
-                RayHit(HitEnemy,tRStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
+                RayHit(HitEnemy, tRStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
             }
-            else if (OVRInput.Get(OVRInput.RawButton.X) || OVRInput.Get(OVRInput.RawButton.Y))
+            else if (OVRInput.Get(OVRInput.RawButton.X) || OVRInput.Get(OVRInput.RawButton.Y))//左手
             {
                 laser.enabled = true;
                 Collider[] HitEnemy = HitJudge();//触れているオブジェクトをすべて返す
-                RayHit(HitEnemy,tLStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
+                RayHit(HitEnemy, tLStartPos);//範囲内にいて更にレイで触れているオブジェクトを処理
             }
             else
             {
@@ -74,13 +78,16 @@ public class Transit : MonoBehaviour
 
             }
 
-            if (OVRInput.GetUp(OVRInput.RawButton.A) && Soul != null && isMoveAction == false)
+            if (OVRInput.GetUp(OVRInput.RawButton.A) || OVRInput.GetUp(OVRInput.RawButton.B) || OVRInput.GetUp(OVRInput.RawButton.Y) || OVRInput.GetUp(OVRInput.RawButton.X))
             {
-                ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
-                ps.GetComponent<Renderer>().enabled = true;
+                if (Soul != null && isMoveAction == false)
+                {
+                    ParticleSystem ps = System[0].GetComponent<ParticleSystem>();
+                    ps.GetComponent<Renderer>().enabled = true;
 
-                isAction = true;
-                Invoke("ChangeSouls", 0.2f);//もし触れているなら魂を変える
+                    isAction = true;
+                    Invoke("ChangeSouls", 0.2f);//もし触れているなら魂を変える
+                }
             }
 
 
@@ -98,8 +105,8 @@ public class Transit : MonoBehaviour
 
 
 
-    //触れているオブジェクトの判定
-    Collider[] HitJudge()
+  
+    Collider[] HitJudge()  //触れているオブジェクトの判定
     {
         Collider[] Hit;
         if (NowCount < MaxCount)//最大サイズ以下なら
@@ -146,8 +153,7 @@ public class Transit : MonoBehaviour
 
     }
 
-    //右手から出るRayの処理
-    void RayHit(Collider[] hitEnemy,Transform tStartPos)
+    void RayHit(Collider[] hitEnemy, Transform tStartPos)  //手から出るRayの処理
     {
         //WireFrame(hitEnemy);
 
@@ -177,7 +183,7 @@ public class Transit : MonoBehaviour
         }
     }
 
-    void MoveAction()
+    void MoveAction()//移動中のアクションの処理
     {
         float test = Vector3.Distance(transform.position, tEndPos);
 
@@ -207,7 +213,6 @@ public class Transit : MonoBehaviour
 
     }
 
-
     void Arrival()//到着後の処理
     {
         isMoveAction = false;
@@ -226,11 +231,10 @@ public class Transit : MonoBehaviour
         ps.GetComponent<Renderer>().enabled = false;
 
         SystemImageAnim.SetBool("isActivate", false);
-        isAction = false;
 
     }
 
-    void WireFrame(Collider[] hitEnemy)
+    void WireFrame(Collider[] hitEnemy)//触れている敵を全てワイヤーフレーム化する
     {
         for (int i = 0; i < hitEnemy.Length; i++)//円に触れているオブジェクト分
         {
@@ -239,6 +243,23 @@ public class Transit : MonoBehaviour
             {
                 p_EMM.isWireFrame = true;
             }
+        }
+    }
+
+    void ChargeTime()//次の移動までにかかるCharge時間
+    {
+        if (isAction == true)
+        {
+            fChargeTime += Time.deltaTime;
+            ChargeRate = fChargeTime / fMaxChargeTime;
+            if (fMaxChargeTime < fChargeTime)
+            {
+                isAction = false;
+            }
+        }
+        else
+        {
+            fChargeTime = 0;
         }
     }
 }

@@ -18,7 +18,8 @@ public class FieldManager : MonoBehaviour
 
     public AREA eArea;
 
-    private bool isAreaTime;
+    private bool isAreaTime;//範囲内にプレイヤーがいたら
+    private bool isTimeStop;//敵の数が多くなったときに一旦止める役割
     void OnTriggerEnter(Collider other)
     {
         EnemyManager p_EnemyManager = other.transform.root.GetComponent<EnemyManager>();
@@ -80,9 +81,25 @@ public class FieldManager : MonoBehaviour
 
     void Update()
     {
-        if (isAreaTime == true)
+        if (isAreaTime == true && isTimeStop == true)
         {
             p_GameManager.AreaUpdate(eArea.ToString());
+        }
+
+
+        GameObject[] tagobjs = GameObject.FindGameObjectsWithTag("EnemyModel");
+        int EnemyCount = 0;
+        foreach (GameObject obj in tagobjs)
+        {
+            EnemyCount++;
+        }
+        if (EnemyCount > 6)
+        {
+            isTimeStop = false;
+        }
+        else
+        {
+            isTimeStop = true;
         }
 
     }

@@ -38,17 +38,22 @@ public class BulletManager : MonoBehaviour
                         other.gameObject.AddComponent<Rigidbody>();
                     }
                     // Instantiate(headFX, transform.position, transform.rotation);
-                    Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    GameObject Fx = Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    Destroy(Fx, 2.0f);
+
 
                 }
                 else if (other.tag == "BackGround")
                 {
-                    Instantiate(lastFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    GameObject Fx = Instantiate(lastFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    Destroy(Fx, 2.0f);
                 }
                 else
                 {
                     other.transform.root.SendMessage("Damage", Power);
-                    Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    GameObject Fx = Instantiate(HitFX, transform.position, Quaternion.identity);//エフェクトを生成
+                    Destroy(Fx, 2.0f);
+
                 }
 
                 Destroy(gameObject);//弾を消す

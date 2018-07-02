@@ -12,15 +12,20 @@ public class DisplayCamera : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        offset = transform.position - Camera.transform.position;
+        if (Camera != null)
+        {
+            offset = transform.position - Camera.transform.position;
+        }
         UnityEngine.XR.XRSettings.showDeviceView = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Camera != null)
+        {
 
-        transform.position = Camera.transform.position + offset;
-
+            transform.position = Camera.transform.position + offset;
+        }
     }
 }

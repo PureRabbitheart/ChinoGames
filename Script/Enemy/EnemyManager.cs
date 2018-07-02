@@ -43,7 +43,6 @@ public class EnemyManager : MonoBehaviour
     private Vector3 AidTarget;//援護を呼ばれた場所
     private float fAttackTime;//攻撃後のクールタイム
     private float fNowTime;//経過時間
-    private float fStartTime;//乗りうつり始めた時間
     private float fEnemyDis;//プレイヤーとの距離
 
     private bool[] isTarget;//ターゲット
@@ -75,7 +74,8 @@ public class EnemyManager : MonoBehaviour
     private GunStatus[] p_GunStatus = new GunStatus[3];
     [SerializeField]
     private SceneObject RestartScene;
-
+    [SerializeField]
+    private GameObject ExplosionFX;
 
     void OnTriggerEnter(Collider other)//触れたら
     {
@@ -269,6 +269,8 @@ public class EnemyManager : MonoBehaviour
         if (isAIEnemy == true && EnemyHP <= 0)//体力がなくなったら
         {
             Destroy(transform.root.gameObject);//消す
+            GameObject Fx = Instantiate(ExplosionFX, transform.position, Quaternion.identity);
+            Destroy(Fx, 1.0f);
         }
         else if (TimeActive(isAIEnemy) || isAIEnemy == false && PlayerHP <= 0)
         {
@@ -283,13 +285,17 @@ public class EnemyManager : MonoBehaviour
     {
         if (palyer == false)
         {
-            fActiveTime += Time.deltaTime;
-            p_TimeGage.Now = fMaxActiveTime - fActiveTime;
-            p_TimeGage.Max = fMaxActiveTime;
-            if (fActiveTime > fMaxActiveTime)
+            if (fMaxActiveTime > 0)
             {
-                return true;
+                fActiveTime += Time.deltaTime;
+                p_TimeGage.Now = fMaxActiveTime - fActiveTime;
+                p_TimeGage.Max = fMaxActiveTime;
+                if (fActiveTime > fMaxActiveTime)
+                {
+                    return true;
+                }
             }
+
         }
         return false;
     }

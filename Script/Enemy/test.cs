@@ -6,6 +6,17 @@ public class test : MonoBehaviour
 {
     public bool isFrame;
 
+    [SerializeField]
+    private GameObject Boss;
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag =="Player")
+        {
+            Boss.SetActive(true);
+            Boss.GetComponent<Animator>().SetBool("PVAnim", true);
+        }
+    }
+
 
     void Start()
     {

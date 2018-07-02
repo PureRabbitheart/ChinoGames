@@ -4506,9 +4506,10 @@ GameObject:
   - component: {fileID: 54907310842907996}
   - component: {fileID: 135205187996175242}
   - component: {fileID: 114547564035487934}
+  - component: {fileID: 114525872980426302}
   m_Layer: 0
   m_Name: LHand
-  m_TagString: Untagged
+  m_TagString: LHandObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7686,7 +7687,7 @@ GameObject:
   - component: {fileID: 114900277695890740}
   m_Layer: 0
   m_Name: RHand
-  m_TagString: Untagged
+  m_TagString: RHandObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13432,7 +13433,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334366162252522}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -289.7382, y: 53.945004, z: 0.069257736}
+  m_LocalPosition: {x: -306.05734, y: 53.945004, z: 6.3057194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4569825976118480}
@@ -18143,6 +18144,17 @@ MonoBehaviour:
   openLerpLevel: 0.3
   closeLerpLevel: 0.15
   isThumb: 0
+--- !u!114 &114525872980426302
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1505767935202464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7996aad0301dfcb43957e0b59f9f2a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114532119404157990
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18313,6 +18325,8 @@ MonoBehaviour:
   - {fileID: 0}
   RestartScene:
     SceneName: Main
+  ExplosionFX: {fileID: 1308268244499688, guid: 3f74307097baa164b874346497279c29,
+    type: 2}
 --- !u!114 &114669050634195736
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18610,7 +18624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 0.5
   rend: {fileID: 120300605419853830}
-  LR: 0
+  eType: 0
 --- !u!114 &114848031535701630
 MonoBehaviour:
   m_ObjectHideFlags: 1

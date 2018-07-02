@@ -10,6 +10,9 @@ public class ChildTitleManager : MonoBehaviour
     private TitleManager p_TitleManager;
     [SerializeField]
     private GameObject TeleportParticle;
+    [SerializeField]
+    private GameObject Arrow;
+
 
     private float fNowTime;
 
@@ -32,6 +35,7 @@ public class ChildTitleManager : MonoBehaviour
         {
             fNowTime = 0;
             TeleportParticle.SetActive(true);
+            Arrow.SetActive(false);
         }
 
     }
@@ -41,6 +45,8 @@ public class ChildTitleManager : MonoBehaviour
         if (other.tag == "Player")
         {
             TeleportParticle.SetActive(false);
+            Arrow.SetActive(true);
+
         }
     }
 
